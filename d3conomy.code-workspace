@@ -1,9 +1,7 @@
 {
-	"folders": [
-		{
-			"name": "d3conomy",
-			"path": "."
-		}
-	],
-	"settings": {}
+    "folders": [
+        {
+            "path": "."
+        }
+    ]
 }
