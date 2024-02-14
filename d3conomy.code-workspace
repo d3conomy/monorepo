@@ -3,14 +3,6 @@
         {
             "path": ".",
             "name": "d3conomy",
-        },
-        {
-            "path": "./moonbase",
-            "name": "moonbase"
-        },
-        {
-            "path": "./airlock",
-            "name": "airlock"
         }
     ]
 }
