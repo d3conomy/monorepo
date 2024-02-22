@@ -4,5 +4,7 @@
             "path": ".",
             "name": "d3conomy",
         }
-    ]
+    ],
+    "settings": {
+    }
 }
