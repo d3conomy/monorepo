@@ -10,3 +10,4 @@ git subtree split --prefix=moonbase --branch moonbase
 # Push all changes to remote
 git push https://github.com/d3conomy/airlock airlock:setup
 git push https://github.com/d3conomy/moonbase moonbase:setup
+git push origin main

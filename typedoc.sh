@@ -15,4 +15,6 @@ npx typedoc \
 npx typedoc \
     --entryPointStrategy merge "docs-json/*.json"
 
+echo docs.d3conomy.com > docs/CNAME
+
 rm -f -R docs-json
