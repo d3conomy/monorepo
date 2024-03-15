@@ -106,14 +106,14 @@
     // "sourceMap": true,
   },
   "include": [
-    "moonbase/src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
+    "moonbase/src/**/*",
     "moonbase/dist/**/*",
     "moonbase/dist/api/**/*",
     "moonbase/dist/utils/**/*",
     "moonbase/dist/db/**/*"
+  ],
+  "exclude": [
+    "node_modules",
   ],
   "files": [],
   "references": [
