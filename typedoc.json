@@ -1,0 +1,6 @@
+{
+    "entryPoints": ["./*"],
+    "name": "d3",
+    "entryPointStrategy": "packages",
+    "includeVersion": false
+}
