@@ -3,5 +3,6 @@
     "entryPoints": ["./*"],
     "name": "d3",
     "entryPointStrategy": "packages",
-    "includeVersion": false
+    "includeVersion": false,
+    "sort": ["source-order"]
 }
