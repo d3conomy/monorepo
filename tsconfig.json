@@ -111,7 +111,7 @@
   },
   "include": [
     "moonbase/src/**/*",
-    "airlock/airlock-react/src/**/*",
+    "airlock/airlock-react/src/**/*", "moonbase/src/tests",
     // "moonbase/dist/**/*",
     // "moonbase/dist/api/**/*",
     // "moonbase/dist/utils/**/*",
