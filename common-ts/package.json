@@ -1,0 +1,23 @@
+{
+  "name": "d3-common",
+  "version": "0.0.1",
+  "description": "Shared utilities, models, etc.",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "mocha -r ts-node/register 'tests/*.spec.js' --trace-warnings\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/d3conomy/common-ts"
+  },
+  "keywords": [
+    "Tools",
+    "Utilities",
+    "Models",
+    "Moonbase",
+    "Airlock"
+  ],
+  "author": "d3",
+  "license": "ISC"
+}
