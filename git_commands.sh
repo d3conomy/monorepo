@@ -4,6 +4,10 @@ git add .
 git commit -m "${1}"
 
 # Git commands for monorepo
+
+# git subtree split --prefix=common/common-ts --branch common-ts
+# git subtree split --prefix=airlock/airlock-react --branch airlock-react
+# git subtree split --prefix=airlock/airlock-ts --branch airlock-ts
 git subtree split --prefix=airlock --branch airlock
 git subtree split --prefix=moonbase --branch moonbase
 
