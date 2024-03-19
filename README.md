@@ -1,7 +1,7 @@
 # d3
 > Powerful, yet economical p2p solutions for your applications.
 
-![d3](https://github.com/d3conomy/monorepo/blob/main/d3.png)
+![d3](https://github.com/d3conomy/monorepo/blob/main/d3.png?raw=true)
 
 Welcome to the d3 organization! We are excited to introduce you to our two main software offerings: Airlock and Moonbase.
 
