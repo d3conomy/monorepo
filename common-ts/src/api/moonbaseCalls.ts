@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-import { moonbaseUrl } from '../config.js';
+import { defaultMoonbaseUrl } from '../defaults';
 
+
+let moonbaseUrl = defaultMoonbaseUrl;
 
 const ping = async () => {
     const response = await axios.get(`${moonbaseUrl}/ping`);
