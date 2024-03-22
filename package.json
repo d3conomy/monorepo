@@ -3,5 +3,9 @@
     "@types/mocha": "^10.0.6",
     "typedoc-plugin-coverage": "^3.1.0",
     "typedoc-plugin-inline-sources": "^1.0.2"
+  },
+  "dependencies": {
+    "chance": "^1.1.11",
+    "uuid": "^9.0.1"
   }
 }

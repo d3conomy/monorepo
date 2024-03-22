@@ -4,6 +4,13 @@ rm -f -R docs-json
 
 npx typedoc \
     --plugin typedoc-plugin-inline-sources \
+    --json docs-json/common.json \
+    --options common-ts/typedoc.json \
+    --searchInComments \
+    --validation.invalidLink false
+
+npx typedoc \
+    --plugin typedoc-plugin-inline-sources \
     --json docs-json/moonbase.json \
     --options moonbase/typedoc.json \
     --searchInComments \

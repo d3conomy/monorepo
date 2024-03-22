@@ -1,0 +1,8 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "entryPoints": ["./src/index.ts", ],
+    "entryPointStrategy": "expand",
+    "sort": ["alphabetical"],
+    "name": "Common [TS]",
+    "exclude": [ "test/**"]
+}

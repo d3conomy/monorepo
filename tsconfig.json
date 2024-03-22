@@ -111,7 +111,9 @@
   },
   "include": [
     "moonbase/src/**/*",
-    "airlock/airlock-react/src/**/*", "moonbase/src/tests",
+    "moonbase/src/tests",
+    "airlock/airlock-react/src/**/*",
+    "common-ts/src/**/*", "common-ts/bak/models", "common-ts/bak/modules", "common-ts/bak/index.ts", "common-ts/bak/methods", "common-ts/bak/interfaces", "common-ts/bak/constants",
     // "moonbase/dist/**/*",
     // "moonbase/dist/api/**/*",
     // "moonbase/dist/utils/**/*",
@@ -126,6 +128,7 @@
   "files": [],
   "references": [
     { "path": "./moonbase" },
-    { "path": "./airlock/airlock-react" }
+    { "path": "./airlock/airlock-react" },
+    { "path": "./common-ts"}
   ]
 }
