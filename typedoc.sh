@@ -4,10 +4,17 @@ rm -f -R docs-json
 
 npx typedoc \
     --plugin typedoc-plugin-inline-sources \
-    --json docs-json/common.json \
-    --options common-ts/typedoc.json \
+    --json docs-json/airlock-ts.json \
+    --options airlock/airlock-ts/typedoc.json \
     --searchInComments \
     --validation.invalidLink false
+
+# npx typedoc \
+#     --plugin typedoc-plugin-inline-sources \
+#     --json docs-json/common.json \
+#     --options common-ts/typedoc.json \
+#     --searchInComments \
+#     --validation.invalidLink false
 
 npx typedoc \
     --plugin typedoc-plugin-inline-sources \
@@ -16,12 +23,12 @@ npx typedoc \
     --searchInComments \
     --validation.invalidLink false
 
-npx typedoc \
-    --plugin typedoc-plugin-inline-sources \
-    --json docs-json/airlock-react.json \
-    --options airlock/airlock-react/typedoc.json \
-    --searchInComments \
-    --validation.invalidLink false
+# npx typedoc \
+#     --plugin typedoc-plugin-inline-sources \
+#     --json docs-json/airlock-react.json \
+#     --options airlock/airlock-react/typedoc.json \
+#     --searchInComments \
+#     --validation.invalidLink false
 
 npx typedoc \
     --gitRemote github.com/d3conomy/monorepo.git \
