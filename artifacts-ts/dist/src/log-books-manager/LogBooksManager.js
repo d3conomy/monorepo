@@ -1,40 +1,41 @@
-import { IdReferenceTypes } from "../id-reference-factory/index.js";
+import { IdReferenceFormats, IdReferenceTypes, isIdReferenceFormat } from "../id-reference-factory/index.js";
 import { LogBook } from "./LogBook.js";
 import { LogEntry } from "./LogEntry.js";
 import { LogLevel, isLogLevel } from "./LogLevels.js";
+class LogBooksManagerConfig {
+    dir = "logs";
+    level = LogLevel.INFO;
+    names = IdReferenceFormats.NAME;
+}
 /**
  * A class to manage the system's collection of log books
  * @category Logging
  */
 class LogBooksManager {
     /* The collection of log books */
-    books = new Map();
-    /* The log level to print */
-    printLevel = 'info';
-    /* The directory to store the log files
-    * TODO: Implement file storage
-    */
-    dir = "";
-    constructor() {
-        this.books = new Map();
-        this.printLevel = 'info';
+    books;
+    /* The log books manager configuration */
+    config = new LogBooksManagerConfig();
+    constructor({ books, dir, level, names } = {}) {
+        this.books = books ? books : new Map();
+        this.config.dir = dir ? dir : this.config.dir;
+        this.config.level = isLogLevel(level) ? isLogLevel(level) : this.config.level;
+        this.config.names = names ? isIdReferenceFormat(names) : this.config.names;
     }
     /**
      * Initializes the log books manager
      */
-    init({ dir, level } = {}) {
-        this.printLevel = isLogLevel(level);
-        this.dir = dir ? dir : "";
+    init() {
         this.create(IdReferenceTypes.SYSTEM);
     }
     /**
      * Creates a new log book and adds it to the collection
      */
-    create(logBookName) {
-        // if (this.books.has(logBookName)) {
-        //     throw new Error("Log book already exists");
-        // }
-        const newLogBook = new LogBook(logBookName, this.printLevel);
+    create(logBookName, printLevel = this.config.level) {
+        if (this.books.has(logBookName)) {
+            throw new Error("Log book already exists");
+        }
+        const newLogBook = new LogBook(logBookName, printLevel);
         this.books.set(newLogBook.name, newLogBook);
     }
     /**
@@ -61,23 +62,24 @@ class LogBooksManager {
     clear() {
         for (const logBook of this.books.values()) {
             logBook.clear();
+            this.books.delete(logBook.name);
         }
     }
     /**
      * Returns a map of all the entries
      */
-    getAllEntries(item = 10) {
+    getLastEntries(item = 10) {
         let allEntries = new Map();
         for (const logBook of this.books.values()) {
             const entries = logBook.getLast(item);
             entries.forEach((entry, key) => {
-                allEntries.set(key, entry);
+                allEntries.set(`${logBook.name}-${key}`, entry);
             });
-            // sort the entries by timestamp
-            allEntries = new Map([...allEntries.entries()].sort((a, b) => {
-                return a[1].timestamp.getTime() - b[1].timestamp.getTime();
-            }));
         }
+        // sort the entries by timestamp
+        allEntries = new Map([...allEntries.entries()].sort((a, b) => {
+            return a[1].timestamp.getTime() - b[1].timestamp.getTime();
+        }));
         return allEntries;
     }
 }
@@ -118,7 +120,7 @@ const logger = ({ name, level, code, stage, message, error, processId, podId }) 
     }
     logBook = logBooksManager.get(name);
     const entry = new LogEntry({
-        printLevel: logBooksManager.printLevel,
+        printLevel: logBooksManager.config.level,
         level: level ? level : LogLevel.INFO,
         code: code,
         stage: stage,
@@ -138,4 +140,4 @@ const logger = ({ name, level, code, stage, message, error, processId, podId }) 
 const getLogBook = (logBookName) => {
     return logBooksManager.get(logBookName);
 };
-export { logBooksManager, logger, getLogBook, LogBooksManager };
+export { LogBooksManager, LogBooksManagerConfig, logBooksManager, logger, getLogBook };

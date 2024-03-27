@@ -2,8 +2,8 @@ import { expect } from 'chai';
 
 import * as index from '../src/index.js';
 
-describe('Index::LogBookManagerExport', () => {
-    it('should export all modules', () => {
+describe('src/index', () => {
+    it('should export all log-books-manager sub-modules', () => {
         expect(index).to.haveOwnProperty('LogBooksManager');
         expect(index).to.haveOwnProperty('LogBook');
         expect(index).to.haveOwnProperty('logBooksManager');

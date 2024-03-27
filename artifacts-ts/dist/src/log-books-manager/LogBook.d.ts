@@ -7,6 +7,7 @@ import { LogLevel } from './LogLevels.js';
 interface ILogBook {
     name: string;
     entries: Map<number, ILogEntry>;
+    printLevel: LogLevel;
     add: (entry: ILogEntry) => void;
     get: (id: number) => ILogEntry;
     delete: (id: number) => void;

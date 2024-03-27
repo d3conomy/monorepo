@@ -2,7 +2,7 @@ import { IdReferenceFormats } from './IdReferenceConstants.js';
 /**
  * Check if the format is a valid IdReferenceFormat
  */
-declare const isIdReferenceFormat: (format?: string) => boolean;
+declare const isIdReferenceFormat: (format?: string) => IdReferenceFormats;
 /**
  * Create a random id
  */

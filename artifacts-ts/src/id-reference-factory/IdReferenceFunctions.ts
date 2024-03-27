@@ -8,9 +8,11 @@ import { IdReferenceFormats } from './IdReferenceConstants.js';
  */
 const isIdReferenceFormat = (
     format?: string
-): boolean => {
-
-    return Object.values(IdReferenceFormats).includes(format as IdReferenceFormats);
+): IdReferenceFormats => {
+    if (Object.values(IdReferenceFormats).includes(format as IdReferenceFormats)) {
+        return format as IdReferenceFormats;
+    }
+    throw new Error(`Invalid format: ${format}`);
 }
 
 
@@ -20,9 +22,7 @@ const isIdReferenceFormat = (
 const createRandomId = (
     format?: IdReferenceFormats | string
 ): string => {
-    if (format && !isIdReferenceFormat(format)) {
-        throw new Error(`Invalid format: ${format}`);
-    }
+    format = format ? isIdReferenceFormat(format) : IdReferenceFormats.NAME;
 
     switch (format) {
         case IdReferenceFormats.NAME:

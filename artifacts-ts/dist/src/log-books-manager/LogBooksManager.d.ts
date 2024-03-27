@@ -1,25 +1,26 @@
-import { IdReference } from "../id-reference-factory/index.js";
+import { IdReference, IdReferenceFormats } from "../id-reference-factory/index.js";
 import { ProcessStage, ResponseCode } from "../process-interface/index.js";
 import { ILogBook, LogBook } from "./LogBook.js";
 import { ILogEntry, LogEntry } from "./LogEntry.js";
 import { LogLevel } from "./LogLevels.js";
+declare class LogBooksManagerConfig {
+    dir: string;
+    level: LogLevel;
+    names: IdReferenceFormats;
+}
 /**
  * Interface for a log books manager
  * @category Logging
  */
 interface ILogBooksManager {
     books: Map<string, ILogBook>;
-    printLevel: LogLevel | string;
-    init: (config: {
-        dir: string;
-        level: string;
-        names: string;
-    }) => void;
+    config: LogBooksManagerConfig;
+    init: () => void;
     create: (name: string, printLevel: LogLevel) => void;
     get: (name: string) => ILogBook;
     delete: (name: string) => void;
     clear: () => void;
-    getAllEntries: () => Map<number, ILogEntry>;
+    getLastEntries: (items: number) => Map<string, ILogEntry>;
 }
 /**
  * A class to manage the system's collection of log books
@@ -27,20 +28,21 @@ interface ILogBooksManager {
  */
 declare class LogBooksManager implements ILogBooksManager {
     books: Map<string, LogBook>;
-    printLevel: LogLevel | string;
-    dir: string;
-    constructor();
+    config: LogBooksManagerConfig;
+    constructor({ books, dir, level, names }?: {
+        books?: Map<string, LogBook>;
+        dir?: string;
+        level?: LogLevel | string;
+        names?: IdReferenceFormats | string;
+    });
     /**
      * Initializes the log books manager
      */
-    init({ dir, level }?: {
-        dir?: string;
-        level?: string;
-    }): void;
+    init(): void;
     /**
      * Creates a new log book and adds it to the collection
      */
-    create(logBookName: string): void;
+    create(logBookName: string, printLevel?: LogLevel): void;
     /**
      * Gets a log book from the collection
      */
@@ -56,7 +58,7 @@ declare class LogBooksManager implements ILogBooksManager {
     /**
      * Returns a map of all the entries
      */
-    getAllEntries(item?: number): Map<number, LogEntry>;
+    getLastEntries(item?: number): Map<string, LogEntry>;
 }
 /**
  * The log books manager
@@ -99,5 +101,5 @@ declare const logger: ({ name, level, code, stage, message, error, processId, po
  * const logBook = getLogBook("system");
  */
 declare const getLogBook: (logBookName: string) => LogBook;
-export { logBooksManager, logger, getLogBook, ILogBooksManager, LogBooksManager };
+export { ILogBooksManager, LogBooksManager, LogBooksManagerConfig, logBooksManager, logger, getLogBook };
 //# sourceMappingURL=LogBooksManager.d.ts.map

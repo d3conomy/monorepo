@@ -17,10 +17,6 @@ class LogBook {
      * Adds an entry to the log book
      */
     add(entry) {
-        if (!entry.printLevel ||
-            entry.printLevel !== this.printLevel) {
-            entry.printLevel = this.printLevel;
-        }
         const counter = this.entries.size + 1;
         this.entries.set(counter, entry);
     }

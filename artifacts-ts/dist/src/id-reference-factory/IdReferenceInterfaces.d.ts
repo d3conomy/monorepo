@@ -1,6 +1,33 @@
 import { IdReferenceFormats } from "./IdReferenceConstants.js";
 interface IMetaData {
     [key: string]: any;
+    set(key: string, value: any): {
+        key: string;
+        value: any;
+    };
+    get(key: string): any;
+    has(key: string): boolean;
+    delete(key: string): void;
+    clear(): void;
+    update({ key, value, updatedBy }: {
+        key: string;
+        value: any;
+        updatedBy: string;
+    }): {
+        key: string;
+        value: any;
+        updatedBy: string;
+        updated: Date;
+    };
+    keys(): Array<string>;
+    values(): Array<any>;
+    entries(): Array<[string, any]>;
+    forEach(callback: (key: string, value: any) => void): void;
+    toJSON(): string;
+    toString(): string;
+    toMap(): Map<string, any>;
+    fromMap(data: Map<string, any>): void;
+    fromJSON(data: string): void;
 }
 interface IIdReference {
     name: string;

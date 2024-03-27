@@ -5,15 +5,16 @@ import { IdReferenceFormats } from './IdReferenceConstants.js';
  * Check if the format is a valid IdReferenceFormat
  */
 const isIdReferenceFormat = (format) => {
-    return Object.values(IdReferenceFormats).includes(format);
+    if (Object.values(IdReferenceFormats).includes(format)) {
+        return format;
+    }
+    throw new Error(`Invalid format: ${format}`);
 };
 /**
  * Create a random id
  */
 const createRandomId = (format) => {
-    if (format && !isIdReferenceFormat(format)) {
-        throw new Error(`Invalid format: ${format}`);
-    }
+    format = format ? isIdReferenceFormat(format) : IdReferenceFormats.NAME;
     switch (format) {
         case IdReferenceFormats.NAME:
             return chance().first().toLowerCase() + '-' + chance().word({ capitalize: false, syllables: 3 });

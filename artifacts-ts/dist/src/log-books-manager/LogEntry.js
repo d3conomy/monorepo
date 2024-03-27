@@ -12,8 +12,7 @@ class LogEntry {
     timestamp;
     message;
     error;
-    printLevel;
-    constructor({ printLevel, podId, processId, message, level, code, stage, error }) {
+    constructor({ podId, processId, message, level, code, stage, error, printLevel }) {
         this.podId = podId;
         this.processId = processId;
         this.message = message;
@@ -22,8 +21,7 @@ class LogEntry {
         this.stage = stage;
         this.timestamp = new Date();
         this.error = error;
-        this.printLevel = printLevel ? isLogLevel(printLevel) : LogLevel.INFO;
-        this.print(this.printLevel);
+        this.print(printLevel);
     }
     /**
      * Prints the log entry to the console
@@ -33,29 +31,29 @@ class LogEntry {
         const output = `[${timestamp}] ${this.message}`;
         switch (this.level) {
             case LogLevel.ERROR:
-                if (printLevel === LogLevel.ERROR) {
+                if (printLevel === LogLevel.ERROR ||
+                    printLevel === LogLevel.WARN ||
+                    printLevel === LogLevel.INFO ||
+                    printLevel === LogLevel.DEBUG) {
                     console.error(output);
                 }
                 break;
             case LogLevel.WARN:
                 if (printLevel === LogLevel.WARN ||
-                    printLevel === LogLevel.ERROR) {
+                    printLevel === LogLevel.INFO ||
+                    printLevel === LogLevel.DEBUG) {
                     console.warn(output);
                 }
                 break;
             case LogLevel.INFO:
                 if (printLevel === LogLevel.INFO ||
-                    printLevel === LogLevel.WARN ||
-                    printLevel === LogLevel.ERROR) {
-                    console.info(output);
+                    printLevel === LogLevel.DEBUG) {
+                    console.log(output);
                 }
                 break;
             case LogLevel.DEBUG:
-                if (printLevel === LogLevel.DEBUG ||
-                    printLevel === LogLevel.INFO ||
-                    printLevel === LogLevel.WARN ||
-                    printLevel === LogLevel.ERROR) {
-                    console.debug(output);
+                if (printLevel === LogLevel.DEBUG) {
+                    console.log(output);
                 }
                 break;
             default:

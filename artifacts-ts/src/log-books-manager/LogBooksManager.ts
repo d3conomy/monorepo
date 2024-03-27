@@ -1,8 +1,15 @@
-import { IdReference, IdReferenceTypes } from "../id-reference-factory/index.js";
+import { IdReference, IdReferenceFormats, IdReferenceTypes, isIdReferenceFormat } from "../id-reference-factory/index.js";
 import { ProcessStage, ResponseCode } from "../process-interface/index.js";
 import { ILogBook, LogBook } from "./LogBook.js";
 import { ILogEntry, LogEntry } from "./LogEntry.js";
 import { LogLevel, isLogLevel } from "./LogLevels.js";
+
+class LogBooksManagerConfig {
+    dir: string = "logs";
+    level: LogLevel = LogLevel.INFO;
+    names: IdReferenceFormats = IdReferenceFormats.NAME;
+}
+
 
 /**
  * Interface for a log books manager
@@ -10,18 +17,14 @@ import { LogLevel, isLogLevel } from "./LogLevels.js";
  */
 interface ILogBooksManager {
     books: Map<string, ILogBook>;
-    printLevel: LogLevel | string;
+    config: LogBooksManagerConfig;
 
-    init: (config: {
-        dir: string,
-        level: string,
-        names: string
-    }) => void;
+    init: () => void;
     create: (name: string, printLevel: LogLevel) => void;
     get: (name: string) => ILogBook;
     delete: (name: string) => void;
     clear: () => void;
-    getAllEntries: () => Map<number, ILogEntry>;
+    getLastEntries: (items: number) => Map<string, ILogEntry>;
 }
 
 /**
@@ -32,33 +35,32 @@ class LogBooksManager
     implements ILogBooksManager
 {
     /* The collection of log books */
-    public books: Map<string, LogBook> = new Map<string, LogBook>();
+    public books: Map<string, LogBook>;
 
-    /* The log level to print */
-    public printLevel: LogLevel | string = 'info';
+    /* The log books manager configuration */
+    public config = new LogBooksManagerConfig();
 
-    /* The directory to store the log files 
-    * TODO: Implement file storage
-    */
-    public dir: string = "";
-
-    public constructor() {
-        this.books = new Map<string, LogBook>();
-        this.printLevel = 'info';
+    public constructor({
+        books,
+        dir,
+        level,
+        names
+    }: {
+        books?: Map<string, LogBook>,
+        dir?: string,
+        level?: LogLevel | string,
+        names?: IdReferenceFormats | string
+    } = {}) {
+        this.books = books ? books : new Map<string, LogBook>();
+        this.config.dir = dir ? dir : this.config.dir;
+        this.config.level = isLogLevel(level) ? isLogLevel(level) : this.config.level;
+        this.config.names = names ? isIdReferenceFormat(names) : this.config.names;
     }
 
     /**
      * Initializes the log books manager
      */
-    public init({
-        dir,
-        level
-    }: {
-        dir?: string,
-        level?: string
-    } = {}) {
-        this.printLevel = isLogLevel(level)
-        this.dir = dir ? dir : "";
+    public init() {
         this.create(IdReferenceTypes.SYSTEM);
     }
 
@@ -67,12 +69,13 @@ class LogBooksManager
      */
     public create(
         logBookName: string,
+        printLevel: LogLevel = this.config.level
     ) {
-        // if (this.books.has(logBookName)) {
-        //     throw new Error("Log book already exists");
-        // }
-        
-        const newLogBook = new LogBook(logBookName, this.printLevel);
+        if (this.books.has(logBookName)) {
+            throw new Error("Log book already exists");
+        }
+
+        const newLogBook = new LogBook(logBookName, printLevel);
         this.books.set(newLogBook.name, newLogBook);
     }
 
@@ -106,25 +109,27 @@ class LogBooksManager
     public clear() {
         for (const logBook of this.books.values()) {
             logBook.clear();
+            this.books.delete(logBook.name);
         }
     }
 
     /**
      * Returns a map of all the entries
      */
-    public getAllEntries(item: number = 10): Map<number, LogEntry> {
-        let allEntries: Map<number, LogEntry> = new Map<number, LogEntry>();
+    public getLastEntries(item: number = 10): Map<string, LogEntry> {
+        let allEntries: Map<string, LogEntry> = new Map<string, LogEntry>();
         for (const logBook of this.books.values()) {
+            
             const entries = logBook.getLast(item);
             entries.forEach((entry, key) => {
-                allEntries.set(key, entry);
+                allEntries.set(`${logBook.name}-${key}`, entry);
             });
-            
-            // sort the entries by timestamp
-            allEntries = new Map([...allEntries.entries()].sort((a, b) => {
-                return a[1].timestamp.getTime() - b[1].timestamp.getTime();
-            }));
         }
+        // sort the entries by timestamp
+        allEntries = new Map([...allEntries.entries()].sort((a, b) => {
+            return a[1].timestamp.getTime() - b[1].timestamp.getTime();
+        }));
+
         return allEntries;
     }
 }
@@ -190,7 +195,7 @@ const logger = ({
     logBook = logBooksManager.get(name);
 
     const entry: LogEntry = new LogEntry({
-        printLevel: logBooksManager.printLevel,
+        printLevel: logBooksManager.config.level,
         level: level ? level : LogLevel.INFO,
         code: code,
         stage: stage,
@@ -213,9 +218,10 @@ const getLogBook = (logBookName: string): LogBook => {
 }
 
 export {
+    ILogBooksManager,
+    LogBooksManager,
+    LogBooksManagerConfig,
     logBooksManager,
     logger,
-    getLogBook,
-    ILogBooksManager,
-    LogBooksManager
+    getLogBook
 }

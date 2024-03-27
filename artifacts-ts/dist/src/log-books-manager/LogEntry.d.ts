@@ -14,7 +14,6 @@ interface ILogEntry {
     timestamp: Date;
     message: string;
     error?: Error;
-    printLevel: LogLevel;
     print: (logLevel: LogLevel) => void;
 }
 /**
@@ -30,9 +29,7 @@ declare class LogEntry implements ILogEntry {
     timestamp: Date;
     message: string;
     error?: Error;
-    printLevel: LogLevel;
-    constructor({ printLevel, podId, processId, message, level, code, stage, error }: {
-        printLevel?: LogLevel | string;
+    constructor({ podId, processId, message, level, code, stage, error, printLevel }: {
         podId?: IdReference;
         processId?: IdReference;
         message: string;
@@ -40,6 +37,7 @@ declare class LogEntry implements ILogEntry {
         code?: ResponseCode;
         stage?: ProcessStage | string;
         error?: Error;
+        printLevel: LogLevel;
     });
     /**
      * Prints the log entry to the console

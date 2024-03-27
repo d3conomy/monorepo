@@ -17,7 +17,6 @@ interface ILogEntry {
     timestamp: Date;
     message: string;
     error?: Error;
-    printLevel: LogLevel;
 
     print: (logLevel: LogLevel) => void;
 }
@@ -37,19 +36,17 @@ class LogEntry
     public timestamp: Date;
     public message: string;
     public error?: Error;
-    public printLevel: LogLevel;
 
     public constructor({
-        printLevel,
         podId,
         processId,
         message,
         level,
         code,
         stage,
-        error
+        error,
+        printLevel
     }: {
-        printLevel?: LogLevel | string,
         podId?: IdReference,
         processId?: IdReference
         message: string,
@@ -57,7 +54,8 @@ class LogEntry
         code?: ResponseCode,
         stage?: ProcessStage | string,
         error?: Error
-    }) {
+        printLevel: LogLevel
+    })  {
         this.podId = podId;
         this.processId = processId;
         this.message = message;
@@ -66,9 +64,8 @@ class LogEntry
         this.stage = stage;
         this.timestamp = new Date();
         this.error = error;
-        this.printLevel = printLevel ? isLogLevel(printLevel) : LogLevel.INFO;
 
-        this.print(this.printLevel);
+        this.print(printLevel);
     }
 
     /**

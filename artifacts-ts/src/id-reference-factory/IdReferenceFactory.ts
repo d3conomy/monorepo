@@ -44,7 +44,10 @@ class IdReferenceFactory {
         }
 
         if (metadata instanceof Map) {
-            metadata = new MetaData(metadata);
+            metadata = new MetaData({
+                mapped: metadata,
+                createdBy: "system:test"
+            });
         }
         else {
             metadata = metadata ? metadata : new MetaData();
