@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# cd ./common-ts || exit
+# cd ./artifacts-ts || exit
 # npm publish
-# echo -n "d3-common published"
+# echo -n "d3-artifacts published"
 
 cd ./airlock/airlock-ts || exit
 npm publish

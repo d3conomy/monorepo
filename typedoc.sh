@@ -12,7 +12,7 @@ npx typedoc \
 # npx typedoc \
 #     --plugin typedoc-plugin-inline-sources \
 #     --json docs-json/common.json \
-#     --options common-ts/typedoc.json \
+#     --options artifacts-ts/typedoc.json \
 #     --searchInComments \
 #     --validation.invalidLink false
 

@@ -113,8 +113,8 @@
     "moonbase/src/**/*",
     "moonbase/src/tests",
     "airlock/airlock-react/src/**/*",
-    "airlock/airlock-ts/src/**/*",
-    // "common-ts/src/**/*",
+    "airlock/airlock-ts/src/**/*", "artifacts-ts/src/process-interface",
+    // "artifacts-ts/src/**/*",
     // "moonbase/dist/**/*",
     // "moonbase/dist/api/**/*",
     // "moonbase/dist/utils/**/*",
@@ -131,6 +131,6 @@
     { "path": "./moonbase" },
     { "path": "./airlock/airlock-react" },
     { "path": "./airlock/airlock-ts" },
-    { "path": "./common-ts"}
+    { "path": "./artifacts-ts"}
   ]
 }
