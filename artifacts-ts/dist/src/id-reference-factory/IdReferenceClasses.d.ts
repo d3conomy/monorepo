@@ -7,9 +7,9 @@ import { MetaData } from './IdReferenceMetadata.js';
 declare class IdReference implements IIdReference {
     readonly name: string;
     metadata: MetaData;
-    constructor({ name, metadata, format }: {
+    constructor({ name, metadata, format }?: {
         name?: string;
-        metadata?: MetaData;
+        metadata?: MetaData | Map<string, any>;
         format?: IdReferenceFormats | string;
     });
     toString(): string;

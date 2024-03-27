@@ -9,7 +9,7 @@ import {
 } from './IdReferenceInterfaces.js';
 
 import {
-    IdReferenceFormats,
+    IdReferenceFormats, IdReferenceTypes,
 } from './IdReferenceConstants.js';
 
 import {
@@ -36,11 +36,14 @@ class IdReference
         format
     }: {
         name?: string,
-        metadata?: MetaData,
+        metadata?: MetaData | Map<string, any>
         format?: IdReferenceFormats | string
-    }) {
+    } = {}) {
         this.name = name ? name : createRandomId(format);
-        this.metadata = metadata ? metadata : new MetaData();
+        this.metadata = metadata instanceof Map ? new MetaData({
+            mapped: metadata,
+            createdBy: IdReferenceTypes.SYSTEM
+        }) : metadata ? metadata : new MetaData();
     }
 
     public toString(): string {

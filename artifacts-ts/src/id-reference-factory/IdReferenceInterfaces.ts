@@ -54,8 +54,20 @@ interface IJobId extends IIdReference {
 interface IIdReferenceFactory {
     ids: Array<IIdReference>;
 
-    isUnique(name: string): boolean;
-    createIdReference(name: string, metadata?: IMetaData, format?: IdReferenceFormats): IIdReference;
+    // isUnique(name: string): boolean;
+    createIdReference({
+        name,
+        metadata,
+        format,
+        type,
+        dependent
+    }: {
+        name?: string,
+        metadata?: IMetaData | Map<string, any>,
+        format?: IdReferenceFormats | string,
+        type: string,
+        dependent?: IIdReference | string
+    }): IIdReference;
     getIdReference(name: string): IIdReference | undefined;
     deleteIdReference(name: string): void;
     deleteAllIdReferences(): void;

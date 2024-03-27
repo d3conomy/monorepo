@@ -105,7 +105,17 @@ class MetaData
     }
 
     public toJSON() {
-        return JSON.stringify(this);
+        let json = '{';
+        let first = true;
+        Object.entries(this).forEach(([key, value]) => {
+            if (!first) {
+                json += ',';
+            }
+            json += `"${key}": "${value}"`;
+            first = false;
+        });
+        json += '}';
+        return json;
     }
 
     public toMap() {

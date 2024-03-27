@@ -1,3 +1,4 @@
+import { IdReferenceTypes, } from './IdReferenceConstants.js';
 import { createRandomId } from './IdReferenceFunctions.js';
 import { MetaData } from './IdReferenceMetadata.js';
 /**
@@ -6,9 +7,12 @@ import { MetaData } from './IdReferenceMetadata.js';
 class IdReference {
     name;
     metadata;
-    constructor({ name, metadata, format }) {
+    constructor({ name, metadata, format } = {}) {
         this.name = name ? name : createRandomId(format);
-        this.metadata = metadata ? metadata : new MetaData();
+        this.metadata = metadata instanceof Map ? new MetaData({
+            mapped: metadata,
+            createdBy: IdReferenceTypes.SYSTEM
+        }) : metadata ? metadata : new MetaData();
     }
     toString() {
         return this.name;

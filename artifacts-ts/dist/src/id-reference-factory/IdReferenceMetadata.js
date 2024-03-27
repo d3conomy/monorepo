@@ -67,7 +67,17 @@ class MetaData {
         });
     }
     toJSON() {
-        return JSON.stringify(this);
+        let json = '{';
+        let first = true;
+        Object.entries(this).forEach(([key, value]) => {
+            if (!first) {
+                json += ',';
+            }
+            json += `"${key}": "${value}"`;
+            first = false;
+        });
+        json += '}';
+        return json;
     }
     toMap() {
         return new Map(Object.entries(this));
