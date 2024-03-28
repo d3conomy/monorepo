@@ -12,6 +12,7 @@ var ProcessStage;
     ProcessStage["COMPLETED"] = "completed";
     ProcessStage["STOPPING"] = "stopping";
     ProcessStage["STOPPED"] = "stopped";
+    ProcessStage["RESTARTING"] = "restarting";
     ProcessStage["ERROR"] = "error";
     ProcessStage["WARNING"] = "warning";
     ProcessStage["UNKNOWN"] = "unknown";

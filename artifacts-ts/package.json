@@ -2,7 +2,7 @@
   "name": "d3-artifacts",
   "version": "0.0.1",
   "description": "Shared utilities, models, etc.",
-  "main": "src/index.ts",
+  "main": "dist/src/index.js",
   "type": "module",
   "scripts": {
     "test": "tsc && mocha -r ts-node/register 'dist/tests/*.spec.js' --trace-warnings"

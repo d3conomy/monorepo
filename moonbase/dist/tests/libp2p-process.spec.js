@@ -1,5 +1,5 @@
 import { multiaddr } from "@multiformats/multiaddr";
-import { setListenAddresses, listenAddressesConfig } from "../libp2p-process/addresses.js";
+import { setListenAddresses, listenAddressesConfig } from "../src/libp2p-process/addresses.js";
 import { expect } from "chai";
 describe("setListenAddresses", () => {
     it("should return an object with listen addresses", () => {
@@ -8,7 +8,7 @@ describe("setListenAddresses", () => {
             multiaddr("/ip6/::1/tcp/8080"),
         ];
         const result = setListenAddresses(multiaddrs);
-        expect(result).to.equal({
+        expect(result).to.deep.equal({
             listen: [
                 "/ip4/127.0.0.1/tcp/8080",
                 "/ip6/::1/tcp/8080",
@@ -26,7 +26,7 @@ describe("listenAddressesConfig", () => {
             enableIp6: true,
             ip6Domain: "::1",
         });
-        expect(result).to.equal({
+        expect(result).to.deep.equal({
             listen: [
                 "/ip4/127.0.0.1/tcp/8080",
                 "/ip6/::1/tcp/8080",

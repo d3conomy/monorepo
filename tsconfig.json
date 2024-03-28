@@ -36,7 +36,12 @@
     // "paths": {
     //   "addOn": [ "./src/addOn" ]
     // },                                   /* Specify a set of entries that re-map imports to additional lookup locations. */
-    // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
+    "rootDirs": [
+      "./artifacts-ts/dist",
+      "./moonbase/src",
+      "./airlock/airlock-react/src",
+      "./airlock/airlock-ts/src"
+    ],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
     // "types": ["mocha", "chai", "node"],                                      /* Specify type package names to be included without being referenced in a source file. */
     // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
@@ -111,10 +116,12 @@
   },
   "include": [
     "moonbase/src/**/*",
-    "moonbase/src/tests",
+    "moonbase/tests",
     "airlock/airlock-react/src/**/*",
-    "airlock/airlock-ts/src/**/*", "artifacts-ts/src/process-interface",
-    // "artifacts-ts/src/**/*",
+    "airlock/airlock-ts/src/**/*",
+    "artifacts-ts/src/process-interface",
+    "artifacts-ts/src/id-reference-factory",
+    "artifacts-ts/src/process-interface",
     // "moonbase/dist/**/*",
     // "moonbase/dist/api/**/*",
     // "moonbase/dist/utils/**/*",

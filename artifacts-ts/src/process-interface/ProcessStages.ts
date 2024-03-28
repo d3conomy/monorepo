@@ -11,6 +11,7 @@ enum ProcessStage {
     COMPLETED = 'completed',
     STOPPING = 'stopping',
     STOPPED = 'stopped',
+    RESTARTING = 'restarting',
     ERROR = 'error',
     WARNING = 'warning',
     UNKNOWN = 'unknown',

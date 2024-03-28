@@ -9,7 +9,7 @@ interface IProcess {
     process?: any;
     options?: any;
     checkProcess(): boolean;
-    checkStatus(force?: boolean): ProcessStage;
+    status(): ProcessStage;
     init(): Promise<void>;
     start(): Promise<void>;
     stop(): Promise<void>;
