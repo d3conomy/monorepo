@@ -12,19 +12,9 @@ import {
     createOrbitDB,
     Database
 } from '@orbitdb/core';
-
-import {
-    logger
-} from '../utils/index.js';
-
-import {
-    Component,
-    LogLevel,
-    ResponseCode
-} from '../utils/constants.js';
-import { IpfsProcess } from './ipfs.js';
-import { IdReference } from '../utils/id.js';
-import { _BaseProcess, _IBaseProcess } from './base.js';
+import { IpfsProcess } from '../ipfs-process/index.js';
+import { IProcess, IdReference, LogLevel, ProcessStage, ResponseCode, logger } from 'd3-artifacts';
+import { createIdentityProvider } from './OrbitDbIdentityProvider.js';
 
 
 /**
@@ -58,7 +48,7 @@ class _OrbitDbOptions {
         this.enableDID = enableDID ? enableDID : false;
         this.identitySeed = identitySeed;
         this.identityProvider = identityProvider;
-        this.directory = directory ? directory : `./orbitdb/${new IdReference({component: Component.DB}).getId()}`;
+        this.directory = directory ? directory : `./orbitdb/${new IdReference().name}`;
 
         if (this.enableDID) {
             this.identityProvider = createIdentityProvider({
@@ -94,28 +84,40 @@ const createOrbitDbProcess = async (options: _OrbitDbOptions): Promise<typeof Or
  * @category OrbitDb
  */
 class OrbitDbProcess
-    extends _BaseProcess
-    implements _IBaseProcess
+    implements IProcess
 {
-    public declare process?: typeof OrbitDb;
-    public declare options?: _OrbitDbOptions;
+    public id: IdReference;
+    public process?: typeof OrbitDb;
+    public options?: _OrbitDbOptions;
 
     constructor({
         id,
         process,
         options
     }: {
-        id?: IdReference,
+        id: IdReference,
         process?: typeof OrbitDb,
         options?: _OrbitDbOptions
     }) {
-        super({
-            component: Component.ORBITDB,
-            id: id,
-            process: process,
-            options: options
-        });
+        this.id = id;
+        this.process = process;
+        this.options = options;
     }
+
+    /**
+     * Check if the OrbitDb process exists
+     */
+    public checkProcess(): boolean {
+        if (this.process) {
+            return true
+        }
+        logger({
+            level: LogLevel.ERROR,
+            processId: this.id,
+            message: `No OrbitDb process found`
+        })
+        return false
+    };
 
     /**
      * Initialize the OrbitDb process
@@ -141,6 +143,20 @@ class OrbitDbProcess
     }
 
     /**
+     * Get the status of the OrbitDb process
+     */
+    public status(): ProcessStage {
+        throw new Error(`OrbitDb process status not implemented`)
+    }
+
+    /**
+     * Start the OrbitDb process
+     */
+    public async start(): Promise<void> {
+        throw new Error(`OrbitDb process cannot be started, open a database instead`)
+    }
+
+    /**
      * Open an OrbitDb database
      */
     public async open({
@@ -155,7 +171,6 @@ class OrbitDbProcess
         if (!this.process) {
             logger({
                 level: LogLevel.ERROR,
-                name: Component.ORBITDB,
                 code: ResponseCode.NOT_FOUND,
                 message: `No OrbitDb process found`
             })
@@ -173,13 +188,12 @@ class OrbitDbProcess
                     {
                         type: databaseType
                     },
-                    // options?.entries()
+                    options?.entries()
                 );
             }
             catch (error) {
                 logger({
                     level: LogLevel.ERROR,
-                    name: Component.ORBITDB,
                     message: `Error opening database process: ${error}`
                 })
                 throw error;
@@ -209,6 +223,13 @@ class OrbitDbProcess
                 throw error;
             }
         }
+    }
+
+    /**
+     * Restart the OrbitDb process
+     */
+    public async restart(): Promise<void> {
+        throw new Error(`OrbitDb process cannot be restarted, open a database instead`)
     }
 }
 

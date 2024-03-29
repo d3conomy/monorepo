@@ -3,11 +3,9 @@ import { Helia, createHelia} from "helia";
 import { dagJson } from "@helia/dag-json";
 import { dagCbor } from "@helia/dag-cbor";
 import { CID } from "multiformats";
+
 import { IpfsOptions } from "./IpfsOptions.js";
 import { IProcess, IdReference, LogLevel, ProcessStage, logger } from "d3-artifacts";
-
-
-
 
 
 /**
@@ -26,7 +24,6 @@ const createIpfsProcess = async ({
         blockstore: blockstore,
         start: start
     })
-
 }
 
 

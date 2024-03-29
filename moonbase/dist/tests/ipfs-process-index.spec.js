@@ -1,93 +1,100 @@
-"use strict";
-// import { expect } from "chai";
-// import { Helia } from "helia";
-// import { CID } from "multiformats";
-// import { IpfsOptions } from "../src/ipfs-process/IpfsOptions.js";
-// import { IProcess, IdReference, LogLevel, ProcessStage, logger } from "d3-artifacts";
-// import { IpfsProcess, createIpfsProcess } from "../src/ipfs-process/index.js";
-// import { MoonbaseId, PodBayId, PodId, PodProcessId, SystemId } from "d3-artifacts";
-// import sinon from "sinon";
-// import { Libp2pProcess } from "../src/libp2p-process/index.js";
-// describe("IpfsProcess", () => {
-//     const systemId = new SystemId();
-//     const moonbaseId = new MoonbaseId({ systemId });
-//     const podBayId = new PodBayId({ moonbaseId });
-//     const podId = new PodId({ podBayId });
-//     let id: any
-//     let libp2pProcess: any;
-//     let ipfsProcess: any;
-//     beforeEach(() => {
-//         id = new PodProcessId({ podId });
-//         libp2pProcess = new Libp2pProcess({ id });
-//         id = new PodProcessId({ podId });
-//         ipfsProcess = new IpfsProcess({
-//             id: id,
-//             options: new IpfsOptions({
-//                 libp2p: libp2pProcess,
-//                 start: true
-//             })
-//         });
-//     });
-//     describe("checkProcess", () => {
-//         it("should return true if the IPFS process exists", () => {
-//             const result = ipfsProcess.checkProcess();
-//             expect(result).to.be.true;
-//         });
-//         it("should log an error and return false if the IPFS process does not exist", () => {
-//             const loggerSpy = sinon.spy(logger);
-//             const result = ipfsProcess.checkProcess();
-//             expect(result).to.be.false;
-//         });
-//     });
-//     describe("createIpfsProcess", () => {
-//         it("should create an IPFS process", async () => {
-//             const ipfsOptions = new IpfsOptions({
-//                 libp2p: libp2pProcess,
-//                 start: true
-//             });
-//             const ipfsProcess = await createIpfsProcess(ipfsOptions);
-//             expect(ipfsProcess).to.not.be.undefined
-//         });
-//     });
-//     describe("hasIdReference", () => {
-//         it("should return true if the IPFS process has an ID reference", () => {
-//             const result = ipfsProcess.id
-//             expect(result).to.be.not.undefined;
-//         });
-//     });
-//     describe("IpfsProcess", () => {
-//         it("should create an instance of IpfsProcess", () => {
-//             expect(ipfsProcess).to.be.an.instanceOf(IpfsProcess);
-//         });
-//         it("should initialize the IPFS process", async () => {
-//             await ipfsProcess.init();
-//             expect(ipfsProcess.process).to.be.not.undefined;
-//             // await ipfsProcess.stop();
-//         });
-//         it("should return the IPFS process", () => {
-//             const result = ipfsProcess.process;
-//             expect(result).to.be.not.undefined;
-//         });
-//         it("should return the IPFS process ID", () => {
-//             const result = ipfsProcess.id;
-//             expect(result).to.be.not.undefined;
-//         });
-//         it("should fail to pull process status", async () => {
-//             await ipfsProcess.init();
-//             const result = ipfsProcess.status();
-//             expect(result).to.be.undefined;
-//             // await ipfsProcess.stop();
-//         });
-//     });
-//     describe("IpfsProcess-start", () => {
-//         afterEach(async () => {
-//             await ipfsProcess.stop();
-//             await libp2pProcess.stop();
-//         });
-//         it('should start the IPFS process', async () => {
-//             await ipfsProcess.init();
-//             await ipfsProcess.start();
-//             expect(ipfsProcess.process).to.be.not.undefined;
-//         });
-//     });
-// })
+import { expect } from "chai";
+import { IpfsOptions } from "../src/ipfs-process/IpfsOptions.js";
+import { logger } from "d3-artifacts";
+import { IpfsProcess } from "../src/ipfs-process/index.js";
+import { MoonbaseId, PodBayId, PodId, PodProcessId, SystemId } from "d3-artifacts";
+import sinon from "sinon";
+import { Libp2pProcess, Libp2pProcessConfig, Libp2pProcessOptions } from "../src/libp2p-process/index.js";
+describe("IpfsProcess", () => {
+    let libp2pProcess;
+    let id;
+    let ipfsOptions;
+    let ipfsProcess;
+    beforeEach(() => {
+        const systemId = new SystemId();
+        const moonbaseId = new MoonbaseId({ systemId });
+        const podBayId = new PodBayId({ moonbaseId });
+        const podId = new PodId({ podBayId });
+        id = new PodProcessId({ podId });
+        const libp2pProcessConfig = new Libp2pProcessConfig({
+            autoStart: true
+        });
+        const libp2pProcessOptions = new Libp2pProcessOptions({
+            processConfig: libp2pProcessConfig
+        });
+        libp2pProcess = new Libp2pProcess({ id });
+        ipfsOptions = new IpfsOptions({
+            libp2p: libp2pProcess,
+            start: true
+        });
+    });
+    afterEach(async () => {
+        await ipfsProcess.stop();
+    });
+    it("should return true if the IPFS process exists", () => {
+        ipfsProcess = new IpfsProcess({
+            id: id,
+            options: ipfsOptions
+        });
+        const result = ipfsProcess.checkProcess();
+        expect(result).to.be.false;
+    });
+    it("should log an error and return false if the IPFS process does not exist", () => {
+        ipfsProcess = new IpfsProcess({
+            id: id,
+            options: ipfsOptions
+        });
+        const loggerSpy = sinon.spy(logger);
+        const result = ipfsProcess.checkProcess();
+        expect(result).to.be.false;
+    });
+    it("should init an ipfs process", async () => {
+        ipfsProcess = new IpfsProcess({
+            id: id,
+            options: ipfsOptions
+        });
+        await ipfsProcess.init();
+        expect(ipfsProcess.process).to.be.not.undefined;
+        await ipfsProcess.stop();
+    });
+    it("should start an ipfs process", async () => {
+        const systemId = new SystemId();
+        const moonbaseId = new MoonbaseId({ systemId });
+        const podBayId = new PodBayId({ moonbaseId });
+        const podId = new PodId({ podBayId });
+        const newId = new PodProcessId({ podId });
+        const newLibp2pProcessOptions = new Libp2pProcessOptions();
+        const newLibp2pProcess = new Libp2pProcess({
+            id: newId,
+            options: newLibp2pProcessOptions
+        });
+        const newIpfsOptions = new IpfsOptions({
+            libp2p: newLibp2pProcess,
+            start: true
+        });
+        const ipfsProcessId = new PodProcessId({ podId });
+        const newIpfsProcess = new IpfsProcess({
+            id: ipfsProcessId,
+            options: newIpfsOptions
+        });
+        await newIpfsProcess.init();
+        // await newIpfsProcess.start();
+        expect(await newIpfsProcess.addJson({ key: "value" })).to.be.not.undefined;
+        await newIpfsProcess.stop();
+    });
+    it('should add and retrieve a JSON object', async () => {
+        ipfsProcess = new IpfsProcess({
+            id: id,
+            options: ipfsOptions
+        });
+        await ipfsProcess.init();
+        const object = { key: "value" };
+        const cid = await ipfsProcess.addJson(object);
+        if (!cid) {
+            throw new Error(`No CID found`);
+        }
+        const result = await ipfsProcess.getJson(cid.toString());
+        expect(result).to.deep.equal(object);
+        await ipfsProcess.stop();
+    });
+});

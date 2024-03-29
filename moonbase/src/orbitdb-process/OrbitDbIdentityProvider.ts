@@ -9,14 +9,7 @@ import {
 import {
     useIdentityProvider
 } from '@orbitdb/core';
-
-import {
-    logger,
-    Component,
-    LogLevel,
-    ResponseCode
-} from '../utils/index.js';
-
+import { LogLevel, ResponseCode, logger } from 'd3-artifacts';
 
 /**
  * Create an identity provider
@@ -34,7 +27,6 @@ const createIdentityProvider = ({
     if (!identitySeed) {
         logger({
             level: LogLevel.WARN,
-            name: Component.ORBITDB,
             code: ResponseCode.NOT_FOUND,
             message: `No identity seed provided. Using hardcoded seed...`
         });
