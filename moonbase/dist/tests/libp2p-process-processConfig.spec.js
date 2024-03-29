@@ -1,11 +1,10 @@
 import { expect } from 'chai';
-import { createLibp2pProcessOptions, Libp2pProcessConfig } from '../src/libp2p-process/processConfig.js';
-describe('createLibp2pProcessOptions', () => {
-    it('should return a valid Libp2pOptions object', () => {
-        const config = new Libp2pProcessConfig();
-        const options = createLibp2pProcessOptions(config);
-        expect(options).to.be.an('object');
-        expect(options.start).to.equal(config.autoStart);
+import { Libp2pProcessConfig } from '../src/libp2p-process/processConfig.js';
+import { Libp2pProcessOptions, createLibp2pProcessOptions } from '../src/libp2p-process/processOptions.js';
+describe('createLibp2pProcessOptions', async () => {
+    it('should return a valid Libp2pOptions object', async () => {
+        const processOptions = await createLibp2pProcessOptions();
+        expect(processOptions).to.be.an.instanceOf(Libp2pProcessOptions);
         // Add more assertions for other properties
     });
 });

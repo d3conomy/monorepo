@@ -12,10 +12,18 @@ declare class Libp2pProcessOptions {
     });
     init(): Promise<void>;
 }
-declare const libp2pProcessOptions: ({ processOptions, processConfig, peerId }?: {
+/**
+ * Create a libp2p process configuration
+ * @category Libp2p
+ * @param options - The libp2p process configuration options
+ * @returns The libp2p process configuration
+ * @example
+ */
+declare const createLibp2pOptions: ({ autoStart, peerId, enableTcp, tcpPort, enableIp4, ip4Domain, enableUdp, udpPort, enableIp6, ip6Domain, enableQuicv1, enableWebTransport, enableWebSockets, enableWebRTC, enableWebRTCStar, webRTCStarAddress, enableCircuitRelayTransport, enableNoise, enableBootstrap, bootstrapMultiaddrs, enableMDNS, enableGossipSub, enablePublishToZeroTopicPeers, enableAutoNAT, enableIdentify, enableUPnPNAT, enableDHT, enableDHTClient, enableIpnsValidator, enableIpnsSelector, enableLanDHT, lanDhtProtocol, lanDhtPeerInfoMapperRemovePublicAddresses, lanDhtClientMode, enableRelay, enableDCUTR, enablePing, enableDenyDialMultiaddr, denyDialMultiaddr, enableYamux, enableMplex }?: Libp2pProcessConfig) => Promise<Libp2pOptions>;
+declare const createLibp2pProcessOptions: ({ processOptions, processConfig, peerId }?: {
     processOptions?: Libp2pOptions | undefined;
     processConfig?: Libp2pProcessConfig | undefined;
     peerId?: string | PeerId | undefined;
 }) => Promise<Libp2pProcessOptions>;
-export { Libp2pProcessOptions, libp2pProcessOptions };
+export { createLibp2pOptions, Libp2pProcessOptions, createLibp2pProcessOptions, };
 //# sourceMappingURL=processOptions.d.ts.map

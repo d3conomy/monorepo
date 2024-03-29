@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { Libp2pProcessConfig } from "../src/libp2p-process/processConfig.js";
-import { Libp2pProcessOptions, libp2pProcessOptions } from "../src/libp2p-process/processOptions.js";
+import { Libp2pProcessOptions, createLibp2pOptions, createLibp2pProcessOptions } from "../src/libp2p-process/processOptions.js";
 describe("Libp2pProcessOptions", async () => {
     describe("constructor", async () => {
         it("should create an instance with default values", async () => {
@@ -13,7 +13,7 @@ describe("Libp2pProcessOptions", async () => {
             ;
             const processConfig = new Libp2pProcessConfig();
             const peerId = "QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN";
-            const options = await libp2pProcessOptions({
+            const options = await createLibp2pProcessOptions({
                 processConfig,
                 peerId
             });
@@ -33,8 +33,8 @@ describe("Libp2pProcessOptions", async () => {
         it("should create a new instance of Libp2pProcessOptions", async () => {
             const peerId = "QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN";
             const processConfig = new Libp2pProcessConfig({ peerId });
-            const processOptions = await libp2pProcessOptions();
-            const options = await libp2pProcessOptions({
+            const processOptions = await createLibp2pOptions();
+            const options = await createLibp2pProcessOptions({
                 processOptions,
                 processConfig,
                 peerId

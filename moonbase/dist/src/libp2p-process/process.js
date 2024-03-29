@@ -12,6 +12,7 @@ const createLibp2pProcess = async (options) => {
         options = new Libp2pProcessOptions();
     }
     try {
+        await options.init();
         return await createLibp2p(options.processOptions);
     }
     catch (error) {

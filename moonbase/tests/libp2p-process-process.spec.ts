@@ -1,34 +1,52 @@
 import { expect } from 'chai';
-// import { createLibp2pProcess } from '../src/libp2p-process/process.js';
+import { Libp2pProcess, createLibp2pProcess } from '../src/libp2p-process/process.js';
+import { createLibp2pProcessOptions } from '../src/libp2p-process/processOptions.js';
+import { MoonbaseId, PodBayId, PodId, PodProcessId, ProcessStage, SystemId } from 'd3-artifacts';
 
-describe('createLibp2pProcess', () => {
-    it('should create a libp2p process', async () => {
-        const libp2p = await createLibp2pProcess();
-        expect(libp2p).to.be.an('object');
-        // Add more assertions to validate the created libp2p process
+describe('createLibp2pProcess', async () => {
+
+    let process: Libp2pProcess;
+
+    afterEach( async () => {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        if(process && process.status() === ProcessStage.STARTED) {
+            await process.stop();
+        }
+    })
+
+    it('should create a new instance of Libp2pProcess', async () => {
+        const systemId = new SystemId()
+        const moonbaseId = new MoonbaseId({systemId})
+        const podBayId = new PodBayId({moonbaseId})
+        const podId = new PodId({podBayId})
+        const id = new PodProcessId({podId});
+        process = new Libp2pProcess({id});
+        console.log(process)
+        expect(process).to.be.an.instanceOf(Libp2pProcess);
     });
 
-    it('should throw an error if createLibp2p fails', async () => {
-        // Mock the createLibp2p function to throw an error
-        const createLibp2pMock = async () => {
-            throw new Error('Mocked createLibp2p error');
-        };
+    it('should init the Libp2pProcess with the provided options', async () => {
+        const systemId = new SystemId()
+        const moonbaseId = new MoonbaseId({systemId})
+        const podBayId = new PodBayId({moonbaseId
+        })
+        const podId = new PodId({podBayId})
+        const id = new PodProcessId({podId});
+        process = new Libp2pProcess({id});
+        process.init();
+        expect(process.status()).to.equal('unknown');
+    });
 
-        // Replace the original createLibp2p function with the mock
-        const proxyquire = require('proxyquire').noCallThru();
-        const { createLibp2pProcess } = proxyquire('../src/libp2p-process/process.js', {
-            '../libp2p': { createLibp2p: createLibp2pMock }
-        });
-
-        // Call the createLibp2pProcess function
-        try {
-            await createLibp2pProcess();
-        } catch (error: any) {
-            expect(error).to.be.an('error');
-            expect(error.message).to.equal('Mocked createLibp2p error');
-        }
-
-        // Restore the original createLibp2p function
-        const { createLibp2pProcess } = require('../src/libp2p-process/process.js');
+    it('should start the Libp2pProcess with the provided options', async () => {
+        const systemId = new SystemId()
+        const moonbaseId = new MoonbaseId({systemId})
+        const podBayId = new PodBayId({moonbaseId
+        })
+        const podId = new PodId({podBayId})
+        const id = new PodProcessId({podId});
+        process = new Libp2pProcess({id});
+        await process.init();
+        await process.start();
+        expect(process.status()).to.equal('started');
     });
 });

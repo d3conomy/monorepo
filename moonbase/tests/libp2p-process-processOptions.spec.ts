@@ -1,9 +1,9 @@
 import { expect } from "chai";
 import { Libp2pOptions } from "libp2p";
-import { Libp2pProcessConfig, createLibp2pProcessOptions } from "../src/libp2p-process/processConfig.js";
+import { Libp2pProcessConfig } from "../src/libp2p-process/processConfig.js";
 import { PeerId } from "@libp2p/interface";
 import { libp2pPeerId } from "../src/libp2p-process/peerId.js";
-import { Libp2pProcessOptions, libp2pProcessOptions } from "../src/libp2p-process/processOptions.js";
+import { Libp2pProcessOptions, createLibp2pOptions, createLibp2pProcessOptions } from "../src/libp2p-process/processOptions.js";
 
 describe("Libp2pProcessOptions", async () => {
     describe("constructor", async() => {
@@ -18,7 +18,7 @@ describe("Libp2pProcessOptions", async () => {
             const processConfig: Libp2pProcessConfig = new Libp2pProcessConfig();
             const peerId: string | PeerId = "QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN";
 
-            const options = await libp2pProcessOptions({
+            const options = await createLibp2pProcessOptions({
                 processConfig,
                 peerId
             });
@@ -44,9 +44,9 @@ describe("Libp2pProcessOptions", async () => {
             const peerId: string | PeerId = "QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN";
             const processConfig: Libp2pProcessConfig = new Libp2pProcessConfig({ peerId });
 
-            const processOptions: Libp2pOptions = await libp2pProcessOptions();
+            const processOptions: Libp2pOptions = await createLibp2pOptions();
 
-            const options = await libp2pProcessOptions({
+            const options = await createLibp2pProcessOptions({
                 processOptions,
                 processConfig,
                 peerId

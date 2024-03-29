@@ -1,4 +1,3 @@
-import { Libp2pOptions } from 'libp2p';
 import { Multiaddr } from '@multiformats/multiaddr';
 import { PeerId } from '@libp2p/interface';
 declare class Libp2pProcessConfig {
@@ -88,13 +87,5 @@ declare class Libp2pProcessConfig {
         enableMplex?: boolean;
     });
 }
-/**
- * Create a libp2p process configuration
- * @category Libp2p
- * @param options - The libp2p process configuration options
- * @returns The libp2p process configuration
- * @example
- */
-declare const createLibp2pProcessOptions: ({ autoStart, peerId, enableTcp, tcpPort, enableIp4, ip4Domain, enableUdp, udpPort, enableIp6, ip6Domain, enableQuicv1, enableWebTransport, enableWebSockets, enableWebRTC, enableWebRTCStar, webRTCStarAddress, enableCircuitRelayTransport, enableNoise, enableBootstrap, bootstrapMultiaddrs, enableMDNS, enableGossipSub, enablePublishToZeroTopicPeers, enableAutoNAT, enableIdentify, enableUPnPNAT, enableDHT, enableDHTClient, enableIpnsValidator, enableIpnsSelector, enableLanDHT, lanDhtProtocol, lanDhtPeerInfoMapperRemovePublicAddresses, lanDhtClientMode, enableRelay, enableDCUTR, enablePing, enableDenyDialMultiaddr, denyDialMultiaddr, enableYamux, enableMplex }?: Libp2pProcessConfig) => Libp2pOptions;
-export { createLibp2pProcessOptions, Libp2pProcessConfig };
+export { Libp2pProcessConfig };
 //# sourceMappingURL=processConfig.d.ts.map
