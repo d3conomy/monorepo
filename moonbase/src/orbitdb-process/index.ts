@@ -140,8 +140,8 @@ class OrbitDbProcess
                     databaseName, 
                     {
                         type: databaseType
-                    }
-                    // options?.entries()
+                    },
+                    options?.entries()
                 );
             }
             catch (error) {

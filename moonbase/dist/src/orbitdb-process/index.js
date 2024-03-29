@@ -97,9 +97,7 @@ class OrbitDbProcess {
                 }
                 return await this.process.open(databaseName, {
                     type: databaseType
-                }
-                // options?.entries()
-                );
+                }, options?.entries());
             }
             catch (error) {
                 logger({
