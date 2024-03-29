@@ -1,31 +1,12 @@
 /// <reference path="../../../src/typings.d.ts" />
 import { OrbitDb, Database } from '@orbitdb/core';
-import { IpfsProcess } from '../ipfs-process/index.js';
 import { IProcess, IdReference, ProcessStage } from 'd3-artifacts';
-import { createIdentityProvider } from './OrbitDbIdentityProvider.js';
-/**
-* The options for creating an OrbitDb process
-* @category OrbitDb
-*/
-declare class _OrbitDbOptions {
-    ipfs: IpfsProcess;
-    enableDID: boolean;
-    identitySeed?: Uint8Array;
-    identityProvider?: any;
-    directory?: string;
-    constructor({ ipfs, enableDID, identitySeed, identityProvider, directory }: {
-        ipfs?: IpfsProcess;
-        enableDID?: boolean;
-        identitySeed?: Uint8Array;
-        identityProvider?: any;
-        directory?: string;
-    });
-}
+import { OrbitDbOptions } from './OrbitDbOptions.js';
 /**
  * Create an OrbitDb process
  * @category OrbitDb
  */
-declare const createOrbitDbProcess: (options: _OrbitDbOptions) => Promise<typeof OrbitDb>;
+declare const createOrbitDbProcess: ({ ipfs, enableDID, identityProvider, directory }: OrbitDbOptions) => Promise<typeof OrbitDb>;
 /**
  * A class representing an OrbitDb process
  * @category OrbitDb
@@ -33,11 +14,11 @@ declare const createOrbitDbProcess: (options: _OrbitDbOptions) => Promise<typeof
 declare class OrbitDbProcess implements IProcess {
     id: IdReference;
     process?: typeof OrbitDb;
-    options?: _OrbitDbOptions;
+    options?: OrbitDbOptions;
     constructor({ id, process, options }: {
         id: IdReference;
         process?: typeof OrbitDb;
-        options?: _OrbitDbOptions;
+        options?: OrbitDbOptions;
     });
     /**
      * Check if the OrbitDb process exists
@@ -72,5 +53,5 @@ declare class OrbitDbProcess implements IProcess {
      */
     restart(): Promise<void>;
 }
-export { _OrbitDbOptions, createIdentityProvider, createOrbitDbProcess, OrbitDbProcess };
+export { createOrbitDbProcess, OrbitDbProcess };
 //# sourceMappingURL=index.d.ts.map

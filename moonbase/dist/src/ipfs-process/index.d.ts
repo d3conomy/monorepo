@@ -1,12 +1,13 @@
-import { Helia } from "helia";
+import { HeliaLibp2p } from "helia";
 import { CID } from "multiformats";
+import { Libp2p } from "libp2p";
 import { IpfsOptions } from "./IpfsOptions.js";
 import { IProcess, IdReference, ProcessStage } from "d3-artifacts";
 /**
  * Create an IPFS process
  * @category IPFS
  */
-declare const createIpfsProcess: ({ libp2p, datastore, blockstore, start }: IpfsOptions) => Promise<Helia>;
+declare const createIpfsProcess: ({ libp2p, datastore, blockstore, start }: IpfsOptions) => Promise<HeliaLibp2p<Libp2p>>;
 /**
  * The process container for the IPFS process
  *
@@ -15,14 +16,14 @@ declare const createIpfsProcess: ({ libp2p, datastore, blockstore, start }: Ipfs
  */
 declare class IpfsProcess implements IProcess {
     id: IdReference;
-    process?: Helia;
+    process?: HeliaLibp2p<Libp2p>;
     options?: IpfsOptions;
     /**
      * Constructor for the Ipfs process
      */
     constructor({ id, process, options }: {
         id: IdReference;
-        process?: Helia;
+        process?: HeliaLibp2p<Libp2p>;
         options?: IpfsOptions;
     });
     /**
@@ -57,6 +58,10 @@ declare class IpfsProcess implements IProcess {
      * Get a JSON object from IPFS
      */
     getJson(cid: string): Promise<any | undefined>;
+    /**
+     * Get Libp2p from IPFS
+     */
+    getLibp2p(): Libp2p | undefined;
 }
 export { createIpfsProcess, IpfsProcess };
 //# sourceMappingURL=index.d.ts.map

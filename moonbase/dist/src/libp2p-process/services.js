@@ -13,64 +13,163 @@ import { ping } from '@libp2p/ping';
  * @category Libp2p
  */
 const services = ({ enableGossipSub, enablePublishToZeroTopicPeers, enableAutoNAT, enableIdentify, enableUPnPNAT, enableDHT, enableDHTClient, enableIpnsValidator, enableIpnsSelector, enableLanDHT, lanDhtProtocol, lanDhtPeerInfoMapperRemovePublicAddresses, lanDhtClientMode, enableRelay, enableDCUTR, enablePing, } = {}) => {
-    let serviceOptions = new Map();
+    let serviceOptions = {};
     if (enableGossipSub) {
-        serviceOptions.set('pubsub', gossipsub({
+        serviceOptions.pubsub = gossipsub({
             allowPublishToZeroTopicPeers: enablePublishToZeroTopicPeers
-        }));
+        });
     }
     if (enableAutoNAT) {
-        serviceOptions.set('autonat', autoNAT());
+        serviceOptions.autonat = autoNAT();
     }
     if (enableIdentify) {
-        serviceOptions.set('identify', identify());
+        serviceOptions.identify = identify();
     }
     if (enableUPnPNAT) {
-        serviceOptions.set('upnpNAT', uPnPNAT());
+        serviceOptions.upnpNAT = uPnPNAT();
     }
     if (enableDHT) {
-        let dhtConfig = new Map();
+        let dhtConfig = {};
         if (enableDHTClient) {
-            dhtConfig.set('clientMode', true);
+            dhtConfig.clientMode = true;
         }
         if (enableIpnsValidator || enableIpnsSelector) {
             if (enableIpnsValidator && enableIpnsSelector) {
-                dhtConfig.set('validators', { ipns: ipnsValidator });
-                dhtConfig.set('selectors', { ipns: ipnsSelector });
+                dhtConfig.validators = { ipns: ipnsValidator };
+                dhtConfig.selectors = { ipns: ipnsSelector };
             }
             if (enableIpnsValidator && !enableIpnsSelector) {
-                dhtConfig.set('validators', { ipns: ipnsValidator });
+                dhtConfig.validators = { ipns: ipnsValidator };
             }
             if (!enableIpnsValidator && enableIpnsSelector) {
-                dhtConfig.set('selectors', { ipns: ipnsSelector });
+                dhtConfig.selectors = { ipns: ipnsSelector };
             }
-            serviceOptions.set('dht', kadDHT(dhtConfig));
+            serviceOptions.dht = kadDHT(dhtConfig);
         }
     }
     if (enableLanDHT) {
-        let lanDhtConfig = new Map();
+        let lanDhtConfig = {};
         if (lanDhtProtocol) {
-            lanDhtConfig.set('protocol', lanDhtProtocol);
+            lanDhtConfig.protocol = lanDhtProtocol;
         }
         if (lanDhtPeerInfoMapperRemovePublicAddresses) {
-            lanDhtConfig.set('peerInfoMapper', removePublicAddressesMapper);
+            lanDhtConfig.peerInfoMapper = removePublicAddressesMapper;
         }
         if (lanDhtClientMode) {
-            lanDhtConfig.set('clientMode', true);
+            lanDhtConfig.clientMode = true;
         }
-        serviceOptions.set('lanDHT', kadDHT(lanDhtConfig));
+        serviceOptions.lanDHT = kadDHT(lanDhtConfig);
     }
     if (enableRelay) {
-        serviceOptions.set('relay', circuitRelayServer({
+        serviceOptions.relay = circuitRelayServer({
             advertise: true
-        }));
+        });
     }
     if (enableDCUTR) {
-        serviceOptions.set('dcutr', dcutr());
+        serviceOptions.dcutr = dcutr();
     }
     if (enablePing) {
-        serviceOptions.set('ping', ping());
+        serviceOptions.ping = ping();
     }
     return serviceOptions;
 };
+// /**
+//  * Default libp2p options
+//  * @category Libp2p
+//  */
+// const services = ({
+//     enableGossipSub,
+//     enablePublishToZeroTopicPeers,
+//     enableAutoNAT,
+//     enableIdentify,
+//     enableUPnPNAT,
+//     enableDHT,
+//     enableDHTClient,
+//     enableIpnsValidator,
+//     enableIpnsSelector,
+//     enableLanDHT,
+//     lanDhtProtocol,
+//     lanDhtPeerInfoMapperRemovePublicAddresses,
+//     lanDhtClientMode,
+//     enableRelay,
+//     enableDCUTR,
+//     enablePing,
+// } : {
+//     enableGossipSub?: boolean,
+//     enablePublishToZeroTopicPeers?: boolean,
+//     enableAutoNAT?: boolean,
+//     enableIdentify?: boolean,
+//     enableUPnPNAT?: boolean,
+//     enableDHT?: boolean,
+//     enableDHTClient?: boolean,
+//     enableIpnsValidator?: boolean,
+//     enableIpnsSelector?: boolean,
+//     enableLanDHT?: boolean,
+//     lanDhtProtocol?: string,
+//     lanDhtPeerInfoMapperRemovePublicAddresses?: boolean,
+//     lanDhtClientMode?: boolean,
+//     enableRelay?: boolean,
+//     enableDCUTR?: boolean,
+//     enablePing?: boolean
+// } = {}): ServiceFactoryMap<Record<string, any>> => {
+//     let serviceOptions: Map<string, any> = new Map<string, any>()
+//     if (enableGossipSub) {
+//         serviceOptions.set('pubsub', gossipsub({
+//             allowPublishToZeroTopicPeers: enablePublishToZeroTopicPeers
+//         }))
+//     }
+//     if (enableAutoNAT) {
+//         serviceOptions.set('autonat', autoNAT())
+//     }
+//     if (enableIdentify) {
+//         serviceOptions.set('identify', identify())
+//     }
+//     if (enableUPnPNAT) {
+//         serviceOptions.set('upnpNAT', uPnPNAT())
+//     }
+//     if (enableDHT) {
+//         let dhtConfig = new Map<string, any>()
+//         if (enableDHTClient) {
+//             dhtConfig.set('clientMode', true)
+//         }
+//         if (enableIpnsValidator || enableIpnsSelector) {
+//             if (enableIpnsValidator && enableIpnsSelector) {
+//                 dhtConfig.set('validators', { ipns: ipnsValidator })
+//                 dhtConfig.set('selectors', { ipns: ipnsSelector })
+//             }
+//             if (enableIpnsValidator && !enableIpnsSelector) {
+//                 dhtConfig.set('validators', { ipns: ipnsValidator })
+//             }
+//             if (!enableIpnsValidator && enableIpnsSelector) {
+//                 dhtConfig.set('selectors', { ipns: ipnsSelector })
+//             }
+//             serviceOptions.set('dht', kadDHT(dhtConfig as KadDHTInit))
+//         }
+//     }
+//     if (enableLanDHT) {
+//         let lanDhtConfig = new Map<string, any>()
+//         if (lanDhtProtocol) {
+//             lanDhtConfig.set('protocol', lanDhtProtocol)
+//         }
+//         if (lanDhtPeerInfoMapperRemovePublicAddresses) {
+//             lanDhtConfig.set('peerInfoMapper', removePublicAddressesMapper)
+//         }
+//         if (lanDhtClientMode) {
+//             lanDhtConfig.set('clientMode', true)
+//         }
+//         serviceOptions.set('lanDHT', kadDHT(lanDhtConfig as KadDHTInit))
+//     }
+//     if (enableRelay) {
+//         serviceOptions.set('relay', circuitRelayServer({
+//             advertise: true
+//         }))
+//     }
+//     if (enableDCUTR) {
+//         serviceOptions.set('dcutr', dcutr())
+//     }
+//     if (enablePing) {
+//         serviceOptions.set('ping', ping())
+//     }
+//     return serviceOptions
+// }
 export { services as libp2pServices };

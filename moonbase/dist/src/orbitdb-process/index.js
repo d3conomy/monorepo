@@ -1,50 +1,22 @@
 import { createOrbitDB } from '@orbitdb/core';
-import { IdReference, LogLevel, ResponseCode, logger } from 'd3-artifacts';
-import { createIdentityProvider } from './OrbitDbIdentityProvider.js';
-/**
-* The options for creating an OrbitDb process
-* @category OrbitDb
-*/
-class _OrbitDbOptions {
-    ipfs;
-    enableDID;
-    identitySeed;
-    identityProvider;
-    directory;
-    constructor({ ipfs, enableDID, identitySeed, identityProvider, directory }) {
-        if (!ipfs) {
-            throw new Error(`No Ipfs process found`);
-        }
-        this.ipfs = ipfs;
-        this.enableDID = enableDID ? enableDID : false;
-        this.identitySeed = identitySeed;
-        this.identityProvider = identityProvider;
-        this.directory = directory ? directory : `./orbitdb/${new IdReference().name}`;
-        if (this.enableDID) {
-            this.identityProvider = createIdentityProvider({
-                identitySeed: this.identitySeed,
-                identityProvider: this.identityProvider
-            });
-        }
-    }
-}
+import { LogLevel, ResponseCode, logger } from 'd3-artifacts';
 /**
  * Create an OrbitDb process
  * @category OrbitDb
  */
-const createOrbitDbProcess = async (options) => {
-    if (options.enableDID) {
+const createOrbitDbProcess = async ({ ipfs, enableDID, identityProvider, directory }) => {
+    if (enableDID) {
         return await createOrbitDB({
-            ipfs: options.ipfs.process,
+            ipfs: ipfs.process,
             identity: {
-                provider: options.identityProvider
+                provider: identityProvider
             },
-            directory: options.directory
+            directory: directory
         });
     }
     return await createOrbitDB({
-        ipfs: options.ipfs.process,
-        directory: options.directory
+        ipfs: ipfs.process,
+        directory: directory
     });
 };
 /**
@@ -123,10 +95,11 @@ class OrbitDbProcess {
                 if (databaseName.startsWith('/orbitdb')) {
                     return await this.process.open(databaseName);
                 }
-                ;
                 return await this.process.open(databaseName, {
                     type: databaseType
-                }, options?.entries());
+                }
+                // options?.entries()
+                );
             }
             catch (error) {
                 logger({
@@ -167,4 +140,4 @@ class OrbitDbProcess {
         throw new Error(`OrbitDb process cannot be restarted, open a database instead`);
     }
 }
-export { _OrbitDbOptions, createIdentityProvider, createOrbitDbProcess, OrbitDbProcess };
+export { createOrbitDbProcess, OrbitDbProcess };

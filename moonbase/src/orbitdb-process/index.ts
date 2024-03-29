@@ -1,81 +1,34 @@
-import OrbitDBIdentityProviderDID from '@orbitdb/identity-provider-did'
-import KeyDidResolver from 'key-did-resolver'
-
 import {
-    Ed25519Provider
-} from 'key-did-provider-ed25519'
-
-
-import {
-    useIdentityProvider,
     OrbitDb,
     createOrbitDB,
     Database
 } from '@orbitdb/core';
-import { IpfsProcess } from '../ipfs-process/index.js';
 import { IProcess, IdReference, LogLevel, ProcessStage, ResponseCode, logger } from 'd3-artifacts';
-import { createIdentityProvider } from './OrbitDbIdentityProvider.js';
+import { OrbitDbOptions } from './OrbitDbOptions.js';
 
-
-/**
-* The options for creating an OrbitDb process
-* @category OrbitDb
-*/
-class _OrbitDbOptions {
-    ipfs: IpfsProcess;
-    enableDID: boolean;
-    identitySeed?: Uint8Array;
-    identityProvider?: any;
-    directory?: string;
-
-    constructor({
-        ipfs,
-        enableDID,
-        identitySeed,
-        identityProvider,
-        directory
-    }: {
-        ipfs?: IpfsProcess;
-        enableDID?: boolean;
-        identitySeed?: Uint8Array;
-        identityProvider?: any;
-        directory?: string;
-    }) {
-        if (!ipfs) {
-            throw new Error(`No Ipfs process found`)
-        }
-        this.ipfs = ipfs;
-        this.enableDID = enableDID ? enableDID : false;
-        this.identitySeed = identitySeed;
-        this.identityProvider = identityProvider;
-        this.directory = directory ? directory : `./orbitdb/${new IdReference().name}`;
-
-        if (this.enableDID) {
-            this.identityProvider = createIdentityProvider({
-                identitySeed: this.identitySeed,
-                identityProvider: this.identityProvider
-            });
-        }
-    }
-}
 
 /**
  * Create an OrbitDb process
  * @category OrbitDb
  */
-const createOrbitDbProcess = async (options: _OrbitDbOptions): Promise<typeof OrbitDb> => {
-    if (options.enableDID) {
+const createOrbitDbProcess = async ({
+    ipfs,
+    enableDID,
+    identityProvider,
+    directory
+}: OrbitDbOptions): Promise<typeof OrbitDb> => {
+    if (enableDID) {
         return await createOrbitDB({
-            ipfs: options.ipfs.process,
+            ipfs: ipfs.process,
             identity: {
-                provider: options.identityProvider
+                provider: identityProvider
             },
-            directory: options.directory
+            directory: directory
         });
     }
     return await createOrbitDB({
-        ipfs: options.ipfs.process,
-        directory: options.directory
+        ipfs: ipfs.process,
+        directory: directory
     });
 }
 
@@ -88,7 +41,7 @@ class OrbitDbProcess
 {
     public id: IdReference;
     public process?: typeof OrbitDb;
-    public options?: _OrbitDbOptions;
+    public options?: OrbitDbOptions;
 
     constructor({
         id,
@@ -97,7 +50,7 @@ class OrbitDbProcess
     }: {
         id: IdReference,
         process?: typeof OrbitDb,
-        options?: _OrbitDbOptions
+        options?: OrbitDbOptions
     }) {
         this.id = id;
         this.process = process;
@@ -181,14 +134,14 @@ class OrbitDbProcess
                     return await this.process.open(
                         databaseName
                     )
-                };
+                }
 
                 return await this.process.open(
                     databaseName, 
                     {
                         type: databaseType
-                    },
-                    options?.entries()
+                    }
+                    // options?.entries()
                 );
             }
             catch (error) {
@@ -234,8 +187,6 @@ class OrbitDbProcess
 }
 
 export {
-    _OrbitDbOptions,
-    createIdentityProvider,
     createOrbitDbProcess,
     OrbitDbProcess
 }

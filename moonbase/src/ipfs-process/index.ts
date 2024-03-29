@@ -1,13 +1,17 @@
 
-import { Helia, createHelia} from "helia";
+import { Helia, createHelia, HeliaLibp2p,} from "helia";
 import { dagJson } from "@helia/dag-json";
 import { dagCbor } from "@helia/dag-cbor";
 import { CID } from "multiformats";
+import { Libp2p } from "libp2p";
 
 import { IpfsOptions } from "./IpfsOptions.js";
 import { IProcess, IdReference, LogLevel, ProcessStage, logger } from "d3-artifacts";
+import { Libp2pProcess } from "../libp2p-process/process.js";
 
+// class HeliaLibp2pProcess extends HeliaLibp2p {
 
+// }
 /**
  * Create an IPFS process
  * @category IPFS
@@ -17,13 +21,16 @@ const createIpfsProcess = async ({
     datastore,
     blockstore,
     start
-}: IpfsOptions): Promise<Helia> => {
-    return await createHelia({
+}: IpfsOptions): Promise<HeliaLibp2p<Libp2p>> => {
+    const helia: HeliaLibp2p<Libp2p> = await createHelia({
         libp2p: libp2p.process,
         datastore: datastore,
         blockstore: blockstore,
         start: start
     })
+    console.log(`Created IPFS process: ${helia.libp2p.peerId}`)
+    // return helia as Helia<Libp2pProcess>
+    return helia as HeliaLibp2p<Libp2p>
 }
 
 
@@ -36,9 +43,9 @@ const createIpfsProcess = async ({
 class IpfsProcess
     implements IProcess
 {
-    public declare id: IdReference
-    public declare process?: Helia
-    public declare options?: IpfsOptions
+    public id: IdReference
+    public process?: HeliaLibp2p<Libp2p>
+    public options?: IpfsOptions
 
     /**
      * Constructor for the Ipfs process
@@ -49,7 +56,7 @@ class IpfsProcess
         options
     }: {
         id: IdReference,
-        process?: Helia
+        process?: HeliaLibp2p<Libp2p>,
         options?: IpfsOptions
     }) {
         this.id = id
@@ -62,6 +69,7 @@ class IpfsProcess
      */
     public checkProcess(): boolean {
         if (this.process) {
+            console.log(`Checking process: ${this.process.libp2p.peerId}`)
             return true
         }
         logger({
@@ -104,7 +112,10 @@ class IpfsProcess
         }
 
         try {
-            this.process = await createIpfsProcess(this.options)
+            const process: HeliaLibp2p<Libp2p> = await createIpfsProcess(this.options)
+            this.process = process
+            await process.libp2p.start()
+            console.log(`Ipfs process created on IPFSProcess: ${this.process.libp2p.addEventListener('peer:discovery', (peerId) => {})}`)
         }
         catch (error: any) {
             logger({
@@ -216,7 +227,7 @@ class IpfsProcess
         let cid: CID | undefined = undefined
         if (this.checkProcess()) {
             try {
-                const dj = dagJson(this.process as Helia)
+                const dj = dagJson(this.process as HeliaLibp2p<Libp2p>)
                 cid = await dj.add(data);
             }
             catch (error: any) {
@@ -262,7 +273,18 @@ class IpfsProcess
             processId: this.id,
             message: `Got JSON from Ipfs: ${JSON.stringify(result)}`
         })
+        console.log(`Got JSON from IPFS: ${JSON.stringify(result)} using Libp2p: ${this.process?.libp2p.peerId}`)
         return result
+    }
+
+    /**
+     * Get Libp2p from IPFS
+     */
+    public getLibp2p(): Libp2p | undefined {
+        if (this.process) {
+            return this.process.libp2p
+        }
+        return undefined
     }
 }
 

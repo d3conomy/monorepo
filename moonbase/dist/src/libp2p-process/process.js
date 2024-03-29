@@ -108,7 +108,7 @@ class Libp2pProcess {
             level: LogLevel.INFO,
             stage: ProcessStage.STARTING,
             processId: this.id,
-            message: `Process started for ${this.id.podId.name}-${this.id.name}`
+            message: `Process started for ${this.id.podId.name}`
         });
     }
     /**

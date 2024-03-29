@@ -1,18 +1,23 @@
-import { createHelia } from "helia";
+import { createHelia, } from "helia";
 import { dagJson } from "@helia/dag-json";
 import { CID } from "multiformats";
 import { LogLevel, ProcessStage, logger } from "d3-artifacts";
+// class HeliaLibp2pProcess extends HeliaLibp2p {
+// }
 /**
  * Create an IPFS process
  * @category IPFS
  */
 const createIpfsProcess = async ({ libp2p, datastore, blockstore, start }) => {
-    return await createHelia({
+    const helia = await createHelia({
         libp2p: libp2p.process,
         datastore: datastore,
         blockstore: blockstore,
         start: start
     });
+    console.log(`Created IPFS process: ${helia.libp2p.peerId}`);
+    // return helia as Helia<Libp2pProcess>
+    return helia;
 };
 /**
  * The process container for the IPFS process
@@ -21,6 +26,9 @@ const createIpfsProcess = async ({ libp2p, datastore, blockstore, start }) => {
  * @category IPFS
  */
 class IpfsProcess {
+    id;
+    process;
+    options;
     /**
      * Constructor for the Ipfs process
      */
@@ -34,6 +42,7 @@ class IpfsProcess {
      */
     checkProcess() {
         if (this.process) {
+            console.log(`Checking process: ${this.process.libp2p.peerId}`);
             return true;
         }
         logger({
@@ -72,7 +81,10 @@ class IpfsProcess {
             throw new Error(`No Libp2p process found`);
         }
         try {
-            this.process = await createIpfsProcess(this.options);
+            const process = await createIpfsProcess(this.options);
+            this.process = process;
+            await process.libp2p.start();
+            console.log(`Ipfs process created on IPFSProcess: ${this.process.libp2p.addEventListener('peer:discovery', (peerId) => { })}`);
         }
         catch (error) {
             logger({
@@ -224,7 +236,17 @@ class IpfsProcess {
             processId: this.id,
             message: `Got JSON from Ipfs: ${JSON.stringify(result)}`
         });
+        console.log(`Got JSON from IPFS: ${JSON.stringify(result)} using Libp2p: ${this.process?.libp2p.peerId}`);
         return result;
+    }
+    /**
+     * Get Libp2p from IPFS
+     */
+    getLibp2p() {
+        if (this.process) {
+            return this.process.libp2p;
+        }
+        return undefined;
     }
 }
 export { createIpfsProcess, IpfsProcess };

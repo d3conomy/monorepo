@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Helia } from "helia";
+import { HeliaLibp2p } from "helia";
 import { CID } from "multiformats";
 import { IpfsOptions } from "../src/ipfs-process/IpfsOptions.js";
 import { IProcess, IdReference, LogLevel, ProcessStage, logger } from "d3-artifacts";
@@ -30,7 +30,7 @@ describe("IpfsProcess", () => {
         libp2pProcess = new Libp2pProcess({ id });
         ipfsOptions = new IpfsOptions({
             libp2p: libp2pProcess,
-            start: true
+            start: false
         });
     });
 
@@ -82,7 +82,7 @@ describe("IpfsProcess", () => {
         });
         const newIpfsOptions = new IpfsOptions({
             libp2p: newLibp2pProcess,
-            start: true
+            start: false
         });
         const ipfsProcessId = new PodProcessId({ podId });
         const newIpfsProcess = new IpfsProcess({
@@ -90,8 +90,13 @@ describe("IpfsProcess", () => {
             options: newIpfsOptions
         });
         await newIpfsProcess.init();
-        // await newIpfsProcess.start();
+        await newIpfsProcess.start();
         expect(await newIpfsProcess.addJson({ key: "value" })).to.be.not.undefined;
+        
+        console.log(`Starting addEventListener`)
+        ipfsProcess.process?.libp2p.addEventListener('peer:discovery', (peerId: any) => {
+            console.log(`Peer discovered: ${peerId}`)
+        });
 
         await newIpfsProcess.stop();
     });
@@ -112,4 +117,15 @@ describe("IpfsProcess", () => {
 
         await ipfsProcess.stop();
     });
+
+    it('should get the libp2p process', async () => {
+        ipfsProcess = new IpfsProcess({
+            id: id,
+            options: ipfsOptions
+        });
+        await ipfsProcess.init();
+        const result = ipfsProcess.getLibp2p()
+        console.log(`getLibp2p result: ${result}`)
+        expect(result).to.be.not.undefined;
+    })
 })

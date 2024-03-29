@@ -25,7 +25,7 @@ describe("IpfsProcess", () => {
         libp2pProcess = new Libp2pProcess({ id });
         ipfsOptions = new IpfsOptions({
             libp2p: libp2pProcess,
-            start: true
+            start: false
         });
     });
     afterEach(async () => {
@@ -70,7 +70,7 @@ describe("IpfsProcess", () => {
         });
         const newIpfsOptions = new IpfsOptions({
             libp2p: newLibp2pProcess,
-            start: true
+            start: false
         });
         const ipfsProcessId = new PodProcessId({ podId });
         const newIpfsProcess = new IpfsProcess({
@@ -78,8 +78,12 @@ describe("IpfsProcess", () => {
             options: newIpfsOptions
         });
         await newIpfsProcess.init();
-        // await newIpfsProcess.start();
+        await newIpfsProcess.start();
         expect(await newIpfsProcess.addJson({ key: "value" })).to.be.not.undefined;
+        console.log(`Starting addEventListener`);
+        ipfsProcess.process?.libp2p.addEventListener('peer:discovery', (peerId) => {
+            console.log(`Peer discovered: ${peerId}`);
+        });
         await newIpfsProcess.stop();
     });
     it('should add and retrieve a JSON object', async () => {
@@ -96,5 +100,15 @@ describe("IpfsProcess", () => {
         const result = await ipfsProcess.getJson(cid.toString());
         expect(result).to.deep.equal(object);
         await ipfsProcess.stop();
+    });
+    it('should get the libp2p process', async () => {
+        ipfsProcess = new IpfsProcess({
+            id: id,
+            options: ipfsOptions
+        });
+        await ipfsProcess.init();
+        const result = ipfsProcess.getLibp2p();
+        console.log(`getLibp2p result: ${result}`);
+        expect(result).to.be.not.undefined;
     });
 });

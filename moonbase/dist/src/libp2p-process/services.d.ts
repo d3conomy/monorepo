@@ -19,6 +19,6 @@ declare const services: ({ enableGossipSub, enablePublishToZeroTopicPeers, enabl
     enableRelay?: boolean | undefined;
     enableDCUTR?: boolean | undefined;
     enablePing?: boolean | undefined;
-}) => any;
+}) => {};
 export { services as libp2pServices };
 //# sourceMappingURL=services.d.ts.map

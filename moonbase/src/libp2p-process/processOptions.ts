@@ -1,4 +1,4 @@
-import { Libp2pOptions } from "libp2p";
+import { Libp2pOptions, ServiceFactoryMap } from "libp2p";
 import { transports } from './transports.js'
 import { listenAddressesConfig } from './addresses.js'
 import { libp2pServices } from './services.js'
@@ -146,7 +146,7 @@ const createLibp2pOptions = async ({
             enableRelay,
             enableDCUTR,
             enablePing
-        }),
+        }) as ServiceFactoryMap,
         peerDiscovery: peerDiscovery({
             enableMDNS,
             enableBootstrap,
