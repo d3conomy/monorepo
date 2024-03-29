@@ -289,6 +289,49 @@ class Libp2pProcess {
         return protocols;
     }
     /**
+     * Get a peers public Key
+     */
+    async getPublicKey(peerId) {
+        let publicKey = undefined;
+        try {
+            publicKey = await this.process?.getPublicKey(peerId);
+        }
+        catch (error) {
+            logger({
+                level: LogLevel.ERROR,
+                stage: ProcessStage.ERROR,
+                processId: this.id,
+                message: `Error getting public key for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                error: error
+            });
+            throw error;
+        }
+        return publicKey;
+    }
+    /**
+     * Get the listenerCount for the libp2p process
+     */
+    listenerCount(type) {
+        let count = 0;
+        try {
+            if (!this.process) {
+                throw new Error(`No process found for ${this.id.podId.name}`);
+            }
+            count = this.process.listenerCount(type);
+        }
+        catch (error) {
+            logger({
+                level: LogLevel.ERROR,
+                stage: ProcessStage.ERROR,
+                processId: this.id,
+                message: `Error getting listener count for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                error: error
+            });
+            throw error;
+        }
+        return count;
+    }
+    /**
      * dial a libp2p address
      */
     async dial(address) {
@@ -343,6 +386,62 @@ class Libp2pProcess {
             });
         }
         return output;
+    }
+    /**
+     * Hang Up a connection
+     */
+    async hangUpConnection(peerId) {
+        try {
+            await this.process?.hangUp(peerId);
+        }
+        catch (error) {
+            logger({
+                level: LogLevel.ERROR,
+                stage: ProcessStage.ERROR,
+                processId: this.id,
+                message: `Error closing connection for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                error: error
+            });
+            throw error;
+        }
+    }
+    /**
+     *  Subscribe to PubSub topic
+     */
+    async subscribe(topic) {
+        try {
+            // @ts-ignore
+            this.process.services.pubsub.subscribe(topic);
+        }
+        catch (error) {
+            logger({
+                level: LogLevel.ERROR,
+                stage: ProcessStage.ERROR,
+                processId: this.id,
+                message: `Error subscribing to topic for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                error: error
+            });
+            throw error;
+        }
+    }
+    /**
+     * Publish to PubSub topic
+     */
+    async publish(topic, message) {
+        try {
+            // @ts-ignore
+            await this.process.services.pubsub.publish(topic, message);
+        }
+        catch (error) {
+            logger({
+                level: LogLevel.ERROR,
+                stage: ProcessStage.ERROR,
+                processId: this.id,
+                message: `Error publishing to topic for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                error: error
+            });
+            throw error;
+        }
     }
 }
 export { createLibp2pProcess, Libp2pProcess };

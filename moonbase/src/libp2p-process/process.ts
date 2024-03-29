@@ -336,6 +336,51 @@ class Libp2pProcess
     }
 
     /**
+     * Get a peers public Key
+     */
+    public async getPublicKey(peerId: PeerId): Promise<Uint8Array | undefined> {
+        let publicKey: Uint8Array | undefined = undefined;
+        try {
+            publicKey = await this.process?.getPublicKey(peerId)
+        }
+        catch (error: any) {
+            logger({
+                level: LogLevel.ERROR,
+                stage: ProcessStage.ERROR,
+                processId: this.id,
+                message: `Error getting public key for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                error: error
+            })
+            throw error
+        }
+        return publicKey
+    }
+
+    /**
+     * Get the listenerCount for the libp2p process
+     */
+    public listenerCount(type: string): number {
+        let count: number = 0;
+        try {
+            if (!this.process) {
+                throw new Error(`No process found for ${this.id.podId.name}`)
+            }
+            count = this.process.listenerCount(type)
+        }
+        catch (error: any) {
+            logger({
+                level: LogLevel.ERROR,
+                stage: ProcessStage.ERROR,
+                processId: this.id,
+                message: `Error getting listener count for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                error: error
+            })
+            throw error
+        }
+        return count
+    }
+
+    /**
      * dial a libp2p address
      */
     public async dial(address: string): Promise<Connection | undefined> {
@@ -392,6 +437,67 @@ class Libp2pProcess
         }
         return output
     }
+
+    /**
+     * Hang Up a connection
+     */
+    public async hangUpConnection(peerId: PeerId): Promise<void> {
+        try {
+            await this.process?.hangUp(peerId)
+        }
+        catch (error: any) {
+            logger({
+                level: LogLevel.ERROR,
+                stage: ProcessStage.ERROR,
+                processId: this.id,
+                message: `Error closing connection for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                error: error
+            })
+            throw error
+        }
+    }
+
+    /**
+     *  Subscribe to PubSub topic
+     */
+    public async subscribe(topic: string): Promise<void> {
+        try {
+            // @ts-ignore
+            this.process.services.pubsub.subscribe(topic)
+        }
+        catch (error: any) {
+            logger({
+                level: LogLevel.ERROR,
+                stage: ProcessStage.ERROR,
+                processId: this.id,
+                message: `Error subscribing to topic for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                error: error
+            })
+            throw error
+        }
+    }
+
+    /**
+     * Publish to PubSub topic
+     */
+    public async publish(topic: string, message: Buffer): Promise<void> {
+        try {
+            // @ts-ignore
+            await this.process.services.pubsub.publish(topic, message)
+        }
+        catch (error: any) {
+            logger({
+                level: LogLevel.ERROR,
+                stage: ProcessStage.ERROR,
+                processId: this.id,
+                message: `Error publishing to topic for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                error: error
+            })
+            throw error
+        }
+    }
+
+
 }
 
 export {

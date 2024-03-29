@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { PeerId, Connection, Stream } from '@libp2p/interface';
 import { Libp2p } from 'libp2p';
 import { Multiaddr } from '@multiformats/multiaddr';
@@ -66,6 +67,14 @@ declare class Libp2pProcess implements IProcess {
      */
     getProtocols(): string[];
     /**
+     * Get a peers public Key
+     */
+    getPublicKey(peerId: PeerId): Promise<Uint8Array | undefined>;
+    /**
+     * Get the listenerCount for the libp2p process
+     */
+    listenerCount(type: string): number;
+    /**
      * dial a libp2p address
      */
     dial(address: string): Promise<Connection | undefined>;
@@ -73,6 +82,18 @@ declare class Libp2pProcess implements IProcess {
      * Dial a libp2p address and protocol
      */
     dialProtocol(address: string, protocol: string): Promise<Stream | undefined>;
+    /**
+     * Hang Up a connection
+     */
+    hangUpConnection(peerId: PeerId): Promise<void>;
+    /**
+     *  Subscribe to PubSub topic
+     */
+    subscribe(topic: string): Promise<void>;
+    /**
+     * Publish to PubSub topic
+     */
+    publish(topic: string, message: Buffer): Promise<void>;
 }
 export { createLibp2pProcess, Libp2pProcess };
 //# sourceMappingURL=process.d.ts.map

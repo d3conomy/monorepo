@@ -92,11 +92,6 @@ describe("IpfsProcess", () => {
         await newIpfsProcess.init();
         await newIpfsProcess.start();
         expect(await newIpfsProcess.addJson({ key: "value" })).to.be.not.undefined;
-        
-        console.log(`Starting addEventListener`)
-        ipfsProcess.process?.libp2p.addEventListener('peer:discovery', (peerId: any) => {
-            console.log(`Peer discovered: ${peerId}`)
-        });
 
         await newIpfsProcess.stop();
     });
@@ -125,7 +120,6 @@ describe("IpfsProcess", () => {
         });
         await ipfsProcess.init();
         const result = ipfsProcess.getLibp2p()
-        console.log(`getLibp2p result: ${result}`)
         expect(result).to.be.not.undefined;
     })
 })

@@ -78,4 +78,101 @@ describe('createLibp2pProcess', async () => {
         expect(multiaddrs).to.be.an('array');
         await process.stop();
     });
+    it('should get the public key of an example peerid', async function () {
+        this.timeout(10000);
+        const systemId = new SystemId();
+        const moonbaseId = new MoonbaseId({ systemId });
+        const podBayId = new PodBayId({ moonbaseId });
+        const podId = new PodId({ podBayId });
+        const id = new PodProcessId({ podId });
+        const options = await createLibp2pProcessOptions();
+        process = new Libp2pProcess({ id, options });
+        await process.init();
+        await process.start();
+        const publickey = await process.getPublicKey(process.peerId());
+        console.log(publickey);
+        await process.stop();
+    });
+    it('should get the listenerCount of the Libp2pProcess with the provided options', async () => {
+        const systemId = new SystemId();
+        const moonbaseId = new MoonbaseId({ systemId });
+        const podBayId = new PodBayId({ moonbaseId });
+        const podId = new PodId({ podBayId });
+        const id = new PodProcessId({ podId });
+        const options = await createLibp2pProcessOptions();
+        process = new Libp2pProcess({ id, options });
+        await process.init();
+        await process.start();
+        const listenerCount = process.listenerCount('peer:connect');
+        console.log(listenerCount);
+        await process.stop();
+    });
+    it('should dial a multiaddr', async () => {
+        const systemId = new SystemId();
+        const moonbaseId = new MoonbaseId({ systemId });
+        const podBayId = new PodBayId({ moonbaseId });
+        const podId = new PodId({ podBayId });
+        const id = new PodProcessId({ podId });
+        const options = await createLibp2pProcessOptions();
+        process = new Libp2pProcess({ id, options });
+        await process.init();
+        await process.start();
+        const connection = await process.dial('/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ');
+        console.log(connection);
+        expect(connection?.remotePeer).to.not.be.null;
+        await process.stop();
+    });
+    it('should dial a peerId with protocol', async () => {
+        const systemId = new SystemId();
+        const moonbaseId = new MoonbaseId({ systemId });
+        const podBayId = new PodBayId({ moonbaseId });
+        const podId = new PodId({ podBayId });
+        const id = new PodProcessId({ podId });
+        const options = await createLibp2pProcessOptions();
+        process = new Libp2pProcess({ id, options });
+        await process.init();
+        await process.start();
+        const connection = await process.dialProtocol('/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ', '/libp2p/circuit/relay/0.2.0/hop');
+        console.log(connection);
+        expect(connection?.protocol).to.not.be.null;
+        await process.stop();
+    });
+    it('should subscribe to a pubsub topic', async () => {
+        const systemId = new SystemId();
+        const moonbaseId = new MoonbaseId({ systemId });
+        const podBayId = new PodBayId({ moonbaseId });
+        const podId = new PodId({ podBayId });
+        const id = new PodProcessId({ podId });
+        const options = await createLibp2pProcessOptions();
+        process = new Libp2pProcess({ id, options });
+        await process.init();
+        await process.start();
+        const topic = 'moonbase';
+        const handler = (msg) => {
+            console.log(msg);
+        };
+        await process.subscribe(topic);
+    });
+    it('should publish to a pubsub topic', async () => {
+        const systemId = new SystemId();
+        const moonbaseId = new MoonbaseId({ systemId });
+        const podBayId = new PodBayId({ moonbaseId });
+        const podId = new PodId({ podBayId });
+        const id = new PodProcessId({ podId });
+        const options = await createLibp2pProcessOptions();
+        process = new Libp2pProcess({ id, options });
+        await process.init();
+        await process.start();
+        const topic = 'moonbase';
+        let buffer = (msg) => {
+            return Buffer.from(msg);
+        };
+        // @ts-ignore
+        process.process?.services.pubsub.addEventListener('message', (message) => {
+            console.log(`${message.detail.topic}:`, new TextDecoder().decode(message.detail.data));
+        });
+        await process.subscribe(topic);
+        await process.publish(topic, buffer('hello world'));
+        await process.stop();
+    });
 });

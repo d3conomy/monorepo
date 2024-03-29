@@ -28,8 +28,6 @@ const createIpfsProcess = async ({
         blockstore: blockstore,
         start: start
     })
-    console.log(`Created IPFS process: ${helia.libp2p.peerId}`)
-    // return helia as Helia<Libp2pProcess>
     return helia as HeliaLibp2p<Libp2p>
 }
 
@@ -69,7 +67,6 @@ class IpfsProcess
      */
     public checkProcess(): boolean {
         if (this.process) {
-            console.log(`Checking process: ${this.process.libp2p.peerId}`)
             return true
         }
         logger({
@@ -115,7 +112,6 @@ class IpfsProcess
             const process: HeliaLibp2p<Libp2p> = await createIpfsProcess(this.options)
             this.process = process
             await process.libp2p.start()
-            console.log(`Ipfs process created on IPFSProcess: ${this.process.libp2p.addEventListener('peer:discovery', (peerId) => {})}`)
         }
         catch (error: any) {
             logger({
@@ -273,7 +269,6 @@ class IpfsProcess
             processId: this.id,
             message: `Got JSON from Ipfs: ${JSON.stringify(result)}`
         })
-        console.log(`Got JSON from IPFS: ${JSON.stringify(result)} using Libp2p: ${this.process?.libp2p.peerId}`)
         return result
     }
 
