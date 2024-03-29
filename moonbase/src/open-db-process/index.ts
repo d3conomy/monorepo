@@ -1,55 +1,11 @@
-import { Component, LogLevel } from '../utils/constants.js';
-import { IdReference } from '../utils/id.js';
-import { logger } from '../utils/logBook.js';
 
 
 import {
     Database
 } from '@orbitdb/core';
-import { OrbitDbProcess } from './orbitDb.js';
-import { _BaseProcess, _IBaseProcess } from './base.js';
+import { IProcess, IdReference, LogLevel, ProcessStage, logger } from 'd3-artifacts';
+import { OpenDbOptions } from './OpenDbOptions';
 
-/**
- * The Types of OrbitDb databases.
- * @category Database
- */
-enum OrbitDbTypes {
-    EVENTS = 'events',
-    DOCUMENTS = 'documents',
-    KEYVALUE = 'keyvalue',
-    KEYVALUEINDEXED = 'keyvalueindexed'
-}
-
-/**
- * The options for opening a database.
- * @category Database
- */
-class _OpenDbOptions {
-    public orbitDb: OrbitDbProcess;
-    public databaseName: string;
-    public databaseType: OrbitDbTypes;
-    public options?: Map<string, string>;
-
-    /**
-     * Constructs a new instance of the _OpenDbOptions class.
-     */
-    constructor({
-        orbitDb,
-        databaseName,
-        databaseType,
-        options
-    }: {
-        orbitDb: OrbitDbProcess,
-        databaseName?: string,
-        databaseType?: OrbitDbTypes | string,
-        options?: Map<string, string>
-    }) {
-        this.orbitDb = orbitDb;
-        this.databaseName = databaseName ? databaseName : new IdReference({ component: Component.DB }).getId();
-        this.databaseType = databaseType ? databaseType as OrbitDbTypes : OrbitDbTypes.EVENTS;
-        this.options = options ? options : new Map<string, string>();
-    }
-}
 
 /**
  * Opens a database.
@@ -60,13 +16,13 @@ const openDb = async ({
     databaseName,
     databaseType,
     options
-}: _OpenDbOptions): Promise<typeof Database> => {
+}: OpenDbOptions): Promise<typeof Database> => {
     logger({
         level: LogLevel.INFO,
         message: `Opening database: ${databaseName}\n` +
                     `Type: ${databaseType}\n` +
-                    `process: ${orbitDb.id.getId()}`
-
+                    `process: ${orbitDb.id.name}\n` +
+                    `options: ${JSON.stringify(options, null, 2)}`
     });
     try {
         // await orbitDb.start();
@@ -84,16 +40,13 @@ const openDb = async ({
     }
 }
 
-/**
- * Represents a class for opening a database.
- * @category Database
- */
-class OpenDb
-    extends _BaseProcess
-    implements _IBaseProcess
+
+class OpenDbProcess
+    implements IProcess
 {
-    public declare process?: typeof Database;
-    public declare options?: _OpenDbOptions;
+    public id: IdReference;
+    public process?: typeof Database;
+    public options?: OpenDbOptions;
 
     /**
      * Constructs a new instance of the OpenDb class.
@@ -103,16 +56,20 @@ class OpenDb
         process,
         options
     }: {
-        id?: IdReference;
+        id: IdReference;
         process?: typeof Database;
-        options?: _OpenDbOptions;
+        options?: OpenDbOptions;
     }) {
-        super({
-            id: id ? id : new IdReference({id: options?.databaseName, component: Component.DB }),
-            component: Component.DB,
-            process: process,
-            options: options as _OpenDbOptions
-        });
+        this.id = id;
+        this.process = process;
+        this.options = options;
+    }
+
+    /**
+     * Checks if the database process exists.
+     */
+    public checkProcess(): boolean {
+        return this.process ? true : false;
     }
 
     /**
@@ -151,6 +108,20 @@ class OpenDb
     }
 
     /**
+     * Starts the database process.
+     */
+    public async start(): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    /** 
+     * Check the Status of the databaseProcess
+     */
+    public status(): ProcessStage {
+        throw new Error('Method not implemented.');
+    }
+
+    /**
      * Stops the database process.
      */
     public async stop(): Promise<void> {
@@ -169,6 +140,14 @@ class OpenDb
             });
             throw new Error(`No database process found`);
         }
+    }
+
+    /**
+     * Restarts the database process.
+     */
+    public async restart(): Promise<void> {
+        await this.stop();
+        await this.init();
     }
 
     /**
@@ -231,9 +210,7 @@ class OpenDb
 
 
 export {
-    OrbitDbTypes,
-    _OpenDbOptions,
+    OpenDbProcess,
     openDb,
-    OpenDb
 }
 
