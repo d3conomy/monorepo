@@ -4,6 +4,8 @@ import { IdReferenceFormats, IdReferenceTypes } from "./IdReferenceConstants.js"
 import { MetaData } from "./IdReferenceMetadata.js";
 
 
+type IdTypes = PodBayId | PodId | SystemId | MoonbaseId | JobId | PodProcessId | IdReference;
+
 class IdReferenceFactory {
     public ids: Array<IdReference> = new Array<IdReference>();
     public config: IdReferenceConfig;
@@ -25,14 +27,14 @@ class IdReferenceFactory {
         metadata,
         format,
         type,
-        dependent
+        dependsOn
     }: {
         name?: string,
         metadata?: MetaData | Map<string, any>,
         format?: IdReferenceFormats | string,
         type: IdReferenceTypes | string,
-        dependent?: IdReference | string
-    }): IdReference {
+        dependsOn?: PodBayId | PodId | SystemId | MoonbaseId | string
+    }): IdTypes | any {
         if (!type) {
             throw new Error("IdReferenceFactory: type is required");
         }
@@ -62,19 +64,19 @@ class IdReferenceFactory {
                 idref = new SystemId({name, metadata, format});
                 break;
             case IdReferenceTypes.MOONBASE:
-                idref = new MoonbaseId({name, metadata, format, systemId: dependent as SystemId});
+                idref = new MoonbaseId({name, metadata, format, systemId: dependsOn as SystemId});
                 break;
             case IdReferenceTypes.PODBAY:
-                idref = new PodBayId({name, metadata, format, moonbaseId: dependent as MoonbaseId});
+                idref = new PodBayId({name, metadata, format, moonbaseId: dependsOn as MoonbaseId});
                 break;
             case IdReferenceTypes.POD:
-                idref = new PodId({name, metadata, format, podBayId: dependent as PodBayId});
+                idref = new PodId({name, metadata, format, podBayId: dependsOn as PodBayId});
                 break;
             case IdReferenceTypes.PROCESS:
-                idref = new PodProcessId({name, metadata, format, podId: dependent as PodId});
+                idref = new PodProcessId({name, metadata, format, podId: dependsOn as PodId});
                 break;
             case IdReferenceTypes.JOB:
-                idref = new JobId({name, metadata, format, componenetId: dependent as PodProcessId | PodId | PodBayId | MoonbaseId | SystemId});
+                idref = new JobId({name, metadata, format, componenetId: dependsOn as PodProcessId | PodId | PodBayId | MoonbaseId | SystemId});
             default:
                 idref = new IdReference({name, metadata, format});
         }

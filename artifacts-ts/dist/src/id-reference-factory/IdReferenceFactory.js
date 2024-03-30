@@ -11,7 +11,7 @@ class IdReferenceFactory {
     isUnique(name) {
         return !this.ids.some((idRef) => idRef.name === name);
     }
-    createIdReference({ name, metadata, format, type, dependent }) {
+    createIdReference({ name, metadata, format, type, dependsOn }) {
         if (!type) {
             throw new Error("IdReferenceFactory: type is required");
         }
@@ -38,19 +38,19 @@ class IdReferenceFactory {
                 idref = new SystemId({ name, metadata, format });
                 break;
             case IdReferenceTypes.MOONBASE:
-                idref = new MoonbaseId({ name, metadata, format, systemId: dependent });
+                idref = new MoonbaseId({ name, metadata, format, systemId: dependsOn });
                 break;
             case IdReferenceTypes.PODBAY:
-                idref = new PodBayId({ name, metadata, format, moonbaseId: dependent });
+                idref = new PodBayId({ name, metadata, format, moonbaseId: dependsOn });
                 break;
             case IdReferenceTypes.POD:
-                idref = new PodId({ name, metadata, format, podBayId: dependent });
+                idref = new PodId({ name, metadata, format, podBayId: dependsOn });
                 break;
             case IdReferenceTypes.PROCESS:
-                idref = new PodProcessId({ name, metadata, format, podId: dependent });
+                idref = new PodProcessId({ name, metadata, format, podId: dependsOn });
                 break;
             case IdReferenceTypes.JOB:
-                idref = new JobId({ name, metadata, format, componenetId: dependent });
+                idref = new JobId({ name, metadata, format, componenetId: dependsOn });
             default:
                 idref = new IdReference({ name, metadata, format });
         }

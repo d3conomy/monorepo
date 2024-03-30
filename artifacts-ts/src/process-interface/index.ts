@@ -1,6 +1,22 @@
 import { IdReference } from "../id-reference-factory/index.js"
 import { ProcessStage } from "./ProcessStages.js"
 
+enum ProcessType {
+    LIBP2P = 'libp2p',
+    IPFS = 'ipfs',
+    ORBITDB = 'orbitdb',
+    OPEN_DB = 'open-db',
+}
+
+const isProcessType = (value: any): ProcessType => {
+    if (Object.values(ProcessType).includes(value)) {
+        return value as ProcessType;
+    }
+    throw new Error('Invalid process type');
+}
+
+
+
 /**
  * Interface for process containers
  * @category Process
@@ -19,6 +35,8 @@ interface IProcess {
 }
 
 export {
+    ProcessType,
+    isProcessType,
     IProcess
 }
 

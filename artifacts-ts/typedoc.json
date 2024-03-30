@@ -8,6 +8,6 @@
     ],
     "entryPointStrategy": "expand",
     "sort": ["alphabetical"],
-    "name": "Artifacts [TS]",
+    "name": "Artifacts",
     "exclude": [ "test/**"]
 }
