@@ -12,12 +12,13 @@ const openDb = async ({ orbitDb, databaseName, databaseType, options }) => {
             `options: ${JSON.stringify(options, null, 2)}`
     });
     try {
-        // await orbitDb.start();
-        return await orbitDb.open({
-            databaseName,
-            databaseType,
-            options
-        });
+        if (databaseName.startsWith('/orbitdb')) {
+            return await orbitDb.process.open(databaseName);
+        }
+        await orbitDb.start();
+        return await orbitDb.process.open(databaseName, {
+            type: databaseType
+        }, options?.entries());
     }
     catch (error) {
         logger({
@@ -91,6 +92,7 @@ class OpenDbProcess {
      * Starts the database process.
      */
     async start() {
+        this.processStatus = ProcessStage.STARTED;
         return;
     }
     /**

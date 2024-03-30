@@ -5,6 +5,7 @@ import {
 } from '@orbitdb/core';
 import { IProcess, IdReference, LogLevel, PodProcessId, ProcessStage, logger } from 'd3-artifacts';
 import { OpenDbOptions } from './OpenDbOptions';
+import { OrbitDbProcess } from '../orbitdb-process';
 
 
 /**
@@ -17,7 +18,7 @@ const openDb = async ({
     databaseType,
     options
 }: {
-    orbitDb: typeof Database,
+    orbitDb: OrbitDbProcess,
     databaseName: string,
     databaseType: string,
     options?: Map<string, string>
@@ -30,12 +31,19 @@ const openDb = async ({
                     `options: ${JSON.stringify(options, null, 2)}`
     });
     try {
-        // await orbitDb.start();
-        return await orbitDb.open({
-            databaseName,
-            databaseType,
-            options
-        });
+        if (databaseName.startsWith('/orbitdb')) {
+            return await orbitDb.process.open(
+                databaseName
+            )
+        }
+        await orbitDb.start();
+        return await orbitDb.process.open(
+            databaseName, 
+            {
+                type: databaseType
+            },
+            options?.entries()
+        );
     }
     catch (error) {
         logger({
@@ -127,6 +135,7 @@ class OpenDbProcess
      * Starts the database process.
      */
     public async start(): Promise<void> {
+        this.processStatus = ProcessStage.STARTED;
         return;
     }
 

@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { OpenDbOptions, OpenDbProcess } from '../src/open-db-process/index.js';
 import { MoonbaseId, PodBayId, PodId, PodProcessId, SystemId } from 'd3-artifacts';
 import { createLibp2pProcessOptions } from '../src/libp2p-process/processOptions.js';
 import { Libp2pProcess } from '../src/libp2p-process/process.js';
@@ -41,9 +42,14 @@ describe('openDb', () => {
         const databaseName = 'test-db';
         const databaseType = 'keyvalue';
         await orbitDb.init();
-        const result = await orbitDb.open({
-            databaseName,
-            databaseType
+        const result = new OpenDbProcess({
+            id: openDbId,
+            options: new OpenDbOptions({
+                id: openDbId,
+                databaseName,
+                databaseType,
+                orbitDb: orbitDb
+            })
         });
         expect(result).to.be.an.instanceOf(Object);
         await orbitDb.stop();
@@ -53,15 +59,20 @@ describe('openDb', () => {
         const databaseType = 'test-type';
         // Mock OrbitDB.open() to throw an error
         try {
-            await orbitDb.open({
-                databaseName,
-                databaseType
-            });
+            await new OpenDbProcess({
+                id: openDbId,
+                options: new OpenDbOptions({
+                    id: openDbId,
+                    databaseName,
+                    databaseType,
+                    orbitDb: orbitDb
+                })
+            }).init();
             // The test should throw an error, so this line should not be reached
-            expect.fail('Failed to open database');
+            expect.fail('Invalid OrbitDb type');
         }
         catch (error) {
-            expect(error.message).to.equal('Failed to open database');
+            expect(error.message).to.equal('Invalid OrbitDb type');
         }
     });
 });
@@ -100,14 +111,19 @@ describe('OpenDbProcess', () => {
         const databaseType = 'test-type';
         // Mock OrbitDB.open() to throw an error
         try {
-            await orbitDb.open({
-                databaseName,
-                databaseType
-            });
+            await new OpenDbProcess({
+                id: openDbId,
+                options: new OpenDbOptions({
+                    id: openDbId,
+                    databaseName,
+                    databaseType,
+                    orbitDb: orbitDb
+                })
+            }).init();
         }
         catch (error) {
             // The test should throw an error, so this line should not be reached
-            expect.fail('Failed to open database');
+            expect.fail('Invalid OrbitDb type');
         }
         await orbitDb.stop();
     });

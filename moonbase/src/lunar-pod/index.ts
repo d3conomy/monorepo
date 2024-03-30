@@ -128,16 +128,16 @@ class LunarPod {
 
         switch (processType) {
             case ProcessType.LIBP2P:
-                await this.initLibp2p({});
+                await this.initLibp2p();
                 break;
             case ProcessType.IPFS:
-                await this.initIpfs({});
+                await this.initIpfs();
                 break;
             case ProcessType.ORBITDB:
-                await this.initOrbitDb({});
+                await this.initOrbitDb();
                 break;
             case ProcessType.OPEN_DB:
-                await this.initOpenDb({});
+                await this.initOpenDb();
                 break;
             default:
                 await this.initAll();

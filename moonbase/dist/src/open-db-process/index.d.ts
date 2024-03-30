@@ -2,12 +2,13 @@
 import { Database } from '@orbitdb/core';
 import { IProcess, PodProcessId, ProcessStage } from 'd3-artifacts';
 import { OpenDbOptions } from './OpenDbOptions';
+import { OrbitDbProcess } from '../orbitdb-process';
 /**
  * Opens a database.
  * @category Database
  */
 declare const openDb: ({ orbitDb, databaseName, databaseType, options }: {
-    orbitDb: typeof Database;
+    orbitDb: OrbitDbProcess;
     databaseName: string;
     databaseType: string;
     options?: Map<string, string> | undefined;

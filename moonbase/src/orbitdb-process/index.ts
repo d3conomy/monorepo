@@ -5,6 +5,7 @@ import {
 } from '@orbitdb/core';
 import { IProcess, IdReference, LogLevel, PodProcessId, ProcessStage, ResponseCode, logger } from 'd3-artifacts';
 import { OrbitDbOptions } from './OrbitDbOptions.js';
+import { openDb } from '../open-db-process/index.js';
 
 
 /**
@@ -121,53 +122,53 @@ class OrbitDbProcess
      * Start the OrbitDb process
      */
     public async start(): Promise<void> {
-        throw new Error(`OrbitDb process cannot be started, open a database instead`)
+        this.processStatus = ProcessStage.STARTED;
+        // this.processStatus = ProcessStage.STARTING;
+        // await this.open({
+        //     databaseName: this.options?.databaseName || 'events',
+        //     databaseType: 'eventlog'
+        // });
     }
 
-    /**
-     * Open an OrbitDb database
-     */
-    public async open({
-        databaseName,
-        databaseType,
-        options
-    }: {
-        databaseName: string;
-        databaseType: string;
-        options?: Map<string, string>
-    }): Promise<typeof Database> {
-        if (!this.process) {
-            logger({
-                level: LogLevel.ERROR,
-                code: ResponseCode.NOT_FOUND,
-                message: `No OrbitDb process found`
-            })
-        }
-        else {
-            try {
-                if (databaseName.startsWith('/orbitdb')) {
-                    return await this.process.open(
-                        databaseName
-                    )
-                }
+    // /**
+    //  * Open an OrbitDb database
+    //  */
+    // public async open({
+    //     databaseName,
+    //     databaseType,
+    //     options
+    // }: {
+    //     databaseName: string;
+    //     databaseType: string;
+    //     options?: Map<string, any>
+    // }): Promise<typeof Database> {
+    //     if (!this.process) {
+    //         logger({
+    //             level: LogLevel.ERROR,
+    //             code: ResponseCode.NOT_FOUND,
+    //             message: `No OrbitDb process found`
+    //         })
+    //     }
+    //     else {
+    //         this.processStatus = ProcessStage.STARTING;
+    //         try {
+    //             return await openDb({
+    //                 orbitDb: this.process,
+    //                 databaseName: databaseName,
+    //                 databaseType: databaseType,
+    //                 options: options
+    //             });
+    //         }
 
-                return await this.process.open(
-                    databaseName, 
-                    {
-                        type: databaseType
-                    },
-                    options?.entries()
-                );
-            }
-            catch (error) {
-                logger({
-                    level: LogLevel.ERROR,
-                    message: `Error opening database process: ${error}`
-                })
-                throw error;
-            }
-        }
-    }
+    //         catch (error) {
+    //             logger({
+    //                 level: LogLevel.ERROR,
+    //                 message: `Error opening database process: ${error}`
+    //             })
+    //             throw error;
+    //         }
+    //     }
+    // }
 
     /**
      * Stop the OrbitDb process
@@ -175,12 +176,14 @@ class OrbitDbProcess
     public async stop(): Promise<void> {
         if (this.process) {
             try {
+                this.processStatus = ProcessStage.STOPPING;
                 await this.process.stop();
                 logger({
                     level: LogLevel.INFO,
                     processId: this.id,
                     message: `OrbitDb process stopped`
                 })
+                this.processStatus = ProcessStage.STOPPED;
             }
             catch (error) {
                 logger({
@@ -188,6 +191,7 @@ class OrbitDbProcess
                     processId: this.id,
                     message: `Error stopping OrbitDb process: ${error}`
                 })
+                this.processStatus = ProcessStage.ERROR;
                 throw error;
             }
         }

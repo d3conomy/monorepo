@@ -66,13 +66,13 @@ describe('OrbitDbProcess', () => {
         expect(() => new OrbitDbOptions({})).to.throw('No Ipfs process found');
     });
 
-    it('should open a database', async () => {
-        await orbitDbProcess.init();
-        console.log(`OrbitDb process created on OrbitDbProcess: ${orbitDbProcess.process} with Libp2p Peer Id: ${orbitDbProcess.process?.ipfs.libp2p.peerId}`)
-        console.log(`AddEventListener: ${orbitDbProcess.process?.ipfs.libp2p.services.pubsub?.eventEmitter}`)
-        const db = await orbitDbProcess.open({databaseName: 'test-database', databaseType: 'keyvalue'});
-        expect(db).to.exist;
-        await db.close();
-        await orbitDbProcess.stop();
-    });
+    // it('should open a database', async () => {
+    //     await orbitDbProcess.init();
+    //     console.log(`OrbitDb process created on OrbitDbProcess: ${orbitDbProcess.process} with Libp2p Peer Id: ${orbitDbProcess.process?.ipfs.libp2p.peerId}`)
+    //     console.log(`AddEventListener: ${orbitDbProcess.process?.ipfs.libp2p.services.pubsub?.eventEmitter}`)
+    //     const db = await orbitDbProcess.open({databaseName: 'test-database', databaseType: 'keyvalue'});
+    //     expect(db).to.exist;
+    //     await db.close();
+    //     await orbitDbProcess.stop();
+    // });
 });

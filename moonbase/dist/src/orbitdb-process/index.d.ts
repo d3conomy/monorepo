@@ -1,5 +1,5 @@
 /// <reference path="../../../src/typings.d.ts" />
-import { OrbitDb, Database } from '@orbitdb/core';
+import { OrbitDb } from '@orbitdb/core';
 import { IProcess, PodProcessId, ProcessStage } from 'd3-artifacts';
 import { OrbitDbOptions } from './OrbitDbOptions.js';
 /**
@@ -37,14 +37,6 @@ declare class OrbitDbProcess implements IProcess {
      * Start the OrbitDb process
      */
     start(): Promise<void>;
-    /**
-     * Open an OrbitDb database
-     */
-    open({ databaseName, databaseType, options }: {
-        databaseName: string;
-        databaseType: string;
-        options?: Map<string, string>;
-    }): Promise<typeof Database>;
     /**
      * Stop the OrbitDb process
      */
