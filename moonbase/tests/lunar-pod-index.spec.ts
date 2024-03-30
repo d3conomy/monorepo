@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { LunarPod } from '../src/lunar-pod/index.js';
-import { IdReferenceFactory } from 'd3-artifacts';
+import { IdReferenceFactory, ProcessType } from 'd3-artifacts';
 
 describe('LunarPod', async () => {
     let lunarPod: LunarPod;
@@ -45,8 +45,8 @@ describe('LunarPod', async () => {
 
     it('should initialize OpenDb', async () => {
 
-        await lunarPod.init('open_db');
-        await lunarPod.start();
+        await lunarPod.init(ProcessType.OPEN_DB);
+        await lunarPod.start(ProcessType.OPEN_DB);
         const components = lunarPod.getProcesses();
         expect(components.length).to.equal(4);
         expect(components[3].id).to.equal(lunarPod.db.values().next().value.id);

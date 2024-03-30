@@ -38,7 +38,7 @@ describe('createLibp2pProcess', async () => {
         const options = await createLibp2pProcessOptions();
         process = new Libp2pProcess({id, options});
         process.init();
-        expect(process.status()).to.equal('unknown');
+        expect(process.status()).to.equal('initializing');
     });
 
     it('should start the Libp2pProcess with the provided options', async () => {

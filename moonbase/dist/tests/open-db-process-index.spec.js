@@ -120,10 +120,11 @@ describe('OpenDbProcess', () => {
                     orbitDb: orbitDb
                 })
             }).init();
+            expect.fail('Invalid OrbitDb type');
         }
         catch (error) {
             // The test should throw an error, so this line should not be reached
-            expect.fail('Invalid OrbitDb type');
+            expect(error.message).to.be.equal('Invalid OrbitDb type');
         }
         await orbitDb.stop();
     });
