@@ -1,21 +1,27 @@
 /// <reference path="../../../src/typings.d.ts" />
 import { Database } from '@orbitdb/core';
-import { IProcess, IdReference, ProcessStage } from 'd3-artifacts';
+import { IProcess, PodProcessId, ProcessStage } from 'd3-artifacts';
 import { OpenDbOptions } from './OpenDbOptions';
 /**
  * Opens a database.
  * @category Database
  */
-declare const openDb: ({ orbitDb, databaseName, databaseType, options }: OpenDbOptions) => Promise<typeof Database>;
+declare const openDb: ({ orbitDb, databaseName, databaseType, options }: {
+    orbitDb: typeof Database;
+    databaseName: string;
+    databaseType: string;
+    options?: Map<string, string> | undefined;
+}) => Promise<typeof Database>;
 declare class OpenDbProcess implements IProcess {
-    id: IdReference;
+    id: PodProcessId;
     process?: typeof Database;
     options?: OpenDbOptions;
+    private processStatus;
     /**
      * Constructs a new instance of the OpenDb class.
      */
     constructor({ id, process, options }: {
-        id: IdReference;
+        id: PodProcessId;
         process?: typeof Database;
         options?: OpenDbOptions;
     });

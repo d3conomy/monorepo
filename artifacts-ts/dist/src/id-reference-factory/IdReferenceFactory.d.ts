@@ -6,7 +6,7 @@ type IdTypes = PodBayId | PodId | SystemId | MoonbaseId | JobId | PodProcessId |
 declare class IdReferenceFactory {
     ids: Array<IdReference>;
     config: IdReferenceConfig;
-    constructor({ idReferenceFormat, }?: {
+    constructor({ idReferenceFormat }?: {
         idReferenceFormat?: IdReferenceFormats;
     });
     private isUnique;

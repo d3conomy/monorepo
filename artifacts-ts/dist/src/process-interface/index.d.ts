@@ -1,18 +1,11 @@
-import { IdReference } from "../id-reference-factory/index.js";
+import { PodProcessId } from "../id-reference-factory/index.js";
 import { ProcessStage } from "./ProcessStages.js";
-declare enum ProcessType {
-    LIBP2P = "libp2p",
-    IPFS = "ipfs",
-    ORBITDB = "orbitdb",
-    OPEN_DB = "open-db"
-}
-declare const isProcessType: (value: any) => ProcessType;
 /**
  * Interface for process containers
  * @category Process
  */
 interface IProcess {
-    id: IdReference;
+    id: PodProcessId;
     process?: any;
     options?: any;
     checkProcess(): boolean;
@@ -22,7 +15,8 @@ interface IProcess {
     stop(): Promise<void>;
     restart(): Promise<void>;
 }
-export { ProcessType, isProcessType, IProcess };
+export { IProcess };
 export * from './ProcessResponses.js';
 export * from './ProcessStages.js';
+export * from './ProcessTypes.js';
 //# sourceMappingURL=index.d.ts.map

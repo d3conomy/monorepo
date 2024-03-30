@@ -109,11 +109,12 @@
     // "sourceMap": true,
   },
   "include": [
-    "./src"
+    "./src",
+    "./tests"
   ],
   "exclude": [
     "node_modules",
-    "./tests/**/*.spec.ts"
+    // "./tests/**/*.spec.ts"
   ]
 
 }

@@ -1,3 +1,4 @@
+import { PodProcessId } from 'd3-artifacts';
 import { OrbitDbProcess } from '../orbitdb-process';
 
 /**
@@ -23,6 +24,7 @@ const isOrbitDbType = (value: string): OrbitDbTypes => {
  * @category Database
  */
 class OpenDbOptions {
+    public id: PodProcessId;
     public orbitDb: OrbitDbProcess;
     public databaseName: string;
     public databaseType: OrbitDbTypes;
@@ -32,16 +34,19 @@ class OpenDbOptions {
      * Constructs a new instance of the _OpenDbOptions class.
      */
     constructor({
+        id,
         orbitDb,
         databaseName,
         databaseType,
         options
     }: {
+        id: PodProcessId,
         orbitDb: OrbitDbProcess,
         databaseName: string,
         databaseType?: OrbitDbTypes | string,
         options?: Map<string, string>
     }) {
+        this.id = id;
         this.orbitDb = orbitDb;
         this.databaseName = databaseName;
         this.databaseType = databaseType ? isOrbitDbType(databaseType) : OrbitDbTypes.EVENTS;

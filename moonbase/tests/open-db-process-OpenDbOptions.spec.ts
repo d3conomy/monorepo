@@ -10,6 +10,7 @@ import { OrbitDbOptions } from '../src/orbitdb-process/OrbitDbOptions.js';
 
 describe('OpenDbOptions', () => {
     let orbitDb: OrbitDbProcess;
+    let opendbProcessId: PodProcessId;
 
     beforeEach( async () => {
         const systemId = new SystemId()
@@ -37,10 +38,13 @@ describe('OpenDbOptions', () => {
             })
 
         });
+        opendbProcessId = new PodProcessId({podId});
     });
 
     it('should create an instance of OpenDbOptions with default values', () => {
+
         const openDbOptions = new OpenDbOptions({
+            id: opendbProcessId,
             orbitDb,
             databaseName: 'myDatabase'
         });
@@ -58,6 +62,7 @@ describe('OpenDbOptions', () => {
         options.set('option2', 'value2');
 
         const openDbOptions = new OpenDbOptions({
+            id: opendbProcessId,
             orbitDb,
             databaseName: 'myDatabase',
             databaseType: OrbitDbTypes.KEYVALUE,
@@ -73,6 +78,7 @@ describe('OpenDbOptions', () => {
     it('should throw an error for invalid OrbitDb type', () => {
         expect(() => {
             new OpenDbOptions({
+                id: opendbProcessId,
                 orbitDb,
                 databaseName: 'myDatabase',
                 databaseType: 'invalidType'

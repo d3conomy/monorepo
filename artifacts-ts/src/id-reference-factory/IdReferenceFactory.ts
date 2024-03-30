@@ -11,7 +11,7 @@ class IdReferenceFactory {
     public config: IdReferenceConfig;
 
     constructor({
-        idReferenceFormat,
+        idReferenceFormat
     } : {
         idReferenceFormat?: IdReferenceFormats
     } = {}) {
@@ -48,7 +48,7 @@ class IdReferenceFactory {
         if (metadata instanceof Map) {
             metadata = new MetaData({
                 mapped: metadata,
-                createdBy: "system:test"
+                createdBy: "system"
             });
         }
         else {

@@ -5,7 +5,8 @@
 var ProcessStage;
 (function (ProcessStage) {
     ProcessStage["NEW"] = "new";
-    ProcessStage["INIT"] = "init";
+    ProcessStage["INITIALIZING"] = "initializing";
+    ProcessStage["INITIALIZED"] = "initialized";
     ProcessStage["STARTED"] = "started";
     ProcessStage["STARTING"] = "starting";
     ProcessStage["PENDING"] = "pending";

@@ -27,6 +27,7 @@ class IpfsProcess {
     id;
     process;
     options;
+    processStatus = ProcessStage.NEW;
     /**
      * Constructor for the Ipfs process
      */
@@ -53,12 +54,14 @@ class IpfsProcess {
      * Initialize the IPFS Process
      */
     async init() {
+        this.processStatus = ProcessStage.INITIALIZING;
         if (this.process !== undefined) {
             logger({
                 level: LogLevel.WARN,
                 processId: this.id,
                 message: `Ipfs process already exists`
             });
+            this.processStatus = ProcessStage.INITIALIZED;
             return;
         }
         if (!this.options) {
@@ -67,6 +70,7 @@ class IpfsProcess {
                 processId: this.id,
                 message: `No Ipfs options found`
             });
+            this.processStatus = ProcessStage.ERROR;
             throw new Error(`No Ipfs options found`);
         }
         if (!this.options.libp2p) {
@@ -75,14 +79,15 @@ class IpfsProcess {
                 processId: this.id,
                 message: `No Libp2p process found`
             });
+            this.processStatus = ProcessStage.ERROR;
             throw new Error(`No Libp2p process found`);
         }
         try {
             const process = await createIpfsProcess(this.options);
             this.process = process;
-            await process.libp2p.start();
         }
         catch (error) {
+            this.processStatus = ProcessStage.ERROR;
             logger({
                 level: LogLevel.ERROR,
                 processId: this.id,
@@ -95,20 +100,22 @@ class IpfsProcess {
             level: LogLevel.INFO,
             processId: this.id,
             message: `Ipfs process created and initialized`,
-            stage: ProcessStage.INIT
+            stage: ProcessStage.INITIALIZED
         });
+        this.processStatus = ProcessStage.INITIALIZED;
     }
     /**
      * Get the status of the IPFS process
      */
     status() {
-        throw new Error("Method not implemented.");
+        return this.processStatus;
     }
     /**
      * Start the IPFS process
      */
     async start() {
         if (this.checkProcess()) {
+            this.processStatus = ProcessStage.STARTING;
             try {
                 await this.process?.start();
                 logger({
@@ -117,6 +124,7 @@ class IpfsProcess {
                     message: `Ipfs process started`,
                     stage: ProcessStage.STARTED
                 });
+                this.processStatus = ProcessStage.STARTED;
             }
             catch (error) {
                 logger({
@@ -125,6 +133,7 @@ class IpfsProcess {
                     message: `Error starting Ipfs process: ${error.message}`,
                     error: error
                 });
+                this.processStatus = ProcessStage.ERROR;
                 throw error;
             }
         }
@@ -135,6 +144,7 @@ class IpfsProcess {
     async stop() {
         if (this.checkProcess()) {
             try {
+                this.processStatus = ProcessStage.STOPPING;
                 await this.process?.stop();
                 logger({
                     level: LogLevel.INFO,
@@ -142,6 +152,7 @@ class IpfsProcess {
                     message: `Ipfs process stopped`,
                     stage: ProcessStage.STOPPED
                 });
+                this.processStatus = ProcessStage.STOPPED;
             }
             catch (error) {
                 logger({
@@ -150,6 +161,7 @@ class IpfsProcess {
                     message: `Error stopping Ipfs process: ${error.message}`,
                     error: error
                 });
+                this.processStatus = ProcessStage.ERROR;
                 throw error;
             }
         }
@@ -160,14 +172,16 @@ class IpfsProcess {
     async restart() {
         if (this.checkProcess()) {
             try {
+                this.processStatus = ProcessStage.RESTARTING;
                 await this.process?.stop();
                 await this.process?.start();
                 logger({
                     level: LogLevel.INFO,
                     processId: this.id,
                     message: `Ipfs process restarted`,
-                    stage: ProcessStage.RESTARTING
+                    stage: ProcessStage.STARTED
                 });
+                this.processStatus = ProcessStage.STARTED;
             }
             catch (error) {
                 logger({
@@ -176,6 +190,7 @@ class IpfsProcess {
                     message: `Error restarting Ipfs process: ${error.message}`,
                     error: error
                 });
+                this.processStatus = ProcessStage.ERROR;
                 throw error;
             }
         }

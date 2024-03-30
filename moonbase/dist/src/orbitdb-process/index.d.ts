@@ -1,6 +1,6 @@
 /// <reference path="../../../src/typings.d.ts" />
 import { OrbitDb, Database } from '@orbitdb/core';
-import { IProcess, IdReference, ProcessStage } from 'd3-artifacts';
+import { IProcess, PodProcessId, ProcessStage } from 'd3-artifacts';
 import { OrbitDbOptions } from './OrbitDbOptions.js';
 /**
  * Create an OrbitDb process
@@ -12,11 +12,12 @@ declare const createOrbitDbProcess: ({ ipfs, enableDID, identityProvider, direct
  * @category OrbitDb
  */
 declare class OrbitDbProcess implements IProcess {
-    id: IdReference;
+    id: PodProcessId;
     process?: typeof OrbitDb;
     options?: OrbitDbOptions;
+    private processStatus;
     constructor({ id, process, options }: {
-        id: IdReference;
+        id: PodProcessId;
         process?: typeof OrbitDb;
         options?: OrbitDbOptions;
     });

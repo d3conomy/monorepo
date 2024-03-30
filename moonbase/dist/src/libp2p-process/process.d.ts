@@ -17,6 +17,7 @@ declare class Libp2pProcess implements IProcess {
     id: PodProcessId;
     process?: Libp2p;
     options?: Libp2pProcessOptions;
+    private processStatus;
     /**
      * Create a new libp2p process
      */

@@ -3,7 +3,7 @@
 import {
     Database
 } from '@orbitdb/core';
-import { IProcess, IdReference, LogLevel, ProcessStage, logger } from 'd3-artifacts';
+import { IProcess, IdReference, LogLevel, PodProcessId, ProcessStage, logger } from 'd3-artifacts';
 import { OpenDbOptions } from './OpenDbOptions';
 
 
@@ -16,7 +16,12 @@ const openDb = async ({
     databaseName,
     databaseType,
     options
-}: OpenDbOptions): Promise<typeof Database> => {
+}: {
+    orbitDb: typeof Database,
+    databaseName: string,
+    databaseType: string,
+    options?: Map<string, string>
+}): Promise<typeof Database> => {
     logger({
         level: LogLevel.INFO,
         message: `Opening database: ${databaseName}\n` +
@@ -44,9 +49,10 @@ const openDb = async ({
 class OpenDbProcess
     implements IProcess
 {
-    public id: IdReference;
+    public id: PodProcessId;
     public process?: typeof Database;
     public options?: OpenDbOptions;
+    private processStatus: ProcessStage = ProcessStage.NEW;
 
     /**
      * Constructs a new instance of the OpenDb class.
@@ -56,7 +62,7 @@ class OpenDbProcess
         process,
         options
     }: {
-        id: IdReference;
+        id: PodProcessId;
         process?: typeof Database;
         options?: OpenDbOptions;
     }) {
@@ -76,11 +82,18 @@ class OpenDbProcess
      * Initializes the database process.
      */
     public async init(): Promise<void> {
-        if (this.checkProcess()) {
+        if (this.processStatus !== ProcessStage.INITIALIZING  &&
+            this.processStatus !== ProcessStage.INITIALIZED &&
+            this.processStatus !== ProcessStage.STARTING &&
+            this.processStatus !== ProcessStage.STARTED
+        ) {
+            this.processStatus = ProcessStage.INITIALIZING;
+        } 
+        else {
             logger({
                 level: LogLevel.WARN,
                 processId: this.id,
-                message: `Database process already exists`
+                message: `Database process already initializing`
             });
             return;
         }
@@ -92,12 +105,15 @@ class OpenDbProcess
                 databaseType: this.options.databaseType,
                 options: this.options.options
             });
-        } else {
+            this.processStatus = ProcessStage.INITIALIZED;
+        } 
+        else {
             logger({
                 level: LogLevel.ERROR,
                 processId: this.id,
                 message: `No database options found`
             });
+            this.processStatus = ProcessStage.ERROR;
             throw new Error(`No database options found`);
         }
         logger({
@@ -111,20 +127,34 @@ class OpenDbProcess
      * Starts the database process.
      */
     public async start(): Promise<void> {
-        throw new Error('Method not implemented.');
+        return;
     }
 
     /** 
      * Check the Status of the databaseProcess
      */
     public status(): ProcessStage {
-        throw new Error('Method not implemented.');
+        return this.processStatus;
     }
 
     /**
      * Stops the database process.
      */
     public async stop(): Promise<void> {
+        if (this.processStatus !== ProcessStage.STOPPING &&
+            this.processStatus !== ProcessStage.STOPPED
+        ) {
+            this.processStatus = ProcessStage.STOPPING;
+        }
+        else {
+            logger({
+                level: LogLevel.WARN,
+                processId: this.id,
+                message: `Database process already stopping`
+            });
+            return;
+        }
+
         if (this.checkProcess()) {
             await this.process?.close();
             logger({
@@ -132,12 +162,15 @@ class OpenDbProcess
                 processId: this.id,
                 message: `Database process stopped`
             });
-        } else {
+            this.processStatus = ProcessStage.STOPPED;
+        }
+        else {
             logger({
                 level: LogLevel.ERROR,
                 processId: this.id,
                 message: `No database process found`
             });
+            this.processStatus = ProcessStage.ERROR;
             throw new Error(`No database process found`);
         }
     }
@@ -146,8 +179,23 @@ class OpenDbProcess
      * Restarts the database process.
      */
     public async restart(): Promise<void> {
-        await this.stop();
-        await this.init();
+        this.processStatus = ProcessStage.RESTARTING;
+        try {
+            await this.stop();
+            this.processStatus = ProcessStage.STOPPED;
+            await this.init();
+            this.processStatus = ProcessStage.STARTED;
+        }
+        catch (error) {
+            logger({
+                level: LogLevel.ERROR,
+                processId: this.id,
+                message: `Error restarting database process: ${error}`
+            });
+            this.processStatus = ProcessStage.ERROR;
+            throw error;
+        }
+
     }
 
     /**

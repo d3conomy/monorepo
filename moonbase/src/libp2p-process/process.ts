@@ -47,6 +47,7 @@ class Libp2pProcess
     public declare id: PodProcessId
     public declare process?: Libp2p
     public declare options?: Libp2pProcessOptions
+    private processStatus: ProcessStage = ProcessStage.NEW
 
     /**
      * Create a new libp2p process
@@ -87,6 +88,7 @@ class Libp2pProcess
     public async init(): Promise<void> {
         if (!this.checkProcess()) {
             try {
+                this.processStatus = ProcessStage.INITIALIZING
                 this.process = await createLibp2pProcess(this.options)
             }
             catch {
@@ -97,22 +99,24 @@ class Libp2pProcess
                     processId: this.id,
                     message: message
                 })
+                this.processStatus = ProcessStage.ERROR
                 throw new Error(message)
             }
             logger({
                 level: LogLevel.INFO,
-                stage: ProcessStage.INIT,
+                stage: ProcessStage.INITIALIZED,
                 processId: this.id,
-                message: `Process initialized for ${this.id.podId.name}-${this.id.name}`
+                message: `Process ${this.id.name} initialized for ${this.id.podId.name}`
             })
+            this.processStatus = ProcessStage.INITIALIZED
         }
     }
 
 
     public status(): ProcessStage {
-        
         const updatedStatus = this.process?.status
-        return updatedStatus ? isProcessStage(updatedStatus) : ProcessStage.UNKNOWN
+        this.processStatus = updatedStatus ? isProcessStage(updatedStatus) : this.processStatus
+        return this.processStatus
     }
 
     /**
@@ -124,6 +128,7 @@ class Libp2pProcess
             this.status() !== ProcessStage.STARTED &&
             this.status() !== ProcessStage.STARTING
         ) {
+            this.processStatus = ProcessStage.STARTING
             try {
                 await this.process?.start()
             }
@@ -135,15 +140,29 @@ class Libp2pProcess
                     processId: this.id,
                     message: message
                 })
+                this.processStatus = ProcessStage.ERROR
                 throw new Error(message)
             }
+            this.processStatus = ProcessStage.STARTED
         }
+
+        if (this.status() === ProcessStage.STARTED) {
+            logger({
+                level: LogLevel.INFO,
+                stage: ProcessStage.STARTED,
+                processId: this.id,
+                message: `Process already started for ${this.id.podId.name}`
+            })
+            return
+        }
+
         logger({
             level: LogLevel.INFO,
-            stage: ProcessStage.STARTING,
+            stage: ProcessStage.STARTED,
             processId: this.id,
             message: `Process started for ${this.id.podId.name}`
         })
+        this.processStatus = ProcessStage.STARTED
     }
 
     /**
@@ -173,7 +192,7 @@ class Libp2pProcess
             level: LogLevel.INFO,
             stage: ProcessStage.STOPPING,
             processId: this.id,
-            message: `Process stopped for ${this.id.podId.name}-${this.id.name}`
+            message: `Process stopped for ${this.id.podId.name}`
         })
     }
 
@@ -201,7 +220,7 @@ class Libp2pProcess
             level: LogLevel.INFO,
             stage: ProcessStage.RESTARTING,
             processId: this.id,
-            message: `Process restarted for ${this.id.podId.name}-${this.id.name}`
+            message: `Process restarted for ${this.id.podId.name}`
         })
     }
 
@@ -221,7 +240,7 @@ class Libp2pProcess
                 level: LogLevel.ERROR,
                 stage: ProcessStage.ERROR,
                 processId: this.id,
-                message: `Error getting PeerId for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                message: `Error getting PeerId for ${this.id.name}: ${error.message}`,
                 error: error
             })
             throw error
@@ -245,7 +264,7 @@ class Libp2pProcess
                 level: LogLevel.ERROR,
                 stage: ProcessStage.ERROR,
                 processId: this.id,
-                message: `Error getting multiaddrs for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                message: `Error getting multiaddrs for ${this.id.name}: ${error.message}`,
                 error: error
             })
             throw error
@@ -269,7 +288,7 @@ class Libp2pProcess
                 level: LogLevel.ERROR,
                 stage: ProcessStage.ERROR,
                 processId: this.id,
-                message: `Error getting peers for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                message: `Error getting peers for ${this.id.name}: ${error.message}`,
                 error: error
             })
             throw error
@@ -327,7 +346,7 @@ class Libp2pProcess
                 level: LogLevel.ERROR,
                 stage: ProcessStage.ERROR,
                 processId: this.id,
-                message: `Error getting protocols for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                message: `Error getting protocols for ${this.id.name}: ${error.message}`,
                 error: error
             })
             throw error
@@ -348,7 +367,7 @@ class Libp2pProcess
                 level: LogLevel.ERROR,
                 stage: ProcessStage.ERROR,
                 processId: this.id,
-                message: `Error getting public key for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                message: `Error getting public key for ${this.id.name}: ${error.message}`,
                 error: error
             })
             throw error
@@ -372,7 +391,7 @@ class Libp2pProcess
                 level: LogLevel.ERROR,
                 stage: ProcessStage.ERROR,
                 processId: this.id,
-                message: `Error getting listener count for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                message: `Error getting listener count for ${this.id.name}: ${error.message}`,
                 error: error
             })
             throw error
@@ -393,7 +412,7 @@ class Libp2pProcess
                 level: LogLevel.ERROR,
                 stage: ProcessStage.ERROR,
                 processId: this.id,
-                message: `Error dialing for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                message: `Error dialing for ${this.id.name}: ${error.message}`,
                 error: error
             })
             throw error
@@ -403,7 +422,7 @@ class Libp2pProcess
                 level: LogLevel.ERROR,
                 stage: ProcessStage.ERROR,
                 processId: this.id,
-                message: `Dialed but no Connection was return for ${this.id.podId.name}-${this.id.name}: unknown error`
+                message: `Dialed but no Connection was return for ${this.id.name}: unknown error`
             })
         }
         return output
@@ -422,7 +441,7 @@ class Libp2pProcess
                 level: LogLevel.ERROR,
                 stage: ProcessStage.ERROR,
                 processId: this.id,
-                message: `Error dialing protocol for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                message: `Error dialing protocol for ${this.id.name}: ${error.message}`,
                 error: error
             })
             throw error
@@ -432,7 +451,7 @@ class Libp2pProcess
                 level: LogLevel.ERROR,
                 stage: ProcessStage.ERROR,
                 processId: this.id,
-                message: `Dialed protocol but no Stream was return for ${this.id.podId.name}-${this.id.name}: unknown error`
+                message: `Dialed protocol but no Stream was return for ${this.id.name}: unknown error`
             })
         }
         return output
@@ -450,7 +469,7 @@ class Libp2pProcess
                 level: LogLevel.ERROR,
                 stage: ProcessStage.ERROR,
                 processId: this.id,
-                message: `Error closing connection for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                message: `Error closing connection for ${this.id.name}: ${error.message}`,
                 error: error
             })
             throw error
@@ -470,7 +489,7 @@ class Libp2pProcess
                 level: LogLevel.ERROR,
                 stage: ProcessStage.ERROR,
                 processId: this.id,
-                message: `Error subscribing to topic for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                message: `Error subscribing to topic for ${this.id.name}: ${error.message}`,
                 error: error
             })
             throw error
@@ -490,7 +509,7 @@ class Libp2pProcess
                 level: LogLevel.ERROR,
                 stage: ProcessStage.ERROR,
                 processId: this.id,
-                message: `Error publishing to topic for ${this.id.podId.name}-${this.id.name}: ${error.message}`,
+                message: `Error publishing to topic for ${this.id.name}: ${error.message}`,
                 error: error
             })
             throw error

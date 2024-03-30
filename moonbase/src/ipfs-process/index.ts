@@ -6,7 +6,7 @@ import { CID } from "multiformats";
 import { Libp2p } from "libp2p";
 
 import { IpfsOptions } from "./IpfsOptions.js";
-import { IProcess, IdReference, LogLevel, ProcessStage, logger } from "d3-artifacts";
+import { IProcess, IdReference, LogLevel, PodProcessId, ProcessStage, logger } from "d3-artifacts";
 import { Libp2pProcess } from "../libp2p-process/process.js";
 
 // class HeliaLibp2pProcess extends HeliaLibp2p {
@@ -41,9 +41,10 @@ const createIpfsProcess = async ({
 class IpfsProcess
     implements IProcess
 {
-    public id: IdReference
+    public id: PodProcessId
     public process?: HeliaLibp2p<Libp2p>
     public options?: IpfsOptions
+    private processStatus: ProcessStage = ProcessStage.NEW
 
     /**
      * Constructor for the Ipfs process
@@ -53,7 +54,7 @@ class IpfsProcess
         process,
         options
     }: {
-        id: IdReference,
+        id: PodProcessId,
         process?: HeliaLibp2p<Libp2p>,
         options?: IpfsOptions
     }) {
@@ -81,12 +82,14 @@ class IpfsProcess
      * Initialize the IPFS Process
      */
     public async init(): Promise<void> {
+        this.processStatus = ProcessStage.INITIALIZING
         if (this.process !== undefined) {
             logger({
                 level: LogLevel.WARN,
                 processId: this.id,
                 message: `Ipfs process already exists`
             })
+            this.processStatus = ProcessStage.INITIALIZED
             return;
         }
 
@@ -96,6 +99,7 @@ class IpfsProcess
                 processId: this.id,
                 message: `No Ipfs options found`
             })
+            this.processStatus = ProcessStage.ERROR
             throw new Error(`No Ipfs options found`)
         }
         
@@ -105,15 +109,16 @@ class IpfsProcess
                 processId: this.id,
                 message: `No Libp2p process found`
             })
+            this.processStatus = ProcessStage.ERROR
             throw new Error(`No Libp2p process found`)
         }
 
         try {
             const process: HeliaLibp2p<Libp2p> = await createIpfsProcess(this.options)
             this.process = process
-            await process.libp2p.start()
         }
         catch (error: any) {
+            this.processStatus = ProcessStage.ERROR
             logger({
                 level: LogLevel.ERROR,
                 processId: this.id,
@@ -126,15 +131,17 @@ class IpfsProcess
             level: LogLevel.INFO,
             processId: this.id,
             message: `Ipfs process created and initialized`,
-            stage: ProcessStage.INIT
+            stage: ProcessStage.INITIALIZED
         })
+
+        this.processStatus = ProcessStage.INITIALIZED
     }
 
     /**
      * Get the status of the IPFS process
      */
     public status(): ProcessStage {
-        throw new Error("Method not implemented.");
+        return this.processStatus
     }
 
     /**
@@ -142,6 +149,7 @@ class IpfsProcess
      */
     public async start(): Promise<void> {
         if (this.checkProcess()) {
+            this.processStatus = ProcessStage.STARTING
             try {
                 await this.process?.start()
                 logger({
@@ -150,6 +158,7 @@ class IpfsProcess
                     message: `Ipfs process started`,
                     stage: ProcessStage.STARTED
                 })
+                this.processStatus = ProcessStage.STARTED
             }
             catch (error: any) {
                 logger({
@@ -158,6 +167,7 @@ class IpfsProcess
                     message: `Error starting Ipfs process: ${error.message}`,
                     error: error
                 })
+                this.processStatus = ProcessStage.ERROR
                 throw error
             }
         }
@@ -169,6 +179,7 @@ class IpfsProcess
     public async stop(): Promise<void> {
         if (this.checkProcess()) {
             try {
+                this.processStatus = ProcessStage.STOPPING
                 await this.process?.stop()
                 logger({
                     level: LogLevel.INFO,
@@ -176,6 +187,7 @@ class IpfsProcess
                     message: `Ipfs process stopped`,
                     stage: ProcessStage.STOPPED
                 })
+                this.processStatus = ProcessStage.STOPPED
             }
             catch (error: any) {
                 logger({
@@ -184,6 +196,7 @@ class IpfsProcess
                     message: `Error stopping Ipfs process: ${error.message}`,
                     error: error
                 })
+                this.processStatus = ProcessStage.ERROR
                 throw error
             }
         }
@@ -195,14 +208,16 @@ class IpfsProcess
     public async restart(): Promise<void> {
         if (this.checkProcess()) {
             try {
+                this.processStatus = ProcessStage.RESTARTING
                 await this.process?.stop()
                 await this.process?.start()
                 logger({
                     level: LogLevel.INFO,
                     processId: this.id,
                     message: `Ipfs process restarted`,
-                    stage: ProcessStage.RESTARTING
+                    stage: ProcessStage.STARTED
                 })
+                this.processStatus = ProcessStage.STARTED
             }
             catch (error: any) {
                 logger({
@@ -211,6 +226,7 @@ class IpfsProcess
                     message: `Error restarting Ipfs process: ${error.message}`,
                     error: error
                 })
+                this.processStatus = ProcessStage.ERROR
                 throw error
             }
         }

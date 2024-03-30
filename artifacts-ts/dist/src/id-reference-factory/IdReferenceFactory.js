@@ -5,7 +5,7 @@ import { MetaData } from "./IdReferenceMetadata.js";
 class IdReferenceFactory {
     ids = new Array();
     config;
-    constructor({ idReferenceFormat, } = {}) {
+    constructor({ idReferenceFormat } = {}) {
         this.config = new IdReferenceConfig({ idReferenceFormat });
     }
     isUnique(name) {
@@ -24,7 +24,7 @@ class IdReferenceFactory {
         if (metadata instanceof Map) {
             metadata = new MetaData({
                 mapped: metadata,
-                createdBy: "system:test"
+                createdBy: "system"
             });
         }
         else {

@@ -3,7 +3,7 @@ import {
     createOrbitDB,
     Database
 } from '@orbitdb/core';
-import { IProcess, IdReference, LogLevel, ProcessStage, ResponseCode, logger } from 'd3-artifacts';
+import { IProcess, IdReference, LogLevel, PodProcessId, ProcessStage, ResponseCode, logger } from 'd3-artifacts';
 import { OrbitDbOptions } from './OrbitDbOptions.js';
 
 
@@ -39,16 +39,17 @@ const createOrbitDbProcess = async ({
 class OrbitDbProcess
     implements IProcess
 {
-    public id: IdReference;
+    public id: PodProcessId;
     public process?: typeof OrbitDb;
     public options?: OrbitDbOptions;
+    private processStatus: ProcessStage = ProcessStage.NEW;
 
     constructor({
         id,
         process,
         options
     }: {
-        id: IdReference,
+        id: PodProcessId,
         process?: typeof OrbitDb,
         options?: OrbitDbOptions
     }) {
@@ -76,6 +77,7 @@ class OrbitDbProcess
      * Initialize the OrbitDb process
      */
     public async init(): Promise<void> {
+        this.processStatus = ProcessStage.INITIALIZING;
         if (this.process) {
             logger({
                 level: LogLevel.ERROR,
@@ -92,14 +94,27 @@ class OrbitDbProcess
         if (!this.options.ipfs) {
             throw new Error(`No Ipfs process found`)
         }
-        this.process = await createOrbitDbProcess(this.options);
+
+        try {
+            this.process = await createOrbitDbProcess(this.options);
+            this.processStatus = ProcessStage.INITIALIZED;
+        }
+        catch (error: Error | any) {
+            logger({
+                level: LogLevel.ERROR,
+                processId: this.id,
+                message: `Error initializing OrbitDb process: ${error}`
+            })
+            this.processStatus = ProcessStage.ERROR;
+            throw error;
+        }
     }
 
     /**
      * Get the status of the OrbitDb process
      */
     public status(): ProcessStage {
-        throw new Error(`OrbitDb process status not implemented`)
+        return this.processStatus;
     }
 
     /**

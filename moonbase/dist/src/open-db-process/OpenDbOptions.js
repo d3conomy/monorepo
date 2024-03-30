@@ -20,6 +20,7 @@ const isOrbitDbType = (value) => {
  * @category Database
  */
 class OpenDbOptions {
+    id;
     orbitDb;
     databaseName;
     databaseType;
@@ -27,7 +28,8 @@ class OpenDbOptions {
     /**
      * Constructs a new instance of the _OpenDbOptions class.
      */
-    constructor({ orbitDb, databaseName, databaseType, options }) {
+    constructor({ id, orbitDb, databaseName, databaseType, options }) {
+        this.id = id;
         this.orbitDb = orbitDb;
         this.databaseName = databaseName;
         this.databaseType = databaseType ? isOrbitDbType(databaseType) : OrbitDbTypes.EVENTS;

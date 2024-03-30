@@ -2,7 +2,7 @@ import { HeliaLibp2p } from "helia";
 import { CID } from "multiformats";
 import { Libp2p } from "libp2p";
 import { IpfsOptions } from "./IpfsOptions.js";
-import { IProcess, IdReference, ProcessStage } from "d3-artifacts";
+import { IProcess, PodProcessId, ProcessStage } from "d3-artifacts";
 /**
  * Create an IPFS process
  * @category IPFS
@@ -15,14 +15,15 @@ declare const createIpfsProcess: ({ libp2p, datastore, blockstore, start }: Ipfs
  * @category IPFS
  */
 declare class IpfsProcess implements IProcess {
-    id: IdReference;
+    id: PodProcessId;
     process?: HeliaLibp2p<Libp2p>;
     options?: IpfsOptions;
+    private processStatus;
     /**
      * Constructor for the Ipfs process
      */
     constructor({ id, process, options }: {
-        id: IdReference;
+        id: PodProcessId;
         process?: HeliaLibp2p<Libp2p>;
         options?: IpfsOptions;
     });

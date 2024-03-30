@@ -1,5 +1,5 @@
 import { createOrbitDB } from '@orbitdb/core';
-import { LogLevel, ResponseCode, logger } from 'd3-artifacts';
+import { LogLevel, ProcessStage, ResponseCode, logger } from 'd3-artifacts';
 /**
  * Create an OrbitDb process
  * @category OrbitDb
@@ -27,6 +27,7 @@ class OrbitDbProcess {
     id;
     process;
     options;
+    processStatus = ProcessStage.NEW;
     constructor({ id, process, options }) {
         this.id = id;
         this.process = process;
@@ -51,6 +52,7 @@ class OrbitDbProcess {
      * Initialize the OrbitDb process
      */
     async init() {
+        this.processStatus = ProcessStage.INITIALIZING;
         if (this.process) {
             logger({
                 level: LogLevel.ERROR,
@@ -65,13 +67,25 @@ class OrbitDbProcess {
         if (!this.options.ipfs) {
             throw new Error(`No Ipfs process found`);
         }
-        this.process = await createOrbitDbProcess(this.options);
+        try {
+            this.process = await createOrbitDbProcess(this.options);
+            this.processStatus = ProcessStage.INITIALIZED;
+        }
+        catch (error) {
+            logger({
+                level: LogLevel.ERROR,
+                processId: this.id,
+                message: `Error initializing OrbitDb process: ${error}`
+            });
+            this.processStatus = ProcessStage.ERROR;
+            throw error;
+        }
     }
     /**
      * Get the status of the OrbitDb process
      */
     status() {
-        throw new Error(`OrbitDb process status not implemented`);
+        return this.processStatus;
     }
     /**
      * Start the OrbitDb process

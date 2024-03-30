@@ -4,7 +4,8 @@
  */
 enum ProcessStage {
     NEW = 'new',
-    INIT = 'init',
+    INITIALIZING = 'initializing',
+    INITIALIZED = 'initialized',
     STARTED = 'started',
     STARTING = 'starting',
     PENDING = 'pending',
