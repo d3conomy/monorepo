@@ -420,5 +420,9 @@ export {
     PutRecordRequestData,
     PutRecordResponse,
     DeleteRecordRequestData,
-    DeleteRecordRequest
+    DeleteRecordRequest,
+    IDatabaseCommand,
+    IDatabaseRecord,
+    GetDatabaseRequestRecord,
+    GetRecordResponseData
 }

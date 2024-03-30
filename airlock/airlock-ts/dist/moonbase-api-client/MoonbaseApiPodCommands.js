@@ -112,4 +112,4 @@ class PodCommandResponse extends MoonbaseResponse {
         this.data = new PodCommandResponseData(response);
     }
 }
-export { PodCommands, PodCommandRequest, PodCommandResponse, AddJsonCommandArgs, GetJsonCommandArgs, DialCommandArgs, PodCommandArgs, PodInfoTypes, GetPodInfoRequest, GetPodInfoResponse };
+export { PodCommands, PodCommandRequest, PodCommandResponse, AddJsonCommandArgs, GetJsonCommandArgs, DialCommandArgs, PodCommandArgs, PodInfoTypes, GetPodInfoRequest, GetPodInfoResponse, PodCommandResponseData };

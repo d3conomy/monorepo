@@ -1,4 +1,4 @@
-import { IdReferenceFactory, MoonbaseId } from '../id-reference-factory/index.js';
+import { IdReferenceFactory, MoonbaseId } from 'd3-artifacts';
 import { IMoonbaseServers } from './MoonbaseServerInterfaces.js';
 import { MoonbaseServer } from './MoonbaseServer.js';
 import { MoonbaseServerUrl } from './MoonbaseServerUrl.js';

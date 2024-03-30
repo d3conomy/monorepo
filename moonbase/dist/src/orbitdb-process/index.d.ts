@@ -54,4 +54,6 @@ declare class OrbitDbProcess implements IProcess {
     restart(): Promise<void>;
 }
 export { createOrbitDbProcess, OrbitDbProcess };
+export * from './OrbitDbOptions.js';
+export * from './OrbitDbIdentityProvider.js';
 //# sourceMappingURL=index.d.ts.map

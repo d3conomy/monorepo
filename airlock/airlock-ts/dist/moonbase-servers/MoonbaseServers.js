@@ -1,4 +1,4 @@
-import { IdReferenceTypes } from '../id-reference-factory/index.js';
+import { IdReferenceTypes } from 'd3-artifacts';
 import { MoonbaseServer } from './MoonbaseServer.js';
 class MoonbaseServers {
     idReferenceFactory;

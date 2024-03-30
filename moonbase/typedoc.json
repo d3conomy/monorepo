@@ -1,7 +1,15 @@
 
 {
     "$schema": "https://typedoc.org/schema.json",
-    "entryPoints": ["./src/index.ts"],
+    "entryPoints": [
+        // "./src/index.ts",
+        "./src/ipfs-process/index.ts",
+        "./src/libp2p-process/index.ts",
+        // "./src/moonbase-config/index.ts",
+        // "./src/moonbase-system/index.ts",
+        "./src/open-db-process/index.ts",
+        "./src/orbitdb-process/index.ts"
+    ],
     "entryPointStrategy": "expand",
     "sort": ["alphabetical"],
     "name": "Moonbase",

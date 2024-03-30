@@ -1,8 +1,13 @@
 {
     "$schema": "https://typedoc.org/schema.json",
-    "entryPoints": ["./src/index.ts", ],
+    "entryPoints": [
+        // "./src/index.ts",
+        "./src/id-reference-factory/index.ts",
+        "./src/log-books-manager/index.ts",
+        "./src/process-interface/index.ts"
+    ],
     "entryPointStrategy": "expand",
     "sort": ["alphabetical"],
-    "name": "Common [TS]",
+    "name": "Artifacts [TS]",
     "exclude": [ "test/**"]
 }

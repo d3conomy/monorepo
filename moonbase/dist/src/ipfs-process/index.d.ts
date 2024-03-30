@@ -64,4 +64,5 @@ declare class IpfsProcess implements IProcess {
     getLibp2p(): Libp2p | undefined;
 }
 export { createIpfsProcess, IpfsProcess };
+export * from "./IpfsOptions.js";
 //# sourceMappingURL=index.d.ts.map

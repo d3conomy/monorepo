@@ -1,5 +1,17 @@
 #!/bin/bash
 
+if [ "$1" = "build" ]; then
+    echo "Building tsc dist"
+    npx tsc -p ./airlock/airlock-ts/tsconfig.json
+    npx tsc -p ./artifacts-ts/tsconfig.json
+    npx tsc -p ./moonbase/tsconfig.json
+else
+    echo "Building docs"
+    echo "Please use 'build' as an argument"
+    exit 1
+fi
+
+
 rm -f -R docs-json
 
 npx typedoc \
@@ -9,12 +21,12 @@ npx typedoc \
     --searchInComments \
     --validation.invalidLink false
 
-# npx typedoc \
-#     --plugin typedoc-plugin-inline-sources \
-#     --json docs-json/common.json \
-#     --options artifacts-ts/typedoc.json \
-#     --searchInComments \
-#     --validation.invalidLink false
+npx typedoc \
+    --plugin typedoc-plugin-inline-sources \
+    --json docs-json/artifacts-ts.json \
+    --options artifacts-ts/typedoc.json \
+    --searchInComments \
+    --validation.invalidLink false
 
 npx typedoc \
     --plugin typedoc-plugin-inline-sources \

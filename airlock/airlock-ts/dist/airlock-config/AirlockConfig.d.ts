@@ -1,9 +1,4 @@
-declare enum LogLevel {
-    Debug = "debug",
-    Info = "info",
-    Warn = "warn",
-    Error = "error"
-}
+import { LogLevel } from "d3-artifacts";
 declare class AirlockConfig {
     logLevel: LogLevel;
 }

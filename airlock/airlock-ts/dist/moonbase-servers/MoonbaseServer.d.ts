@@ -1,4 +1,4 @@
-import { MoonbaseId } from '../id-reference-factory/index.js';
+import { MoonbaseId } from 'd3-artifacts';
 import { ApiClientCalls } from '../moonbase-api-client/MoonbaseApiClientCalls.js';
 import { AddRecordResponse, DatabaseTypes, PodCommandResponse, PodInfoTypes } from '../moonbase-api-client/index.js';
 import { IMoonbaseServer } from './MoonbaseServerInterfaces.js';

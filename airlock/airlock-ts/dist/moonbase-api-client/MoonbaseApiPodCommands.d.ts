@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { MoonbaseServerUrl } from '../moonbase-servers';
+import { MoonbaseServerUrl } from '../moonbase-servers/index.js';
 import { MoonbaseRequest, MoonbaseResponse } from './MoonbaseApiClasses.js';
 declare enum PodInfoTypes {
     Components = "components",
@@ -81,4 +81,4 @@ declare class PodCommandResponse extends MoonbaseResponse {
     data: PodCommandResponseData;
     constructor(response: AxiosResponse);
 }
-export { PodCommands, PodCommandRequest, PodCommandResponse, AddJsonCommandArgs, GetJsonCommandArgs, DialCommandArgs, PodCommandArgs, PodInfoTypes, GetPodInfoRequest, GetPodInfoResponse };
+export { PodCommands, PodCommandRequest, PodCommandResponse, AddJsonCommandArgs, GetJsonCommandArgs, DialCommandArgs, PodCommandArgs, PodInfoTypes, GetPodInfoRequest, GetPodInfoResponse, IPodCommandArgs, IPodCommandResponseData, PodCommandResponseData };

@@ -1,6 +1,6 @@
 import {
     MoonbaseId
-} from '../id-reference-factory/index.js';
+} from 'd3-artifacts';
 import { ApiClientCalls } from '../moonbase-api-client/MoonbaseApiClientCalls.js';
 import {
     AddRecordResponse,

@@ -139,3 +139,5 @@ class OrbitDbProcess {
     }
 }
 export { createOrbitDbProcess, OrbitDbProcess };
+export * from './OrbitDbOptions.js';
+export * from './OrbitDbIdentityProvider.js';

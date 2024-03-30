@@ -128,6 +128,8 @@ describe('OpenDbProcess', () => {
             // The test should throw an error, so this line should not be reached
             expect.fail('Failed to open database');
         }
+
+        await orbitDb.stop();
     });
 
 

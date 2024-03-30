@@ -258,4 +258,4 @@ class DeleteRecordRequest extends MoonbaseRequest {
         });
     }
 }
-export { GetOpenDatabasesRequest, GetOpenDatabasesResponse, OpenDatabaseRequest, OpenDatabaseResponse, CloseDatabaseRequest, GetDatabaseInfoRequest, GetDatabaseInfoResponse, DatabaseRecord, DatabaseTypes, DatabaseCommands, AddRecordRequest, AddRecordResponse, AddRecordRequestData, GetRecordRequest, GetRecordRequestData, GetRecordResponse, PutRecordRequest, PutRecordRequestData, PutRecordResponse, DeleteRecordRequestData, DeleteRecordRequest };
+export { GetOpenDatabasesRequest, GetOpenDatabasesResponse, OpenDatabaseRequest, OpenDatabaseResponse, CloseDatabaseRequest, GetDatabaseInfoRequest, GetDatabaseInfoResponse, DatabaseRecord, DatabaseTypes, DatabaseCommands, AddRecordRequest, AddRecordResponse, AddRecordRequestData, GetRecordRequest, GetRecordRequestData, GetRecordResponse, PutRecordRequest, PutRecordRequestData, PutRecordResponse, DeleteRecordRequestData, DeleteRecordRequest, GetDatabaseRequestRecord, GetRecordResponseData };

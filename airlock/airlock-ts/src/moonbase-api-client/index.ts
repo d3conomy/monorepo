@@ -1,4 +1,5 @@
 export * from './ApiClient.js';
+export * from './MoonbaseApiClientCalls.js'
 export * from './MoonbaseApiPodCommands.js'
 export * from './MoonbaseApiPodControl.js'
 export * from './MoonbaseApiClasses.js'

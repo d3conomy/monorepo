@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { MoonbaseServerUrl } from '../moonbase-servers';
+import { MoonbaseServerUrl } from '../moonbase-servers/index.js';
 import { MoonbaseRequest, MoonbaseResponse } from './MoonbaseApiClasses.js';
 
 
@@ -187,5 +187,8 @@ export {
     PodCommandArgs,
     PodInfoTypes,
     GetPodInfoRequest,
-    GetPodInfoResponse
+    GetPodInfoResponse,
+    IPodCommandArgs,
+    IPodCommandResponseData,
+    PodCommandResponseData
 }

@@ -38,7 +38,7 @@
     // },                                   /* Specify a set of entries that re-map imports to additional lookup locations. */
     "rootDirs": [
       "./artifacts-ts/dist",
-      "./moonbase/src",
+      "./moonbase/dist",
       "./airlock/airlock-react/src",
       "./airlock/airlock-ts/src"
     ],                                   /* Allow multiple folders to be treated as one when resolving modules. */
@@ -119,9 +119,10 @@
     "moonbase/tests",
     "airlock/airlock-react/src/**/*",
     "airlock/airlock-ts/src/**/*",
-    "artifacts-ts/src/process-interface",
-    "artifacts-ts/src/id-reference-factory",
-    "artifacts-ts/src/process-interface",
+    "artifacts-ts/src/**/*",
+    // "artifacts-ts/src/process-interface",
+    // "artifacts-ts/src/id-reference-factory",
+    // "artifacts-ts/src/process-interface",
     // "moonbase/dist/**/*",
     // "moonbase/dist/api/**/*",
     // "moonbase/dist/utils/**/*",

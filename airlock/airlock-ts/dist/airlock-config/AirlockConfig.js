@@ -1,11 +1,5 @@
-var LogLevel;
-(function (LogLevel) {
-    LogLevel["Debug"] = "debug";
-    LogLevel["Info"] = "info";
-    LogLevel["Warn"] = "warn";
-    LogLevel["Error"] = "error";
-})(LogLevel || (LogLevel = {}));
+import { LogLevel } from "d3-artifacts";
 class AirlockConfig {
-    logLevel = LogLevel.Info;
+    logLevel = LogLevel.INFO;
 }
 export { AirlockConfig };

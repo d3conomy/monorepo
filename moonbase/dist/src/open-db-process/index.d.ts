@@ -77,4 +77,5 @@ declare class OpenDbProcess implements IProcess {
     query(mapper: any): Promise<any>;
 }
 export { OpenDbProcess, openDb, };
+export * from './OpenDbOptions.js';
 //# sourceMappingURL=index.d.ts.map

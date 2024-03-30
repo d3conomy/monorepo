@@ -168,3 +168,4 @@ class OpenDbProcess {
     }
 }
 export { OpenDbProcess, openDb, };
+export * from './OpenDbOptions.js';

@@ -214,3 +214,4 @@ export {
     openDb,
 }
 
+export * from './OpenDbOptions.js';
