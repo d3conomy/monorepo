@@ -18,7 +18,7 @@ class MoonbaseServers {
     createServer({ id, url, }) {
         id = id ? id : this.idReferenceFactory.createIdReference({
             type: IdReferenceTypes.MOONBASE,
-            dependent: this.idReferenceFactory.getIdReferencesByType('system')[0]
+            dependsOn: this.idReferenceFactory.getIdReferencesByType('system')[0]
         });
         const server = new MoonbaseServer({ id, url });
         this.addServer(server);

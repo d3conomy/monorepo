@@ -51,7 +51,7 @@ class MoonbaseServers implements IMoonbaseServers {
     }): MoonbaseServer {
         id = id ? id : this.idReferenceFactory.createIdReference({
             type: IdReferenceTypes.MOONBASE,
-            dependent: this.idReferenceFactory.getIdReferencesByType('system')[0]
+            dependsOn: this.idReferenceFactory.getIdReferencesByType('system')[0]
         }) as MoonbaseId;
         
         const server = new MoonbaseServer({id, url});
