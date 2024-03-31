@@ -23,5 +23,5 @@ declare class IdReferenceFactory {
     deleteIdReference(name: string): void;
     deleteAllIdReferences(): void;
 }
-export { IdReferenceFactory };
+export { IdReferenceFactory, IdTypes };
 //# sourceMappingURL=IdReferenceFactory.d.ts.map

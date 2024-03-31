@@ -11,11 +11,11 @@ declare class ApiClientCalls extends ApiClient {
     ping(): Promise<PingResponse>;
     logs(): Promise<LogBookResponse>;
     pods(): Promise<PodsResponse>;
-    deployPod(podId?: string, component?: string): Promise<DeployPodResponse>;
+    deployPod(podId?: string, process?: string): Promise<DeployPodResponse>;
     deletePod(podId: string): Promise<DeletePodResponse>;
-    startPod(podId: string, component?: string): Promise<StartPodResponse>;
-    stopPod(podId: string, component?: string): Promise<StartPodResponse>;
-    restartPod(podId: string, component?: string): Promise<StartPodResponse>;
+    startPod(podId: string, process?: string): Promise<StartPodResponse>;
+    stopPod(podId: string, process?: string): Promise<StartPodResponse>;
+    restartPod(podId: string, process?: string): Promise<StartPodResponse>;
     podInfo(podId: string, info: PodInfoTypes): Promise<GetPodInfoResponse>;
     podCommand(podId: string, command: PodCommands, args: PodCommandArgs): Promise<PodCommandResponse>;
     podDial(podId: string, multiAddr: string): Promise<PodCommandResponse>;

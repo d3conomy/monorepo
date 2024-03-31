@@ -95,12 +95,12 @@ class ApiClientCalls extends ApiClient {
     }
 
     async deployPod(podId?: string,
-        component?: string
+        process?: string
     ): Promise<DeployPodResponse> {
         const request: any = new DeployPodRequest(
             this.moonbaseServerUrl,
             podId,
-            component
+            process
         );
         const response = await this.makeRequest(request);
         return new DeployPodResponse(response)
@@ -117,12 +117,12 @@ class ApiClientCalls extends ApiClient {
 
     async startPod(
         podId: string,
-        component?: string
+        process?: string
     ): Promise<StartPodResponse> {
         const request: any = new StartPodRequest(
             this.moonbaseServerUrl,
             podId,
-            component
+            process
         );
         const response = await this.makeRequest(request);
         return new StartPodResponse(response)
@@ -130,12 +130,12 @@ class ApiClientCalls extends ApiClient {
 
     async stopPod(
         podId: string,
-        component?: string
+        process?: string
     ): Promise<StartPodResponse> {
         const request: any = new StopPodRequest(
             this.moonbaseServerUrl,
             podId,
-            component
+            process
         );
         const response = await this.makeRequest(request);
         return new StartPodResponse(response)
@@ -143,12 +143,12 @@ class ApiClientCalls extends ApiClient {
 
     async restartPod(
         podId: string,
-        component?: string
+        process?: string
     ): Promise<StartPodResponse> {
         const request: any = new RestartPodRequest(
             this.moonbaseServerUrl,
             podId,
-            component
+            process
         );
         const response = await this.makeRequest(request);
         return new StartPodResponse(response)

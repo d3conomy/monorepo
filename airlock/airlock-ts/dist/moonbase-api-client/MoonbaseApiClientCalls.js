@@ -25,8 +25,8 @@ class ApiClientCalls extends ApiClient {
         const response = await this.makeRequest(request);
         return new PodsResponse(response);
     }
-    async deployPod(podId, component) {
-        const request = new DeployPodRequest(this.moonbaseServerUrl, podId, component);
+    async deployPod(podId, process) {
+        const request = new DeployPodRequest(this.moonbaseServerUrl, podId, process);
         const response = await this.makeRequest(request);
         return new DeployPodResponse(response);
     }
@@ -35,18 +35,18 @@ class ApiClientCalls extends ApiClient {
         const response = await this.makeRequest(request);
         return new DeletePodResponse(response);
     }
-    async startPod(podId, component) {
-        const request = new StartPodRequest(this.moonbaseServerUrl, podId, component);
+    async startPod(podId, process) {
+        const request = new StartPodRequest(this.moonbaseServerUrl, podId, process);
         const response = await this.makeRequest(request);
         return new StartPodResponse(response);
     }
-    async stopPod(podId, component) {
-        const request = new StopPodRequest(this.moonbaseServerUrl, podId, component);
+    async stopPod(podId, process) {
+        const request = new StopPodRequest(this.moonbaseServerUrl, podId, process);
         const response = await this.makeRequest(request);
         return new StartPodResponse(response);
     }
-    async restartPod(podId, component) {
-        const request = new RestartPodRequest(this.moonbaseServerUrl, podId, component);
+    async restartPod(podId, process) {
+        const request = new RestartPodRequest(this.moonbaseServerUrl, podId, process);
         const response = await this.makeRequest(request);
         return new StartPodResponse(response);
     }

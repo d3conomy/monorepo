@@ -4,7 +4,7 @@ import { MoonbaseRequest, MoonbaseResponse } from './MoonbaseApiClasses.js';
 
 
 enum PodInfoTypes {
-    Components = 'components',
+    ProcessTypes = 'processes',
     PeerId = 'peerId',
     MultiAddrs = 'multiaddrs',
     Connections = 'connections',
@@ -18,14 +18,14 @@ class GetPodInfoRequest extends MoonbaseRequest {
         podId: string,
         info?: PodInfoTypes
     ) {
-        if (info && info !== PodInfoTypes.Components) {
+        if (info && info !== PodInfoTypes.ProcessTypes) {
             super({
                 baseUrl: baseUrl,
                 endpoint: `pod/${podId}?info=${info.toLocaleLowerCase()}`,
                 method: 'GET'
             });
         } 
-        else if (!info || info === PodInfoTypes.Components){
+        else if (!info || info === PodInfoTypes.ProcessTypes){
             super({
                 baseUrl: baseUrl,
                 endpoint: `pod/${podId}`,

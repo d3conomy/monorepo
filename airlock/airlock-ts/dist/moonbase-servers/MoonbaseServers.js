@@ -8,7 +8,8 @@ class MoonbaseServers {
         this.servers = new Array();
         if (moonbaseServerUrls) {
             moonbaseServerUrls.forEach(url => {
-                this.createServer({ url });
+                const id = this.idReferenceFactory.createIdReference({ type: IdReferenceTypes.MOONBASE, dependsOn: this.idReferenceFactory.getIdReferencesByType(IdReferenceTypes.SYSTEM)[0] });
+                this.servers.push(this.createServer({ id, url }));
             });
         }
     }
@@ -16,11 +17,14 @@ class MoonbaseServers {
         this.servers.push(server);
     }
     createServer({ id, url, }) {
-        id = id ? id : this.idReferenceFactory.createIdReference({
-            type: IdReferenceTypes.MOONBASE,
-            dependsOn: this.idReferenceFactory.getIdReferencesByType('system')[0]
-        });
-        const server = new MoonbaseServer({ id, url });
+        let moonbaseId;
+        if (typeof id === 'string') {
+            moonbaseId = this.idReferenceFactory.createIdReference({ name: id, type: IdReferenceTypes.MOONBASE, dependsOn: this.idReferenceFactory.getIdReferencesByType(IdReferenceTypes.SYSTEM)[0] });
+        }
+        else {
+            moonbaseId = this.idReferenceFactory.createIdReference({ type: IdReferenceTypes.MOONBASE, dependsOn: this.idReferenceFactory.getIdReferencesByType(IdReferenceTypes.SYSTEM)[0] });
+        }
+        const server = new MoonbaseServer({ id: moonbaseId, url });
         this.addServer(server);
         return server;
     }

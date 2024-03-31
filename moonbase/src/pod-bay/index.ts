@@ -37,7 +37,8 @@ class PodBay {
     }) {
         this.idReferenceFactory = idReferenceFactory;
         this.id = id ? id : this.idReferenceFactory.createIdReference({
-            type: IdReferenceTypes.POD_BAY
+            type: IdReferenceTypes.POD_BAY,
+            dependsOn: this.idReferenceFactory.getIdReferencesByType(IdReferenceTypes.SYSTEM)[0]
         });
         this.pods = pods ? pods : new Array<LunarPod>();
 
@@ -79,7 +80,8 @@ class PodBay {
                         ["processType", processType],
                         ["createdBy", this.id.name]
                     ])
-                })
+                }),
+                dependsOn: this.id
             });
         }
         if (id && !this.checkPodId(id)) {
@@ -114,7 +116,7 @@ class PodBay {
     /**
      * Gets a pod from the PodBay.
      */
-    public getPod(id?: PodId): LunarPod | undefined {
+    public getPod(id?: PodId | string): LunarPod | undefined {
         if (!id) {
             logger({
                 level: LogLevel.ERROR,
@@ -122,14 +124,27 @@ class PodBay {
             })
         }
         else {
-            const pod = this.pods.find(pod => pod.id.name === id.name);
+            let podId: PodId;
+            if (typeof id === "string") {
+                podId = this.idReferenceFactory.getIdReference(id) as PodId;
+            }
+            else if (id instanceof PodId){
+                podId = id;
+            }
+            else {
+                logger({
+                    level: LogLevel.ERROR,
+                    message: `IdReference is not of type PodId`
+                });
+            }
+            const pod = this.pods.find(pod => pod.id.name === podId.name);
             if (pod) {
                 return pod;
             }
             else {
                 logger({
                     level: LogLevel.ERROR,
-                    message: `Pod with id ${id.name} not found`
+                    message: `Pod with id ${id} not found`
                 });
             }
         }
@@ -138,7 +153,7 @@ class PodBay {
     /**
      * Removes a pod from the PodBay.
      */
-    public async removePod(id: PodId): Promise<void> {
+    public async removePod(id: PodId | string): Promise<void> {
         const pod = this.getPod(id);
         if (pod) {
             if (pod.db.size > 0) {
@@ -148,16 +163,17 @@ class PodBay {
             }
             await pod.stop();
             const index = this.pods.indexOf(pod);
-            this.pods.splice(index, 1);
+            const deletetdId = this.pods.splice(index, 1);
+            this.idReferenceFactory.deleteIdReference(deletetdId[0].id.name);
             logger({
                 level: LogLevel.INFO,
-                message: `Pod with id ${id.name} removed`
+                message: `Pod with id ${deletetdId[0].id.name} removed`
             });
         }
         else {
             logger({
                 level: LogLevel.ERROR,
-                message: `Pod with id ${id.name} not found`
+                message: `Pod with id ${id} not found`
             });
         }
     }
@@ -304,7 +320,8 @@ class PodBay {
                             ["processType", ProcessType.OPEN_DB],
                             ["createdBy", this.id.name]
                         ])
-                    })
+                    }),
+                    dependsOn: this.id
                 }),
                 processType: ProcessType.OPEN_DB
             });
@@ -374,7 +391,7 @@ class PodBay {
             }
         }
 
-        throw new Error(`Database ${dbName} not found`);
+        // throw new Error(`Database ${dbName} not found`);
     }
 
     /**

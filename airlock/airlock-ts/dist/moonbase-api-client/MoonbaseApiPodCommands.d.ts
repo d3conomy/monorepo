@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios';
 import { MoonbaseServerUrl } from '../moonbase-servers/index.js';
 import { MoonbaseRequest, MoonbaseResponse } from './MoonbaseApiClasses.js';
 declare enum PodInfoTypes {
-    Components = "components",
+    ProcessTypes = "processes",
     PeerId = "peerId",
     MultiAddrs = "multiaddrs",
     Connections = "connections",

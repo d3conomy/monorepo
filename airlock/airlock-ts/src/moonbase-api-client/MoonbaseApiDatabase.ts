@@ -306,7 +306,7 @@ class DatabaseCommandResponseData extends DatabaseRecord {
     message?: string;
     dbId?: {
         name: string,
-        component: string
+        process: string
     };
     command?: DatabaseCommands;
     error?: string;
@@ -327,7 +327,7 @@ class DatabaseCommandResponseData extends DatabaseRecord {
         message?: string,
         dbId?: {
             name: string,
-            component: string
+            process: string
         },
         command?: DatabaseCommands,
         error?: string

@@ -1,5 +1,5 @@
 import { LunarPod } from "../lunar-pod/index.js";
-import { IdReferenceTypes, LogLevel, MetaData, PodProcessId, ProcessType, logger } from "d3-artifacts";
+import { IdReferenceTypes, LogLevel, MetaData, PodId, PodProcessId, ProcessType, logger } from "d3-artifacts";
 /**
  * Represents a collection of LunarPods and provides methods for managing and interacting with them.
  * @category PodBay
@@ -20,7 +20,8 @@ class PodBay {
     constructor({ id, idReferenceFactory, pods }) {
         this.idReferenceFactory = idReferenceFactory;
         this.id = id ? id : this.idReferenceFactory.createIdReference({
-            type: IdReferenceTypes.POD_BAY
+            type: IdReferenceTypes.POD_BAY,
+            dependsOn: this.idReferenceFactory.getIdReferencesByType(IdReferenceTypes.SYSTEM)[0]
         });
         this.pods = pods ? pods : new Array();
     }
@@ -51,7 +52,8 @@ class PodBay {
                         ["processType", processType],
                         ["createdBy", this.id.name]
                     ])
-                })
+                }),
+                dependsOn: this.id
             });
         }
         if (id && !this.checkPodId(id)) {
@@ -91,14 +93,27 @@ class PodBay {
             });
         }
         else {
-            const pod = this.pods.find(pod => pod.id.name === id.name);
+            let podId;
+            if (typeof id === "string") {
+                podId = this.idReferenceFactory.getIdReference(id);
+            }
+            else if (id instanceof PodId) {
+                podId = id;
+            }
+            else {
+                logger({
+                    level: LogLevel.ERROR,
+                    message: `IdReference is not of type PodId`
+                });
+            }
+            const pod = this.pods.find(pod => pod.id.name === podId.name);
             if (pod) {
                 return pod;
             }
             else {
                 logger({
                     level: LogLevel.ERROR,
-                    message: `Pod with id ${id.name} not found`
+                    message: `Pod with id ${id} not found`
                 });
             }
         }
@@ -116,16 +131,17 @@ class PodBay {
             }
             await pod.stop();
             const index = this.pods.indexOf(pod);
-            this.pods.splice(index, 1);
+            const deletetdId = this.pods.splice(index, 1);
+            this.idReferenceFactory.deleteIdReference(deletetdId[0].id.name);
             logger({
                 level: LogLevel.INFO,
-                message: `Pod with id ${id.name} removed`
+                message: `Pod with id ${deletetdId[0].id.name} removed`
             });
         }
         else {
             logger({
                 level: LogLevel.ERROR,
-                message: `Pod with id ${id.name} not found`
+                message: `Pod with id ${id} not found`
             });
         }
     }
@@ -223,7 +239,8 @@ class PodBay {
                             ["processType", ProcessType.OPEN_DB],
                             ["createdBy", this.id.name]
                         ])
-                    })
+                    }),
+                    dependsOn: this.id
                 }),
                 processType: ProcessType.OPEN_DB
             });
@@ -283,7 +300,7 @@ class PodBay {
                 return pod.getOpenDb(processId);
             }
         }
-        throw new Error(`Database ${dbName} not found`);
+        // throw new Error(`Database ${dbName} not found`);
     }
     /**
      * Closes the open database with the specified name or ID.

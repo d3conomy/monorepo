@@ -1,7 +1,7 @@
 import { MoonbaseRequest, MoonbaseResponse } from './MoonbaseApiClasses.js';
 var PodInfoTypes;
 (function (PodInfoTypes) {
-    PodInfoTypes["Components"] = "components";
+    PodInfoTypes["ProcessTypes"] = "processes";
     PodInfoTypes["PeerId"] = "peerId";
     PodInfoTypes["MultiAddrs"] = "multiaddrs";
     PodInfoTypes["Connections"] = "connections";
@@ -10,14 +10,14 @@ var PodInfoTypes;
 })(PodInfoTypes || (PodInfoTypes = {}));
 class GetPodInfoRequest extends MoonbaseRequest {
     constructor(baseUrl, podId, info) {
-        if (info && info !== PodInfoTypes.Components) {
+        if (info && info !== PodInfoTypes.ProcessTypes) {
             super({
                 baseUrl: baseUrl,
                 endpoint: `pod/${podId}?info=${info.toLocaleLowerCase()}`,
                 method: 'GET'
             });
         }
-        else if (!info || info === PodInfoTypes.Components) {
+        else if (!info || info === PodInfoTypes.ProcessTypes) {
             super({
                 baseUrl: baseUrl,
                 endpoint: `pod/${podId}`,

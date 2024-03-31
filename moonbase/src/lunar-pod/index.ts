@@ -9,7 +9,7 @@ import { createProcessIds } from "d3-artifacts"
 
 
 /**
- * Represents a LunarPod, which is a container for managing various components and databases.
+ * Represents a LunarPod, which is a container for managing various processes and databases.
  * @category Pod
 */
 class LunarPod {
@@ -66,7 +66,7 @@ class LunarPod {
     }
 
     /**
-     * Get the components and their statuses for this pod.
+     * Get the processes and their statuses for this pod.
      */
     public getProcesses(): Array<{id: PodProcessId, status: ProcessStage}> {
         const componentIds = [
@@ -92,7 +92,7 @@ class LunarPod {
     }
 
     /**
-     * Initialize all components and databases in the pod.
+     * Initialize all processes and databases in the pod.
      */
     private async initAll(): Promise<void> {
         if ((this.orbitDb && !this.ipfs)  || (this.orbitDb && !this.libp2p)) {
@@ -115,7 +115,7 @@ class LunarPod {
     }
 
     /**
-     * Initialize a specific component or all components in the pod.
+     * Initialize a specific process or all processes in the pod.
      */
     public async init(processType?: string | ProcessType): Promise<void> {
         if (processType) {
@@ -365,7 +365,7 @@ class LunarPod {
     }
 
     /**
-     * Start a component or all components in the pod.
+     * Start a process or all processes in the pod.
      */
     public async start(
         processType: string = 'all'
@@ -399,6 +399,7 @@ class LunarPod {
         const db = this.getOpenDb(orbitDbName);
         if (db) {
             await db.stop();
+            this.idReferenceFactory.deleteIdReference(db.id.name);
         }
     }   
 
@@ -445,7 +446,7 @@ class LunarPod {
     }
 
     /**
-     * Get the status of all components and databases in the pod.
+     * Get the status of all processes and databases in the pod.
      */
     public status(): {
         libp2p?: ProcessStage,

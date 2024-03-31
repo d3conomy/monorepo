@@ -4,7 +4,7 @@ import { IpfsOptions, IpfsProcess } from "../ipfs-process/index.js";
 import { OrbitDbOptions, OrbitDbProcess } from "../orbitdb-process/index.js";
 import { OpenDbProcess } from "../open-db-process/index.js";
 /**
- * Represents a LunarPod, which is a container for managing various components and databases.
+ * Represents a LunarPod, which is a container for managing various processes and databases.
  * @category Pod
 */
 declare class LunarPod {
@@ -28,18 +28,18 @@ declare class LunarPod {
         processIds?: Map<ProcessType, PodProcessId>;
     });
     /**
-     * Get the components and their statuses for this pod.
+     * Get the processes and their statuses for this pod.
      */
     getProcesses(): Array<{
         id: PodProcessId;
         status: ProcessStage;
     }>;
     /**
-     * Initialize all components and databases in the pod.
+     * Initialize all processes and databases in the pod.
      */
     private initAll;
     /**
-     * Initialize a specific component or all components in the pod.
+     * Initialize a specific process or all processes in the pod.
      */
     init(processType?: string | ProcessType): Promise<void>;
     /**
@@ -81,7 +81,7 @@ declare class LunarPod {
      */
     getDbNames(): Array<string>;
     /**
-     * Start a component or all components in the pod.
+     * Start a process or all processes in the pod.
      */
     start(processType?: string): Promise<void>;
     /**
@@ -97,7 +97,7 @@ declare class LunarPod {
      */
     restart(processType?: string): Promise<void>;
     /**
-     * Get the status of all components and databases in the pod.
+     * Get the status of all processes and databases in the pod.
      */
     status(): {
         libp2p?: ProcessStage;

@@ -1,6 +1,6 @@
 import express from 'express';
 import timeout from "connect-timeout";
-import { IdReferenceTypes, LogLevel, ProcessType, logger } from 'd3-artifacts';
+import { IdReferenceTypes, LogLevel, ProcessType, isProcessType, logger } from 'd3-artifacts';
 import { execute } from '../../pod-bay/command.js';
 /**
  * Handles the API routes for managing pods
@@ -83,12 +83,13 @@ router.get('/pods', async function (req, res) {
 router.post('/pods', async function (req, res) {
     const podBay = req.podBay;
     const id = req.body.id;
-    const processType = req.body.processType ? req.body.processType : ProcessType.ORBITDB;
+    const processType = req.body.process ? isProcessType(req.body.process) : ProcessType.ORBITDB;
     const idRef = podBay.idReferenceFactory.createIdReference({
         name: id,
-        type: IdReferenceTypes.POD
+        type: IdReferenceTypes.POD,
+        dependsOn: podBay.id
     });
-    await podBay.newPod({ id: idRef, processType });
+    await podBay.newPod({ id: idRef, processType: processType });
     res.send({
         message: `Pod created`,
         podId: idRef,
@@ -129,7 +130,7 @@ router.delete('/pods', async function (req, res) {
     res.send({
         message: `Node deleted`,
         podId: podId,
-        podBay: podBay
+        podBay: podBay.id.name
     });
 });
 /**

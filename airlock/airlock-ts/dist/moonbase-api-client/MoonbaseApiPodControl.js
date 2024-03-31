@@ -16,14 +16,14 @@ class PodsResponse extends MoonbaseResponse {
     }
 }
 class DeployPodRequest extends MoonbaseRequest {
-    constructor(baseUrl, podId, component) {
+    constructor(baseUrl, podId, process) {
         super({
             baseUrl: baseUrl,
             endpoint: `pods`,
             method: 'POST',
             data: {
                 id: podId,
-                component: component
+                process: process
             }
         });
     }
@@ -31,13 +31,13 @@ class DeployPodRequest extends MoonbaseRequest {
 class DeployPodResponse extends MoonbaseResponse {
     message;
     podId;
-    component;
+    process;
     constructor(response) {
         super(response);
         if (response.status === 200) {
             this.message = response.data.message;
             this.podId = response.data.podId;
-            this.component = response.data.component;
+            this.process = response.data.process;
         }
     }
 }
@@ -60,12 +60,12 @@ class DeletePodResponse extends MoonbaseResponse {
         super(response);
         if (response.status === 200) {
             this.message = response.data.message;
-            this.podId = response.data.nodeId;
+            this.podId = response.data.podId;
         }
     }
 }
 class StartPodRequest extends MoonbaseRequest {
-    constructor(baseUrl, podId, component) {
+    constructor(baseUrl, podId, process) {
         super({
             baseUrl: baseUrl,
             endpoint: `pod/${podId}`,
@@ -73,7 +73,7 @@ class StartPodRequest extends MoonbaseRequest {
             data: {
                 state: "start",
                 args: {
-                    component: component ? component : 'orbitdb'
+                    process: process ? process : 'orbitdb'
                 }
             }
         });
@@ -99,7 +99,7 @@ class StartPodResponse extends MoonbaseResponse {
     }
 }
 class StopPodRequest extends MoonbaseRequest {
-    constructor(baseUrl, podId, component) {
+    constructor(baseUrl, podId, process) {
         super({
             baseUrl: baseUrl,
             endpoint: `pod/${podId}`,
@@ -107,14 +107,14 @@ class StopPodRequest extends MoonbaseRequest {
             data: {
                 state: "stop",
                 args: {
-                    component: component ? component : 'orbitdb'
+                    process: process ? process : 'orbitdb'
                 }
             }
         });
     }
 }
 class RestartPodRequest extends MoonbaseRequest {
-    constructor(baseUrl, podId, component) {
+    constructor(baseUrl, podId, process) {
         super({
             baseUrl: baseUrl,
             endpoint: `pod/${podId}`,
@@ -122,7 +122,7 @@ class RestartPodRequest extends MoonbaseRequest {
             data: {
                 state: "restart",
                 args: {
-                    component: component ? component : 'orbitdb'
+                    process: process ? process : 'orbitdb'
                 }
             }
         });

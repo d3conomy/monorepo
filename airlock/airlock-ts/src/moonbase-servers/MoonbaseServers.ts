@@ -32,7 +32,8 @@ class MoonbaseServers implements IMoonbaseServers {
 
         if (moonbaseServerUrls) {
             moonbaseServerUrls.forEach(url => {
-                this.createServer({ url });
+                const id = this.idReferenceFactory.createIdReference({type: IdReferenceTypes.MOONBASE, dependsOn: this.idReferenceFactory.getIdReferencesByType(IdReferenceTypes.SYSTEM)[0]});
+                this.servers.push(this.createServer({ id, url }));
             });
         }
     }
@@ -45,16 +46,19 @@ class MoonbaseServers implements IMoonbaseServers {
         id,
         url,
     } : {
-        id?: MoonbaseId,
+        id?: MoonbaseId | string,
         url: MoonbaseServerUrl
     
     }): MoonbaseServer {
-        id = id ? id : this.idReferenceFactory.createIdReference({
-            type: IdReferenceTypes.MOONBASE,
-            dependsOn: this.idReferenceFactory.getIdReferencesByType('system')[0]
-        }) as MoonbaseId;
-        
-        const server = new MoonbaseServer({id, url});
+        let moonbaseId: MoonbaseId;
+        if (typeof id === 'string') {
+            moonbaseId = this.idReferenceFactory.createIdReference({name: id, type: IdReferenceTypes.MOONBASE, dependsOn: this.idReferenceFactory.getIdReferencesByType(IdReferenceTypes.SYSTEM)[0]});
+        }
+        else {
+            moonbaseId = this.idReferenceFactory.createIdReference({type: IdReferenceTypes.MOONBASE, dependsOn: this.idReferenceFactory.getIdReferencesByType(IdReferenceTypes.SYSTEM)[0]});
+        }
+
+        const server = new MoonbaseServer({id: moonbaseId, url});
         this.addServer(server);
         return server;
     }

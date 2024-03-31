@@ -9,12 +9,12 @@ declare class PodsResponse extends MoonbaseResponse {
     constructor(response: AxiosResponse);
 }
 declare class DeployPodRequest extends MoonbaseRequest {
-    constructor(baseUrl: MoonbaseServerUrl, podId?: string, component?: string);
+    constructor(baseUrl: MoonbaseServerUrl, podId?: string, process?: string);
 }
 declare class DeployPodResponse extends MoonbaseResponse {
     message?: string;
     podId?: string;
-    component?: string;
+    process?: string;
     constructor(response: AxiosResponse);
 }
 declare class DeletePodRequest extends MoonbaseRequest {
@@ -26,7 +26,7 @@ declare class DeletePodResponse extends MoonbaseResponse {
     constructor(response: AxiosResponse);
 }
 declare class StartPodRequest extends MoonbaseRequest {
-    constructor(baseUrl: MoonbaseServerUrl, podId: string, component?: string);
+    constructor(baseUrl: MoonbaseServerUrl, podId: string, process?: string);
 }
 declare class StartPodResponse extends MoonbaseResponse {
     message?: string;
@@ -36,9 +36,9 @@ declare class StartPodResponse extends MoonbaseResponse {
     constructor(response: AxiosResponse);
 }
 declare class StopPodRequest extends MoonbaseRequest {
-    constructor(baseUrl: MoonbaseServerUrl, podId: string, component?: string);
+    constructor(baseUrl: MoonbaseServerUrl, podId: string, process?: string);
 }
 declare class RestartPodRequest extends MoonbaseRequest {
-    constructor(baseUrl: MoonbaseServerUrl, podId: string, component?: string);
+    constructor(baseUrl: MoonbaseServerUrl, podId: string, process?: string);
 }
 export { PodsRequest, PodsResponse, DeployPodRequest, DeployPodResponse, DeletePodRequest, DeletePodResponse, StartPodRequest, StartPodResponse, StopPodRequest, RestartPodRequest, };

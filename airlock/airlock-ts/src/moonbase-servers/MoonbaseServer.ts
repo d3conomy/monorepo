@@ -49,12 +49,12 @@ class MoonbaseServer implements IMoonbaseServer {
         return (await this.apiClient.pods()).pods;
     }
 
-    async deployPod(podId?: string, component?: string) {
-        const response: DeployPodResponse = await this.apiClient.deployPod(podId, component);
+    async deployPod(podId?: string, process?: string) {
+        const response: DeployPodResponse = await this.apiClient.deployPod(podId, process);
         return {
             message: response.message,
             podId: response.podId,
-            component: response.component
+            process: response.process
         }
     }
 
@@ -66,8 +66,8 @@ class MoonbaseServer implements IMoonbaseServer {
         }
     }
 
-    async startPod(podId: string, component?: string) {
-        const response: StartPodResponse = await this.apiClient.startPod(podId, component);
+    async startPod(podId: string, process?: string) {
+        const response: StartPodResponse = await this.apiClient.startPod(podId, process);
         return {
             message: response.message,
             podId: response.podId,
@@ -76,8 +76,8 @@ class MoonbaseServer implements IMoonbaseServer {
         }
     }
 
-    async stopPod(podId: string, component?: string) {
-        const response: StartPodResponse = await this.apiClient.stopPod(podId, component);
+    async stopPod(podId: string, process?: string) {
+        const response: StartPodResponse = await this.apiClient.stopPod(podId, process);
         return {
             message: response.message,
             podId: response.podId,
@@ -86,8 +86,8 @@ class MoonbaseServer implements IMoonbaseServer {
         }
     }
 
-    async restartPod(podId: string, component?: string) {
-        const response: StartPodResponse = await this.apiClient.restartPod(podId, component);
+    async restartPod(podId: string, process?: string) {
+        const response: StartPodResponse = await this.apiClient.restartPod(podId, process);
         return {
             message: response.message,
             podId: response.podId,

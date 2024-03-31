@@ -14,28 +14,28 @@ declare class MoonbaseServer implements IMoonbaseServer {
     ping(): Promise<string | undefined>;
     logs(): Promise<string[]>;
     pods(): Promise<any[] | undefined>;
-    deployPod(podId?: string, component?: string): Promise<{
+    deployPod(podId?: string, process?: string): Promise<{
         message: string | undefined;
         podId: string | undefined;
-        component: string | undefined;
+        process: string | undefined;
     }>;
     deletePod(podId: string): Promise<{
         message: string | undefined;
         podId: string | undefined;
     }>;
-    startPod(podId: string, component?: string): Promise<{
+    startPod(podId: string, process?: string): Promise<{
         message: string | undefined;
         podId: string | undefined;
         command: string | undefined;
         error: string | undefined;
     }>;
-    stopPod(podId: string, component?: string): Promise<{
+    stopPod(podId: string, process?: string): Promise<{
         message: string | undefined;
         podId: string | undefined;
         command: string | undefined;
         error: string | undefined;
     }>;
-    restartPod(podId: string, component?: string): Promise<{
+    restartPod(podId: string, process?: string): Promise<{
         message: string | undefined;
         podId: string | undefined;
         command: string | undefined;

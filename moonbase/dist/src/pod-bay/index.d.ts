@@ -47,11 +47,11 @@ declare class PodBay {
     /**
      * Gets a pod from the PodBay.
      */
-    getPod(id?: PodId): LunarPod | undefined;
+    getPod(id?: PodId | string): LunarPod | undefined;
     /**
      * Removes a pod from the PodBay.
      */
-    removePod(id: PodId): Promise<void>;
+    removePod(id: PodId | string): Promise<void>;
     /**
      * Gets the status of a pod in the PodBay.
      */

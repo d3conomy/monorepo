@@ -18,12 +18,12 @@ class MoonbaseServer {
     async pods() {
         return (await this.apiClient.pods()).pods;
     }
-    async deployPod(podId, component) {
-        const response = await this.apiClient.deployPod(podId, component);
+    async deployPod(podId, process) {
+        const response = await this.apiClient.deployPod(podId, process);
         return {
             message: response.message,
             podId: response.podId,
-            component: response.component
+            process: response.process
         };
     }
     async deletePod(podId) {
@@ -33,8 +33,8 @@ class MoonbaseServer {
             podId: response.podId
         };
     }
-    async startPod(podId, component) {
-        const response = await this.apiClient.startPod(podId, component);
+    async startPod(podId, process) {
+        const response = await this.apiClient.startPod(podId, process);
         return {
             message: response.message,
             podId: response.podId,
@@ -42,8 +42,8 @@ class MoonbaseServer {
             error: response?.error
         };
     }
-    async stopPod(podId, component) {
-        const response = await this.apiClient.stopPod(podId, component);
+    async stopPod(podId, process) {
+        const response = await this.apiClient.stopPod(podId, process);
         return {
             message: response.message,
             podId: response.podId,
@@ -51,8 +51,8 @@ class MoonbaseServer {
             error: response?.error
         };
     }
-    async restartPod(podId, component) {
-        const response = await this.apiClient.restartPod(podId, component);
+    async restartPod(podId, process) {
+        const response = await this.apiClient.restartPod(podId, process);
         return {
             message: response.message,
             podId: response.podId,

@@ -1,6 +1,9 @@
+import { logger } from "../log-books-manager/LogBooksManager.js";
+import { LogLevel } from "../log-books-manager/LogLevels.js";
 import { IdReference, JobId, MoonbaseId, PodBayId, PodId, PodProcessId, SystemId } from "./IdReferenceClasses.js";
 import { IdReferenceConfig } from "./IdReferenceConfig.js";
 import { IdReferenceFormats, IdReferenceTypes } from "./IdReferenceConstants.js";
+import { createRandomId } from "./IdReferenceFunctions.js";
 import { MetaData } from "./IdReferenceMetadata.js";
 
 
@@ -39,22 +42,37 @@ class IdReferenceFactory {
             throw new Error("IdReferenceFactory: type is required");
         }
         if (name && !this.isUnique(name)) {
-            throw new Error(`IdReferenceFactory: IdReference with name ${name} already exists`);
+            logger({
+                level: LogLevel.WARN,
+                message: `IdReferenceFactory: name ${name} already exists, creaating new name`
+            });
+            name = `${name}-${createRandomId('string')}}`
         }
         if (!format && !name) {
             format = this.config.idReferenceFormat;
         }
 
+        let dependsOnId: PodBayId | PodId | SystemId | MoonbaseId | undefined;
+        if (dependsOn && typeof dependsOn === "string") {
+            dependsOnId = this.getIdReference(dependsOn);
+        }
+        else if (dependsOn instanceof PodBayId || dependsOn instanceof PodId || dependsOn instanceof SystemId || dependsOn instanceof MoonbaseId){
+            dependsOnId = dependsOn;
+        }
+        else if (type === IdReferenceTypes.SYSTEM) {
+            dependsOnId = undefined;
+        }
+
         if (metadata instanceof Map) {
             metadata = new MetaData({
                 mapped: metadata,
-                createdBy: "system"
+                createdBy: dependsOnId?.name || "system"
             });
         }
         else {
             metadata = metadata ? metadata : new MetaData();
         }
-        metadata.set("dateCreated", new Date());
+        metadata.set("created", new Date());
         metadata.set("type", type);
 
 
@@ -64,19 +82,19 @@ class IdReferenceFactory {
                 idref = new SystemId({name, metadata, format});
                 break;
             case IdReferenceTypes.MOONBASE:
-                idref = new MoonbaseId({name, metadata, format, systemId: dependsOn as SystemId});
+                idref = new MoonbaseId({name, metadata, format, systemId: dependsOnId as SystemId});
                 break;
             case IdReferenceTypes.POD_BAY:
-                idref = new PodBayId({name, metadata, format, moonbaseId: dependsOn as MoonbaseId});
+                idref = new PodBayId({name, metadata, format, moonbaseId: dependsOnId as MoonbaseId});
                 break;
             case IdReferenceTypes.POD:
-                idref = new PodId({name, metadata, format, podBayId: dependsOn as PodBayId});
+                idref = new PodId({name, metadata, format, podBayId: dependsOnId as PodBayId});
                 break;
             case IdReferenceTypes.PROCESS:
-                idref = new PodProcessId({name, metadata, format, podId: dependsOn as PodId});
+                idref = new PodProcessId({name, metadata, format, podId: dependsOnId as PodId});
                 break;
             case IdReferenceTypes.JOB:
-                idref = new JobId({name, metadata, format, componenetId: dependsOn as PodProcessId | PodId | PodBayId | MoonbaseId | SystemId});
+                idref = new JobId({name, metadata, format, componenetId: dependsOnId as PodProcessId | PodId | PodBayId | MoonbaseId | SystemId});
             default:
                 idref = new IdReference({name, metadata, format});
         }
@@ -106,5 +124,6 @@ class IdReferenceFactory {
 }
 
 export {
-    IdReferenceFactory
+    IdReferenceFactory,
+    IdTypes
 }

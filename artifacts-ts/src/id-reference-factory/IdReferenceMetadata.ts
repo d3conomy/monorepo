@@ -76,7 +76,7 @@ class MetaData
         (this as any)[key] = value;
 
         this.updated = new Date();
-        this.updatedBy = updatedBy ? updatedBy : 'system';
+        this.updatedBy = updatedBy ? updatedBy : this.createdBy;
 
         return {
             key,

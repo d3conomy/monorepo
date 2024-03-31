@@ -37,7 +37,7 @@ console.log(await testServer.startPod('test', 'libp2p'));
 
 console.log(await testServer.pods());
 
-console.log(await testServer.getPodInfo('test', PodInfoTypes.Components));
+console.log(await testServer.getPodInfo('test', PodInfoTypes.ProcessTypes));
 console.log(await testServer.getPodInfo('test', PodInfoTypes.PeerId));
 console.log(await testServer.getPodInfo('test', PodInfoTypes.MultiAddrs));
 console.log(await testServer.getPodInfo('test', PodInfoTypes.Peers));
@@ -47,9 +47,6 @@ console.log(await testServer.getPodInfo('test', PodInfoTypes.Protocols));
 console.log(await testServer.restartPod('test', 'libp2p'));
 
 console.log(await testServer.stopPod('test', 'libp2p'));
-
-console.log(await testServer.pods());
-
 console.log(await testServer.deletePod('test'));
 
 console.log(await testServer.pods());
@@ -86,11 +83,11 @@ console.log(cid);
 
 console.log(await testServer.getRecordFromDatabase('test-db', cid as string));
 
-console.log(await testServer.putRecordToDatabase('test-db', cid as string, { test: 'test2' }));
+// console.log(await testServer.putRecordToDatabase('test-db', cid as string, { test: 'test2' }));
 
-console.log(await testServer.getRecordFromDatabase('test-db', cid as string));
+// console.log(await testServer.getRecordFromDatabase('test-db', cid as string));
 
-console.log(await testServer.deleteRecordFromDatabase('test-db', cid as string));
+// console.log(await testServer.deleteRecordFromDatabase('test-db', cid as string));
 
 console.log(await testServer.closeDatabase('test-db'));
 

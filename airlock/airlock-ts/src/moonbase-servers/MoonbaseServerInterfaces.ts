@@ -1,4 +1,4 @@
-import { MoonbaseId } from "d3-artifacts";
+import { IIdReferenceFactory, IdReferenceFactory, MoonbaseId } from "d3-artifacts";
 import { MoonbaseServerUrl } from "./MoonbaseServerUrl.js";
 
 /**
@@ -15,10 +15,11 @@ interface IMoonbaseServer {
  * @description Interface for MoonbaseServers
  */
 interface IMoonbaseServers {
+    idReferenceFactory: IIdReferenceFactory
     servers: Array<IMoonbaseServer>;
 
     addServer(server: IMoonbaseServer): void;
-    createServer({id, url}: {id?: MoonbaseId, url: MoonbaseServerUrl}): IMoonbaseServer;
+    createServer({id, url}: {id?: MoonbaseId | string, url: MoonbaseServerUrl}): IMoonbaseServer;
     removeServer(server: IMoonbaseServer): void;
     updateServer(server: IMoonbaseServer): void;
     getServer({id, name}: {id?: MoonbaseId, name?: MoonbaseId['name']}): IMoonbaseServer | undefined;

@@ -11,7 +11,7 @@ declare class MoonbaseServers implements IMoonbaseServers {
     });
     addServer(server: MoonbaseServer): void;
     createServer({ id, url, }: {
-        id?: MoonbaseId;
+        id?: MoonbaseId | string;
         url: MoonbaseServerUrl;
     }): MoonbaseServer;
     removeServer(server: MoonbaseServer): void;

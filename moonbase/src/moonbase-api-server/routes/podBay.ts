@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import timeout from "connect-timeout"
 import { PodBay } from '../../pod-bay/index.js';
-import { IdReferenceTypes, LogLevel, PodId, ProcessType, logger } from 'd3-artifacts';
+import { IdReferenceTypes, LogLevel, PodId, ProcessType, isProcessType, logger } from 'd3-artifacts';
 import { execute } from '../../pod-bay/command.js';
 
 
@@ -95,12 +95,13 @@ router.get('/pods', async function(req: Request, res: Response) {
 router.post('/pods', async function(req: Request, res: Response) {
     const podBay: PodBay = req.podBay;
     const id = req.body.id;
-    const processType = req.body.processType ? req.body.processType : ProcessType.ORBITDB;
+    const processType = req.body.process ? isProcessType(req.body.process) : ProcessType.ORBITDB;
     const idRef = podBay.idReferenceFactory.createIdReference({
         name: id,
-        type: IdReferenceTypes.POD
+        type: IdReferenceTypes.POD,
+        dependsOn: podBay.id
     });
-    await podBay.newPod({id: idRef, processType});
+    await podBay.newPod({id: idRef, processType: processType});
     res.send({
         message: `Pod created`,
         podId: idRef,
@@ -143,7 +144,7 @@ router.delete('/pods', async function(req: Request, res: Response) {
     res.send({
         message: `Node deleted`,
         podId: podId,
-        podBay: podBay
+        podBay: podBay.id.name
     });
 });
 

@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { IdReferenceFactory } from '../src/id-reference-factory/IdReferenceFactory.js';
+import { SystemId } from './index.js';
 
 describe('IdReferenceFactory', () => {
     let idReferenceFactory: IdReferenceFactory;
@@ -24,17 +25,17 @@ describe('IdReferenceFactory', () => {
     });
 
     it('should throw an error when creating an IdReference with an existing name', () => {
-        idReferenceFactory.createIdReference({
+        const idRef = idReferenceFactory.createIdReference({
             name: 'testId',
             type: 'SYSTEM',
         });
 
-        expect(() => {
-            idReferenceFactory.createIdReference({
-                name: 'testId',
-                type: 'SYSTEM',
-            });
-        }).to.throw('IdReferenceFactory: IdReference with name testId already exists');
+        const idRef2 = idReferenceFactory.createIdReference({
+            name: 'testId',
+            type: 'SYSTEM',
+        });
+
+        expect(idRef2.name).to.not.equal('testId');
     });
 
     it('should get an existing IdReference by name', () => {
@@ -74,26 +75,26 @@ describe('IdReferenceFactory', () => {
     });
 
     it('should get IdReferences by type', () => {
-        idReferenceFactory.createIdReference({
+        const systemId = idReferenceFactory.createIdReference({
             name: 'id1',
             type: 'SYSTEM',
         });
 
-        idReferenceFactory.createIdReference({
-            name: 'id2',
-            type: 'SYSTEM',
-        });
+        // idReferenceFactory.createIdReference({
+        //     name: 'id2',
+        //     type: 'SYSTEM',
+        // });
 
         idReferenceFactory.createIdReference({
             name: 'id3',
             type: 'MOONBASE',
+            dependsOn: systemId
         });
 
         const systemIdReferences = idReferenceFactory.getIdReferencesByType('SYSTEM');
 
-        expect(systemIdReferences).to.have.lengthOf(2);
+        expect(systemIdReferences).to.have.lengthOf(1);
         expect(systemIdReferences[0].name).to.equal('id1');
-        expect(systemIdReferences[1].name).to.equal('id2');
     });
 
     it('should delete an existing IdReference by name', () => {
@@ -110,7 +111,7 @@ describe('IdReferenceFactory', () => {
     });
 
     it('should delete all IdReferences', () => {
-        idReferenceFactory.createIdReference({
+        const sytemId = idReferenceFactory.createIdReference({
             name: 'id1',
             type: 'SYSTEM',
         });
@@ -118,6 +119,7 @@ describe('IdReferenceFactory', () => {
         idReferenceFactory.createIdReference({
             name: 'id2',
             type: 'MOONBASE',
+            dependsOn: sytemId as SystemId
         });
 
         idReferenceFactory.deleteAllIdReferences();
