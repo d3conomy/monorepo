@@ -9,9 +9,9 @@ var IdReferenceTypes;
 (function (IdReferenceTypes) {
     IdReferenceTypes["SYSTEM"] = "system";
     IdReferenceTypes["MOONBASE"] = "moonbase";
-    IdReferenceTypes["PODBAY"] = "podbay";
+    IdReferenceTypes["POD_BAY"] = "pod-bay";
     IdReferenceTypes["POD"] = "pod";
     IdReferenceTypes["PROCESS"] = "process";
     IdReferenceTypes["JOB"] = "job";
 })(IdReferenceTypes || (IdReferenceTypes = {}));
-export { IdReferenceFormats, IdReferenceTypes };
+export { IdReferenceFormats, IdReferenceTypes, };

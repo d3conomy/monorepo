@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import chance from 'chance';
 
-import { IdReferenceFormats } from './IdReferenceConstants.js';
+import { IdReferenceFormats, IdReferenceTypes } from './IdReferenceConstants.js';
 
 /**
  * Check if the format is a valid IdReferenceFormat
@@ -15,6 +15,12 @@ const isIdReferenceFormat = (
     throw new Error(`Invalid format: ${format}`);
 }
 
+const isIdReferenceType = (type: string): IdReferenceTypes => {
+    if (Object.values(IdReferenceTypes).includes(type as IdReferenceTypes)) {
+        return type as IdReferenceTypes;
+    }
+    throw new Error(`Invalid IdReference type: ${type}`);
+}
 
 /**
  * Create a random id
@@ -38,5 +44,6 @@ const createRandomId = (
 
 export {
     isIdReferenceFormat,
+    isIdReferenceType,
     createRandomId
 }

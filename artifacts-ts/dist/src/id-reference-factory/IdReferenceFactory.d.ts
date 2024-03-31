@@ -17,7 +17,7 @@ declare class IdReferenceFactory {
         type: IdReferenceTypes | string;
         dependsOn?: PodBayId | PodId | SystemId | MoonbaseId | string;
     }): IdTypes | any;
-    getIdReference(name: string): IdReference | undefined;
+    getIdReference(name: string): IdTypes | undefined;
     getAllIdReferences(): Array<IdReference>;
     getIdReferencesByType(type: IdReferenceTypes | string): Array<IdReference>;
     deleteIdReference(name: string): void;

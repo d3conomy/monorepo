@@ -66,7 +66,7 @@ class IdReferenceFactory {
             case IdReferenceTypes.MOONBASE:
                 idref = new MoonbaseId({name, metadata, format, systemId: dependsOn as SystemId});
                 break;
-            case IdReferenceTypes.PODBAY:
+            case IdReferenceTypes.POD_BAY:
                 idref = new PodBayId({name, metadata, format, moonbaseId: dependsOn as MoonbaseId});
                 break;
             case IdReferenceTypes.POD:
@@ -84,7 +84,7 @@ class IdReferenceFactory {
         return idref;
     }
 
-    public getIdReference(name: string): IdReference | undefined {
+    public getIdReference(name: string): IdTypes | undefined {
         return this.ids.find((idRef) => idRef.name === name);
     }
 

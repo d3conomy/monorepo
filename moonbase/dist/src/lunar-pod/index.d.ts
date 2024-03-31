@@ -71,7 +71,7 @@ declare class LunarPod {
     /**
      * Get the OrbitDb process in the pod.
      */
-    getOpenDb(orbitDbName: string): OpenDbProcess | undefined;
+    getOpenDb(orbitDbName: string | PodProcessId): OpenDbProcess;
     /**
      * Get all Open Databases in the pod.
      */

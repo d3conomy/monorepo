@@ -334,12 +334,20 @@ class LunarPod {
     /**
      * Get the OrbitDb process in the pod.
      */
-    public getOpenDb(orbitDbName: string): OpenDbProcess | undefined {
+    public getOpenDb(orbitDbName: string | PodProcessId): OpenDbProcess {
         for (const [key, value] of this.db) {
-            if (value.id.name === orbitDbName) {
-                return value;
+            if (orbitDbName instanceof PodProcessId) {
+                if (key === orbitDbName) {
+                    return value;
+                }
+            }
+            else {
+                if (key.name === orbitDbName) {
+                    return value;
+                }
             }
         }
+        throw new Error(`Database ${orbitDbName} not found in LunarPod ${this.id.name}`);
     }
 
     /**

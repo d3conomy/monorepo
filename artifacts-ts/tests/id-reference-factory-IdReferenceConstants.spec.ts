@@ -14,7 +14,7 @@ describe('IdReferenceTypes', () => {
     it('should have the correct values', () => {
         expect(IdReferenceTypes.SYSTEM).to.equal('system');
         expect(IdReferenceTypes.MOONBASE).to.equal('moonbase');
-        expect(IdReferenceTypes.PODBAY).to.equal('podbay');
+        expect(IdReferenceTypes.POD_BAY).to.equal('pod-bay');
         expect(IdReferenceTypes.POD).to.equal('pod');
         expect(IdReferenceTypes.PROCESS).to.equal('process');
         expect(IdReferenceTypes.JOB).to.equal('job');

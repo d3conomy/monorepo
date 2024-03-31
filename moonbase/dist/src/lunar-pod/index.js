@@ -1,4 +1,4 @@
-import { IdReferenceTypes, LogLevel, MetaData, ProcessStage, ProcessType, isProcessType, logger } from "d3-artifacts";
+import { IdReferenceTypes, LogLevel, MetaData, PodProcessId, ProcessStage, ProcessType, isProcessType, logger } from "d3-artifacts";
 import { Libp2pProcess } from "../libp2p-process/index.js";
 import { IpfsOptions, IpfsProcess } from "../ipfs-process/index.js";
 import { OrbitDbOptions, OrbitDbProcess } from "../orbitdb-process/index.js";
@@ -260,10 +260,18 @@ class LunarPod {
      */
     getOpenDb(orbitDbName) {
         for (const [key, value] of this.db) {
-            if (value.id.name === orbitDbName) {
-                return value;
+            if (orbitDbName instanceof PodProcessId) {
+                if (key === orbitDbName) {
+                    return value;
+                }
+            }
+            else {
+                if (key.name === orbitDbName) {
+                    return value;
+                }
             }
         }
+        throw new Error(`Database ${orbitDbName} not found in LunarPod ${this.id.name}`);
     }
     /**
      * Get all Open Databases in the pod.

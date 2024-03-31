@@ -40,7 +40,7 @@ class IdReferenceFactory {
             case IdReferenceTypes.MOONBASE:
                 idref = new MoonbaseId({ name, metadata, format, systemId: dependsOn });
                 break;
-            case IdReferenceTypes.PODBAY:
+            case IdReferenceTypes.POD_BAY:
                 idref = new PodBayId({ name, metadata, format, moonbaseId: dependsOn });
                 break;
             case IdReferenceTypes.POD:

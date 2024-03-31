@@ -10,13 +10,15 @@ enum IdReferenceFormats {
 enum IdReferenceTypes {
     SYSTEM = "system",
     MOONBASE = "moonbase",
-    PODBAY = "podbay",
+    POD_BAY = "pod-bay",
     POD = "pod",
     PROCESS = "process",
     JOB = "job",
 }
 
+
+
 export {
     IdReferenceFormats,
-    IdReferenceTypes
+    IdReferenceTypes,
 }

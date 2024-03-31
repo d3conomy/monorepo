@@ -7,10 +7,10 @@ declare enum IdReferenceFormats {
 declare enum IdReferenceTypes {
     SYSTEM = "system",
     MOONBASE = "moonbase",
-    PODBAY = "podbay",
+    POD_BAY = "pod-bay",
     POD = "pod",
     PROCESS = "process",
     JOB = "job"
 }
-export { IdReferenceFormats, IdReferenceTypes };
+export { IdReferenceFormats, IdReferenceTypes, };
 //# sourceMappingURL=IdReferenceConstants.d.ts.map
