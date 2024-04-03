@@ -2,10 +2,9 @@ import { expect } from 'chai';
 import { Libp2pProcess, createLibp2pProcess } from '../src/libp2p-process/process.js';
 import { createLibp2pProcessOptions } from '../src/libp2p-process/processOptions.js';
 import { LogLevel, MoonbaseId, PodBayId, PodId, PodProcessId, ProcessStage, SystemId, logger } from 'd3-artifacts';
-import { TextEncoderStream } from 'stream/web';
 import { peerIdFromString } from '@libp2p/peer-id';
-import { listenerCount } from 'process';
 import { GossipSub } from '@chainsafe/libp2p-gossipsub';
+import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string';
 
 describe('createLibp2pProcess', async () => {
 
@@ -191,9 +190,10 @@ describe('createLibp2pProcess', async () => {
         }
 
         const pubSub1: GossipSub = process.process?.services?.pubsub as GossipSub;
+        await pubSub1.start();
 
-        pubSub1.addEventListener('message', (msg: any) => {
-            console.log(msg.data.toString());
+        pubSub1.addEventListener('gossipsub:heartbeat', (msg: any) => {
+            console.log(msg)
         })
 
         pubSub1.subscribe(topic);
@@ -218,7 +218,8 @@ describe('createLibp2pProcess', async () => {
         const multiaddrs2 = process2.getMultiaddrs();
 
         processPubSub.addEventListener('message', (msg: any) => {
-            console.log(msg.data);
+            console.log(msg)
+            // processPubSub.publish(topic, msg.data)
         })
         processPubSub.subscribe(topic)
 
@@ -226,11 +227,13 @@ describe('createLibp2pProcess', async () => {
 
         // console.log(await process)
         // @ts-ignore
-        const output = await process2.publish(topic, 'hello world');
+        const output = await process2.publish(topic, uint8ArrayFromString('hello world'));
         logger({
             level: LogLevel.INFO,
             message: JSON.stringify(output)
         });
+
+        console.log(processPubSub.getSubscribers(topic))
 
         await process.stop();
 

@@ -507,9 +507,9 @@ class Libp2pProcess {
     async publish(topic, message) {
         try {
             const pubsub = this.process?.services.pubsub;
-            const data = new Uint8Array(Buffer.from(message));
+            // const data = new TextEncoder().encode(message)
             // @ts-ignore
-            const output = await pubsub.publish(topic, data);
+            const output = await pubsub.publish(topic, message);
             return output;
         }
         catch (error) {

@@ -94,7 +94,7 @@ declare class Libp2pProcess implements IProcess {
     /**
      * Publish to PubSub topic
      */
-    publish(topic: string, message: string): Promise<any>;
+    publish(topic: string, message: Uint8Array): Promise<any>;
 }
 export { createLibp2pProcess, Libp2pProcess };
 //# sourceMappingURL=process.d.ts.map

@@ -569,14 +569,14 @@ class Libp2pProcess
     /**
      * Publish to PubSub topic
      */
-    public async publish(topic: string, message: string): Promise<any> {
+    public async publish(topic: string, message: Uint8Array): Promise<any> {
         try {
             const pubsub = this.process?.services.pubsub as PubSub
 
-            const data = new Uint8Array(Buffer.from(message))
+            // const data = new TextEncoder().encode(message)
 
             // @ts-ignore
-            const output: PublishResult = await pubsub.publish(topic, data)
+            const output: PublishResult = await pubsub.publish(topic, message)
             
             return output
         }

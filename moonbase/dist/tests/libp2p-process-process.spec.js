@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { Libp2pProcess } from '../src/libp2p-process/process.js';
 import { createLibp2pProcessOptions } from '../src/libp2p-process/processOptions.js';
 import { LogLevel, MoonbaseId, PodBayId, PodId, PodProcessId, ProcessStage, SystemId, logger } from 'd3-artifacts';
+import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string';
 describe('createLibp2pProcess', async () => {
     let process;
     afterEach(async () => {
@@ -170,8 +171,9 @@ describe('createLibp2pProcess', async () => {
             return Buffer.from(msg);
         };
         const pubSub1 = process.process?.services?.pubsub;
-        pubSub1.addEventListener('message', (msg) => {
-            console.log(msg.data.toString());
+        await pubSub1.start();
+        pubSub1.addEventListener('gossipsub:heartbeat', (msg) => {
+            console.log(msg);
         });
         pubSub1.subscribe(topic);
         const systemId2 = new SystemId();
@@ -192,17 +194,19 @@ describe('createLibp2pProcess', async () => {
         const peerId2 = process2.peerId();
         const multiaddrs2 = process2.getMultiaddrs();
         processPubSub.addEventListener('message', (msg) => {
-            console.log(msg.data);
+            console.log(msg);
+            // processPubSub.publish(topic, msg.data)
         });
         processPubSub.subscribe(topic);
         // console.log(await process.dialProtocol(multiaddrs2[0].toString(), '/libp2p/pubsub/1.0.0'))
         // console.log(await process)
         // @ts-ignore
-        const output = await process2.publish(topic, 'hello world');
+        const output = await process2.publish(topic, uint8ArrayFromString('hello world'));
         logger({
             level: LogLevel.INFO,
             message: JSON.stringify(output)
         });
+        console.log(processPubSub.getSubscribers(topic));
         await process.stop();
         await process2.stop();
     });

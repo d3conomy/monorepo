@@ -1,15 +1,4 @@
-"use strict";
-// import { PubSubBaseProtocol, PubSubComponents } from '@libp2p/pubsub'
-// import { PubSubRPC, PublishResult, PubSubRPCMessage, PeerId, Message, PubSubInit, Logger, LoggerOptions } from '@libp2p/interface'
-// import { Uint8ArrayList } from 'uint8arraylist'
-// import { SignaturePolicy } from '@chainsafe/libp2p-gossipsub/dist/src/types'
-// import { IProcess, PodProcessId, ProcessStage, ProcessType } from 'd3-artifacts';
-// import { create } from 'domain';
-// import { Registrar } from '@libp2p/interface-internal';
-// import { createPeerId } from '@libp2p/peer-id';
-// import { ComponentLogger, defaultLogger } from '@libp2p/logger'
-// import { DefaultRegistrar } from 'libp2p/src/registrar.js'
-// import { Libp2pProcess } from './process';
+import { ProcessStage } from 'd3-artifacts';
 // class PubSubProcessInit implements PubSubInit {
 //     topic: string;
 //     enabled: boolean;
@@ -133,8 +122,91 @@
 //         return result;
 //     }
 // }
-// export {
-//     PubSubProcess,
-//     PubSubProcessInit,
-//     PubSubProcessComponents
-// };
+class GossipSubProcess {
+    id;
+    // pubsub: GossipSub;
+    topic;
+    process;
+    constructor({ id, topic, libp2pProcess }) {
+        this.id = id;
+        this.topic = topic ? topic : 'moonbase-pubsub';
+        this.process = libp2pProcess.process?.services?.pubsub;
+    }
+    checkProcess() {
+        return true;
+    }
+    status() {
+        return ProcessStage.STARTED;
+    }
+    async init() {
+        await this.process.start();
+    }
+    async start() {
+        await this.process.start();
+    }
+    async stop() {
+        await this.process.stop();
+    }
+    async restart() {
+        await this.process.stop();
+        await this.process.start();
+    }
+    decodeRpc(bytes) {
+        // take the bytes and decode them into a PubSubRPC object
+        const decoder = new TextDecoder();
+        const buffer = new ArrayBuffer(bytes.length);
+        ;
+        const view = new Uint8Array(buffer);
+        if (bytes instanceof Uint8Array) {
+            view.set(bytes);
+        }
+        // if (bytes instanceof Uint8ArrayList) {
+        //     const bytesArray = new Array(bytes);
+        //     view.set(bytesArra);
+        // }
+        const rpcString = decoder.decode(view);
+        return JSON.parse(rpcString);
+    }
+    encodeRpc(rpc) {
+        // take the rpc object and encode it into a Uint8Array
+        const encoder = new TextEncoder();
+        const rpcString = JSON.stringify(rpc);
+        return encoder.encode(rpcString);
+    }
+    encodeMessage(message) {
+        // take the message object and encode it into a Uint8Array
+        const encoder = new TextEncoder();
+        const messageString = JSON.stringify(message);
+        return encoder.encode(messageString);
+    }
+    subscribe(topic) {
+        // this.process.addEventListener('gossipsub:heartbeat', (msg: any) => {
+        //     console.log(msg)
+        // })
+        this.process.addEventListener('message', (msg) => {
+            console.log(`${this.id.podId} ${new Date()} : ${msg}`);
+        });
+        this.process.subscribe(topic);
+    }
+    async publishMessage(sender, message) {
+        // publish a message to the network
+        // const rpcMessage: PubSubRPCMessage = {
+        //     from: sender.toCID().bytes,
+        //     topic: message.topic,
+        //     data: message.data,
+        // };
+        // const encodedRpc = this.encodeMessage(rpcMessage);
+        // const rpc: PubSubRPC = {
+        //     subscriptions: [this.process.getTopicPeers(message.topic)],
+        //     messages: [rpcMessage]
+        // };
+        // const encodedRpc = this.encodeRpc(rpc);
+        const result = await this.process.publish(this.topic, message);
+        return result;
+    }
+}
+export { 
+// PubSubProcess,
+// PubSubProcessInit,
+// PubSubProcessComponents
+GossipSubProcess };
