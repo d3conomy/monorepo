@@ -1,9 +1,9 @@
-/// <reference types="node" />
 import { PeerId, Connection, Stream } from '@libp2p/interface';
 import { Libp2p } from 'libp2p';
 import { Multiaddr } from '@multiformats/multiaddr';
 import { IProcess, PodProcessId, ProcessStage } from 'd3-artifacts';
 import { Libp2pProcessOptions } from './processOptions.js';
+import { AddrInfo } from '@chainsafe/libp2p-gossipsub/dist/src/types.js';
 /**
  * Create a libp2p process
  * @category Libp2p
@@ -90,11 +90,11 @@ declare class Libp2pProcess implements IProcess {
     /**
      *  Subscribe to PubSub topic
      */
-    subscribe(topic: string): Promise<void>;
+    subscribe(topic: string, peers?: Array<AddrInfo>): Promise<void>;
     /**
      * Publish to PubSub topic
      */
-    publish(topic: string, message: Buffer): Promise<void>;
+    publish(topic: string, message: string): Promise<any>;
 }
 export { createLibp2pProcess, Libp2pProcess };
 //# sourceMappingURL=process.d.ts.map

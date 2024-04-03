@@ -20,6 +20,7 @@ class Libp2pProcessConfig {
     webRTCStarAddress: Multiaddr | string = '/dns4/webrtc-star.trnk.xyz/tcp/443/wss/p2p-webrtc-star';
     enableCircuitRelayTransport: boolean = true;
     enableNoise: boolean = true;
+    enableTls: boolean = true;
     enableBootstrap: boolean = true;
     defaultBootstrapConfig: boolean = true;
     bootstrapMultiaddrs: Array<Multiaddr | string> = new Array<Multiaddr | string>();
@@ -64,6 +65,7 @@ class Libp2pProcessConfig {
         webRTCStarAddress,
         enableCircuitRelayTransport,
         enableNoise,
+        enableTls,
         enableBootstrap,
         bootstrapMultiaddrs,
         enableMDNS,
@@ -106,6 +108,7 @@ class Libp2pProcessConfig {
         webRTCStarAddress?: Multiaddr | string,
         enableCircuitRelayTransport?: boolean,
         enableNoise?: boolean,
+        enableTls?: boolean,
         enableBootstrap?: boolean,
         bootstrapMultiaddrs?: Array<Multiaddr | string>,
         enableMDNS?: boolean,
@@ -148,6 +151,7 @@ class Libp2pProcessConfig {
         this.webRTCStarAddress = webRTCStarAddress ? webRTCStarAddress : this.webRTCStarAddress;
         this.enableCircuitRelayTransport = enableCircuitRelayTransport ? enableCircuitRelayTransport : this.enableCircuitRelayTransport;
         this.enableNoise = enableNoise ? enableNoise : this.enableNoise;
+        this.enableTls = enableTls ? enableTls : this.enableTls;
         this.enableBootstrap = enableBootstrap ? enableBootstrap : this.enableBootstrap;
         this.bootstrapMultiaddrs = bootstrapMultiaddrs ? bootstrapMultiaddrs : this.bootstrapMultiaddrs;
         this.enableMDNS = enableMDNS ? enableMDNS : this.enableMDNS;

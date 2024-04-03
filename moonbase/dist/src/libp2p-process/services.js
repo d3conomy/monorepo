@@ -16,7 +16,15 @@ const services = ({ enableGossipSub, enablePublishToZeroTopicPeers, enableAutoNA
     let serviceOptions = {};
     if (enableGossipSub) {
         serviceOptions.pubsub = gossipsub({
-            allowPublishToZeroTopicPeers: enablePublishToZeroTopicPeers
+            allowPublishToZeroTopicPeers: enablePublishToZeroTopicPeers,
+            enabled: true,
+            multicodecs: ['/libp2p/pubsub/1.0.0'],
+            canRelayMessage: true,
+            emitSelf: true,
+            messageProcessingConcurrency: 16,
+            maxInboundStreams: 100,
+            maxOutboundStreams: 100,
+            doPX: true
         });
     }
     if (enableAutoNAT) {

@@ -426,10 +426,68 @@ class Libp2pProcess {
     /**
      *  Subscribe to PubSub topic
      */
-    async subscribe(topic) {
+    async subscribe(topic, peers) {
         try {
+            const pubsubInit = {
+                enabled: true,
+                canRelayMessage: true,
+                emitSelf: true,
+                maxInboundStreams: 100,
+                maxOutboundStreams: 100
+            };
+            const pubsub = this.process?.services.pubsub;
+            // const pubsub1 = gossipsub({
+            //     enabled: true,
+            //     multicodecs: ['/libp2p/pubsub/1.0.0'],
+            //     canRelayMessage: true,
+            //     emitSelf: true,
+            //     messageProcessingConcurrency: 16,
+            //     maxInboundStreams: 100,
+            //     maxOutboundStreams: 100,
+            //     doPX: true,
+            //     msgIdFn: (msg: any) => {
+            //         return msg.from
+            //     },
+            //     directPeers: peers ? peers : undefined
+            // })
+            // const newPubsub: PubSub = new Pubsub({
+            //     libp2p: this.process,
+            //     debugName: 'moonbase-pubsub',
+            //     multicodecs: ['/libp2p/pubsub/1.0.0'],
+            //     canRelayMessage: true,
+            //     emitSelf: true,
+            // })
             // @ts-ignore
-            this.process.services.pubsub.subscribe(topic);
+            // console.log(pubsub1.getPeers())
+            console.log(pubsub);
+            // if (!isStarted) {
+            //     // @ts-ignore
+            //     pubsub().start()
+            // }
+            // @ts-ignore
+            pubsub.addEventListener('message', (msg) => {
+                if (msg.topic === topic) {
+                    logger({
+                        level: LogLevel.INFO,
+                        stage: ProcessStage.STARTED,
+                        processId: this.id,
+                        message: `Message received for ${this.id.name}: ${msg}`
+                    });
+                }
+            });
+            // @ts-ignore
+            pubsub.addEventListener('subscription-change', (msg) => {
+                if (msg.topic === topic) {
+                    logger({
+                        level: LogLevel.INFO,
+                        stage: ProcessStage.STARTED,
+                        processId: this.id,
+                        message: `Subscription change for ${this.id.name}: ${msg}`
+                    });
+                }
+            });
+            // @ts-ignore
+            await pubsub.publish(topic, Buffer.from('Hello World!'));
         }
         catch (error) {
             logger({
@@ -441,14 +499,18 @@ class Libp2pProcess {
             });
             throw error;
         }
+        // @ts-ignore
     }
     /**
      * Publish to PubSub topic
      */
     async publish(topic, message) {
         try {
+            const pubsub = this.process?.services.pubsub;
+            const data = new Uint8Array(Buffer.from(message));
             // @ts-ignore
-            await this.process.services.pubsub.publish(topic, message);
+            const output = await pubsub.publish(topic, data);
+            return output;
         }
         catch (error) {
             logger({

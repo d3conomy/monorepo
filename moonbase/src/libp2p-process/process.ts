@@ -1,4 +1,5 @@
-import { PeerId, Connection, Stream } from '@libp2p/interface'
+import { PeerId, Connection, Stream, PubSub, PubSubEvents, PubSubInit, PublishResult } from '@libp2p/interface'
+import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 
 import { Libp2p, createLibp2p } from 'libp2p'
 
@@ -8,6 +9,7 @@ import { peerIdFromString } from '@libp2p/peer-id'
 
 import { IProcess, IdReference, LogLevel, PodProcessId, ProcessStage, isProcessStage, logger } from 'd3-artifacts'
 import { Libp2pProcessOptions } from './processOptions.js'
+import { AddrInfo } from '@chainsafe/libp2p-gossipsub/dist/src/types.js'
 
 
 /**
@@ -479,10 +481,76 @@ class Libp2pProcess
     /**
      *  Subscribe to PubSub topic
      */
-    public async subscribe(topic: string): Promise<void> {
+    public async subscribe(topic: string, peers?: Array<AddrInfo> ): Promise<void> {
         try {
+            const pubsubInit: PubSubInit = {
+                enabled: true,
+                canRelayMessage: true,
+                emitSelf: true,
+                maxInboundStreams: 100,
+                maxOutboundStreams: 100
+            }
+
+            const pubsub = this.process?.services.pubsub as PubSub
+            // const pubsub1 = gossipsub({
+            //     enabled: true,
+            //     multicodecs: ['/libp2p/pubsub/1.0.0'],
+            //     canRelayMessage: true,
+            //     emitSelf: true,
+            //     messageProcessingConcurrency: 16,
+            //     maxInboundStreams: 100,
+            //     maxOutboundStreams: 100,
+            //     doPX: true,
+            //     msgIdFn: (msg: any) => {
+            //         return msg.from
+            //     },
+            //     directPeers: peers ? peers : undefined
+            // })
+
+            // const newPubsub: PubSub = new Pubsub({
+            //     libp2p: this.process,
+            //     debugName: 'moonbase-pubsub',
+            //     multicodecs: ['/libp2p/pubsub/1.0.0'],
+            //     canRelayMessage: true,
+            //     emitSelf: true,
+            // })
+
             // @ts-ignore
-            this.process.services.pubsub.subscribe(topic)
+            // console.log(pubsub1.getPeers())
+            console.log(pubsub)
+            // if (!isStarted) {
+            //     // @ts-ignore
+            //     pubsub().start()
+            // }
+            
+
+            // @ts-ignore
+            pubsub.addEventListener('message', (msg: any) => {
+
+                if (msg.topic === topic) {
+                    logger({
+                        level: LogLevel.INFO,
+                        stage: ProcessStage.STARTED,
+                        processId: this.id,
+                        message: `Message received for ${this.id.name}: ${msg}`
+                    })  
+                }
+            })
+
+            // @ts-ignore
+            pubsub.addEventListener('subscription-change', (msg: any) => {
+                if (msg.topic === topic) {
+                    logger({
+                        level: LogLevel.INFO,
+                        stage: ProcessStage.STARTED,
+                        processId: this.id,
+                        message: `Subscription change for ${this.id.name}: ${msg}`
+                    })
+                }
+            });
+
+            // @ts-ignore
+            await pubsub.publish(topic, Buffer.from('Hello World!'))
         }
         catch (error: any) {
             logger({
@@ -494,15 +562,23 @@ class Libp2pProcess
             })
             throw error
         }
+        // @ts-ignore
+        
     }
 
     /**
      * Publish to PubSub topic
      */
-    public async publish(topic: string, message: Buffer): Promise<void> {
+    public async publish(topic: string, message: string): Promise<any> {
         try {
+            const pubsub = this.process?.services.pubsub as PubSub
+
+            const data = new Uint8Array(Buffer.from(message))
+
             // @ts-ignore
-            await this.process.services.pubsub.publish(topic, message)
+            const output: PublishResult = await pubsub.publish(topic, data)
+            
+            return output
         }
         catch (error: any) {
             logger({
@@ -514,6 +590,7 @@ class Libp2pProcess
             })
             throw error
         }
+
     }
 
 

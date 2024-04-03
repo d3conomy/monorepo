@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { Libp2pProcess } from '../src/libp2p-process/process.js';
 import { createLibp2pProcessOptions } from '../src/libp2p-process/processOptions.js';
-import { MoonbaseId, PodBayId, PodId, PodProcessId, ProcessStage, SystemId } from 'd3-artifacts';
+import { LogLevel, MoonbaseId, PodBayId, PodId, PodProcessId, ProcessStage, SystemId, logger } from 'd3-artifacts';
 describe('createLibp2pProcess', async () => {
     let process;
     afterEach(async () => {
@@ -151,7 +151,7 @@ describe('createLibp2pProcess', async () => {
         const handler = (msg) => {
             console.log(msg);
         };
-        await process.subscribe(topic);
+        process.subscribe(topic);
     });
     it('should publish to a pubsub topic', async () => {
         const systemId = new SystemId();
@@ -163,16 +163,47 @@ describe('createLibp2pProcess', async () => {
         process = new Libp2pProcess({ id, options });
         await process.init();
         await process.start();
-        const topic = 'moonbase';
+        const peerId1 = process.peerId();
+        const multiaddrs1 = process.getMultiaddrs();
+        const topic = 'moonbase-pubsub';
         let buffer = (msg) => {
             return Buffer.from(msg);
         };
-        // @ts-ignore
-        process.process?.services.pubsub.addEventListener('message', (message) => {
-            console.log(`${message.detail.topic}:`, new TextDecoder().decode(message.detail.data));
+        const pubSub1 = process.process?.services?.pubsub;
+        pubSub1.addEventListener('message', (msg) => {
+            console.log(msg.data.toString());
         });
-        await process.subscribe(topic);
-        await process.publish(topic, buffer('hello world'));
+        pubSub1.subscribe(topic);
+        const systemId2 = new SystemId();
+        const moonbaseId2 = new MoonbaseId({ systemId: systemId2 });
+        const podBayId2 = new PodBayId({ moonbaseId: moonbaseId2 });
+        const podId2 = new PodId({ podBayId: podBayId2 });
+        const id2 = new PodProcessId({ podId: podId2 });
+        const options2 = await createLibp2pProcessOptions();
+        const process2 = new Libp2pProcess({ id: id2, options: options2 });
+        await process2.init();
+        await process2.start();
+        const processPubSub = process2.process?.services?.pubsub;
+        const connection = await process2.dial(multiaddrs1[0].toString());
+        logger({
+            level: LogLevel.INFO,
+            message: JSON.stringify(connection)
+        });
+        const peerId2 = process2.peerId();
+        const multiaddrs2 = process2.getMultiaddrs();
+        processPubSub.addEventListener('message', (msg) => {
+            console.log(msg.data);
+        });
+        processPubSub.subscribe(topic);
+        // console.log(await process.dialProtocol(multiaddrs2[0].toString(), '/libp2p/pubsub/1.0.0'))
+        // console.log(await process)
+        // @ts-ignore
+        const output = await process2.publish(topic, 'hello world');
+        logger({
+            level: LogLevel.INFO,
+            message: JSON.stringify(output)
+        });
         await process.stop();
+        await process2.stop();
     });
 });

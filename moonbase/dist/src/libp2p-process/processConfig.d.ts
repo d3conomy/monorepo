@@ -19,6 +19,7 @@ declare class Libp2pProcessConfig {
     webRTCStarAddress: Multiaddr | string;
     enableCircuitRelayTransport: boolean;
     enableNoise: boolean;
+    enableTls: boolean;
     enableBootstrap: boolean;
     defaultBootstrapConfig: boolean;
     bootstrapMultiaddrs: Array<Multiaddr | string>;
@@ -43,7 +44,7 @@ declare class Libp2pProcessConfig {
     denyDialMultiaddr: boolean;
     enableYamux: boolean;
     enableMplex: boolean;
-    constructor({ autoStart, peerId, enableTcp, tcpPort, enableIp4, ip4Domain, enableUdp, udpPort, enableIp6, ip6Domain, enableQuicv1, enableWebTransport, enableWebSockets, enableWebRTC, enableWebRTCStar, webRTCStarAddress, enableCircuitRelayTransport, enableNoise, enableBootstrap, bootstrapMultiaddrs, enableMDNS, enableGossipSub, enablePublishToZeroTopicPeers, enableAutoNAT, enableIdentify, enableUPnPNAT, enableDHT, enableDHTClient, enableIpnsValidator, enableIpnsSelector, enableLanDHT, lanDhtProtocol, lanDhtPeerInfoMapperRemovePublicAddresses, lanDhtClientMode, enableRelay, enableDCUTR, enablePing, enableDenyDialMultiaddr, denyDialMultiaddr, enableYamux, enableMplex }?: {
+    constructor({ autoStart, peerId, enableTcp, tcpPort, enableIp4, ip4Domain, enableUdp, udpPort, enableIp6, ip6Domain, enableQuicv1, enableWebTransport, enableWebSockets, enableWebRTC, enableWebRTCStar, webRTCStarAddress, enableCircuitRelayTransport, enableNoise, enableTls, enableBootstrap, bootstrapMultiaddrs, enableMDNS, enableGossipSub, enablePublishToZeroTopicPeers, enableAutoNAT, enableIdentify, enableUPnPNAT, enableDHT, enableDHTClient, enableIpnsValidator, enableIpnsSelector, enableLanDHT, lanDhtProtocol, lanDhtPeerInfoMapperRemovePublicAddresses, lanDhtClientMode, enableRelay, enableDCUTR, enablePing, enableDenyDialMultiaddr, denyDialMultiaddr, enableYamux, enableMplex }?: {
         autoStart?: boolean;
         peerId?: PeerId | string;
         enableTcp?: boolean;
@@ -62,6 +63,7 @@ declare class Libp2pProcessConfig {
         webRTCStarAddress?: Multiaddr | string;
         enableCircuitRelayTransport?: boolean;
         enableNoise?: boolean;
+        enableTls?: boolean;
         enableBootstrap?: boolean;
         bootstrapMultiaddrs?: Array<Multiaddr | string>;
         enableMDNS?: boolean;

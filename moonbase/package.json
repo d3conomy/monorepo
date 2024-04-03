@@ -49,6 +49,7 @@
     "@libp2p/mplex": "^10.0.17",
     "@libp2p/peer-id": "^4.0.8",
     "@libp2p/tcp": "^9.0.17",
+    "@libp2p/tls": "^1.0.4",
     "@libp2p/upnp-nat": "^1.0.15",
     "@libp2p/webrtc": "^4.0.23",
     "@libp2p/websockets": "^8.0.17",

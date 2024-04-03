@@ -70,6 +70,7 @@ const createLibp2pOptions = async ({
     webRTCStarAddress,
     enableCircuitRelayTransport,
     enableNoise,
+    enableTls,
     enableBootstrap,
     bootstrapMultiaddrs,
     enableMDNS,
@@ -123,7 +124,8 @@ const createLibp2pOptions = async ({
             enableCircuitRelayTransport
         }),
         connectionEncryption: connectionEncryption({
-            enableNoise
+            enableNoise,
+            enableTls
         }),
         streamMuxers: streamMuxers({
             enableYamux,

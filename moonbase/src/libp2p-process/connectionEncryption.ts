@@ -1,14 +1,20 @@
 
 import { noise } from '@chainsafe/libp2p-noise'
+import { tls } from '@libp2p/tls'
 
 const connectionEncryption = ({
-    enableNoise
+    enableNoise,
+    enableTls
 }: {
-    enableNoise?: boolean
+    enableNoise?: boolean,
+    enableTls?: boolean
 } = {}) => {
     let connectionEncryption: Array<any> = new Array<any>();
     if (enableNoise) {
         connectionEncryption.push(noise())
+    }
+    if (enableTls) {
+        connectionEncryption.push(tls())
     }
     return connectionEncryption; 
 }
