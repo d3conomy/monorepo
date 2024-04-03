@@ -3,6 +3,7 @@ import { Libp2p } from 'libp2p';
 import { Multiaddr } from '@multiformats/multiaddr';
 import { IProcess, PodProcessId, ProcessStage } from 'd3-artifacts';
 import { Libp2pProcessOptions } from './processOptions.js';
+import { GossipSubProcess } from './pubsub.js';
 /**
  * Create a libp2p process
  * @category Libp2p
@@ -16,6 +17,7 @@ declare class Libp2pProcess implements IProcess {
     id: PodProcessId;
     process?: Libp2p;
     options?: Libp2pProcessOptions;
+    gossipSub?: GossipSubProcess;
     private processStatus;
     /**
      * Create a new libp2p process
@@ -33,6 +35,7 @@ declare class Libp2pProcess implements IProcess {
      * Initialize the libp2p process
      */
     init(): Promise<void>;
+    initPubSub(id: PodProcessId): Promise<void>;
     status(): ProcessStage;
     /**
      * Start the libp2p process

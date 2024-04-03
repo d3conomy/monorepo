@@ -434,6 +434,50 @@ class PodBay {
             return orbitDbId;
         }
     }
+
+    /**
+     * Gets the open pubsub topics in the PodBay.
+     */
+    public getOpenTopics(): Array<string> {
+        const topics: Array<string> = [];
+        this.pods.forEach(pod => {
+            pod.pubsub?.getSubscriptions().forEach(pubsub => {
+                topics.push(pubsub);
+            });
+        });
+        return topics;
+    }
+
+    /**
+     * Publishes a message to a topic in the PodBay.
+     */
+    public async subscribe({
+        topic,
+        podId
+    }: {
+        topic: string,
+        podId: PodId
+    }): Promise<void> {
+        const pod = this.getPod(podId);
+        await pod?.initPubSub(topic);
+    }
+
+    /**
+     * Publishes a message to a topic in the PodBay.
+     */
+    public async publish({
+        topic,
+        message,
+        podId
+    }: {
+        topic: string,
+        message: string
+        podId: PodId
+    }): Promise<any> {
+        const pod = this.getPod(podId);
+        return await pod?.pubsub?.publish(new TextEncoder().encode(message));
+
+    }
 }
 
 export {

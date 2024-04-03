@@ -3,7 +3,8 @@ declare enum ProcessType {
     LIBP2P = "libp2p",
     IPFS = "ipfs",
     ORBITDB = "orbitdb",
-    OPEN_DB = "open-db"
+    OPEN_DB = "open-db",
+    PUB_SUB = "pub-sub"
 }
 declare const isProcessType: (value: any) => ProcessType;
 /**

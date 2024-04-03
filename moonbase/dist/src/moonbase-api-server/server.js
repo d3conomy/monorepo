@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
-import { podBayRouter, metricsRouter, dbRouter } from './routes/index.js';
+import { podBayRouter, metricsRouter, dbRouter, pubSubRouter } from './routes/index.js';
 import { LogLevel, logger } from 'd3-artifacts';
 /**
  * The options for the API server
@@ -75,7 +75,7 @@ class ApiServer {
             next();
         };
         this.app.use(express.json());
-        this.app.use('/api/v0', podBayMiddleware, metricsRouter, podBayRouter, dbRouter);
+        this.app.use('/api/v0', podBayMiddleware, metricsRouter, podBayRouter, dbRouter, pubSubRouter);
         const specs = swaggerJsdoc(options);
         this.app.use('/api/v0/docs', swaggerUi.serve);
         this.app.get('/api/v0/docs', swaggerUi.setup(specs, { explorer: true }));

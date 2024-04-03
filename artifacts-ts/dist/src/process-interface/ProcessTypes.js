@@ -5,6 +5,7 @@ var ProcessType;
     ProcessType["IPFS"] = "ipfs";
     ProcessType["ORBITDB"] = "orbitdb";
     ProcessType["OPEN_DB"] = "open-db";
+    ProcessType["PUB_SUB"] = "pub-sub";
 })(ProcessType || (ProcessType = {}));
 const isProcessType = (value) => {
     if (Object.values(ProcessType).includes(value)) {

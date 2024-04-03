@@ -4,6 +4,7 @@ import { IpfsOptions, IpfsProcess } from "../ipfs-process/index.js";
 import { OrbitDbOptions, OrbitDbProcess } from "../orbitdb-process/index.js";
 import { OpenDbOptions, OpenDbProcess, OrbitDbTypes } from "../open-db-process/index.js";
 import { createProcessIds } from "d3-artifacts";
+import { GossipSubProcess } from "../libp2p-process/pubsub.js";
 /**
  * Represents a LunarPod, which is a container for managing various processes and databases.
  * @category Pod
@@ -13,6 +14,7 @@ class LunarPod {
     libp2p;
     ipfs;
     orbitDb;
+    pubsub;
     db = new Map();
     idReferenceFactory;
     processIds = new Map();
@@ -97,6 +99,9 @@ class LunarPod {
         switch (processType) {
             case ProcessType.LIBP2P:
                 await this.initLibp2p();
+                break;
+            case ProcessType.PUB_SUB:
+                await this.initPubSub();
                 break;
             case ProcessType.IPFS:
                 await this.initIpfs();
@@ -253,6 +258,22 @@ class LunarPod {
                 await this.stop();
                 throw error;
             }
+        }
+    }
+    async initPubSub(topic) {
+        if (this.libp2p && !this.pubsub) {
+            const processId = this.processIds.get(ProcessType.PUB_SUB) ||
+                this.idReferenceFactory.createIdReference({
+                    name: `${this.id.name}-pubsub`,
+                    type: IdReferenceTypes.PROCESS,
+                    dependsOn: this.id
+                });
+            this.pubsub = new GossipSubProcess({
+                id: processId,
+                topic: topic ? topic : 'moonbase-pubsub',
+                libp2pProcess: this.libp2p
+            });
+            await this.pubsub.init();
         }
     }
     /**

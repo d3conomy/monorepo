@@ -10,6 +10,7 @@ import { peerIdFromString } from '@libp2p/peer-id'
 import { IProcess, IdReference, LogLevel, PodProcessId, ProcessStage, isProcessStage, logger } from 'd3-artifacts'
 import { Libp2pProcessOptions } from './processOptions.js'
 import { AddrInfo } from '@chainsafe/libp2p-gossipsub/dist/src/types.js'
+import { GossipSubProcess } from './pubsub.js'
 
 
 /**
@@ -46,9 +47,10 @@ const createLibp2pProcess = async (
 class Libp2pProcess
     implements IProcess
 {
-    public declare id: PodProcessId
-    public declare process?: Libp2p
-    public declare options?: Libp2pProcessOptions
+    public id: PodProcessId
+    public process?: Libp2p
+    public options?: Libp2pProcessOptions
+    public gossipSub?: GossipSubProcess
     private processStatus: ProcessStage = ProcessStage.NEW
 
     /**
@@ -112,6 +114,34 @@ class Libp2pProcess
             })
             this.processStatus = ProcessStage.INITIALIZED
         }
+    }
+
+    public async initPubSub(id: PodProcessId): Promise<void> {
+
+        try {
+            this.gossipSub = new GossipSubProcess({
+                id: id,
+                libp2pProcess: this
+            })
+            await this.gossipSub.init()
+        }
+        catch {
+            const message = `Error initializing pubsub for ${this.id.name}`
+            logger({
+                level: LogLevel.ERROR,
+                stage: ProcessStage.ERROR,
+                processId: this.id,
+                message: message
+            })
+            throw new Error(message)
+        }
+        logger({
+            level: LogLevel.INFO,
+            stage: ProcessStage.INITIALIZED,
+            processId: this.id,
+            message: `PubSub initialized for ${this.id.podId.name}`
+        })
+     
     }
 
 

@@ -89,6 +89,25 @@ declare class PodBay {
      * Closes the open database with the specified name or ID.
      */
     closeDb(dbName: string | PodProcessId): Promise<PodProcessId | undefined>;
+    /**
+     * Gets the open pubsub topics in the PodBay.
+     */
+    getOpenTopics(): Array<string>;
+    /**
+     * Publishes a message to a topic in the PodBay.
+     */
+    subscribe({ topic, podId }: {
+        topic: string;
+        podId: PodId;
+    }): Promise<void>;
+    /**
+     * Publishes a message to a topic in the PodBay.
+     */
+    publish({ topic, message, podId }: {
+        topic: string;
+        message: string;
+        podId: PodId;
+    }): Promise<any>;
 }
 export { PodBay };
 //# sourceMappingURL=index.d.ts.map

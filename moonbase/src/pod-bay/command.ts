@@ -1,3 +1,4 @@
+import { GossipSubProcess } from "../libp2p-process/pubsub"
 import { LunarPod } from "../lunar-pod"
 import { OpenDbProcess } from "../open-db-process"
 

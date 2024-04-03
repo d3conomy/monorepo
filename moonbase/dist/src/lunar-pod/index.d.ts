@@ -3,6 +3,7 @@ import { Libp2pProcess, Libp2pProcessOptions } from "../libp2p-process/index.js"
 import { IpfsOptions, IpfsProcess } from "../ipfs-process/index.js";
 import { OrbitDbOptions, OrbitDbProcess } from "../orbitdb-process/index.js";
 import { OpenDbProcess } from "../open-db-process/index.js";
+import { GossipSubProcess } from "../libp2p-process/pubsub.js";
 /**
  * Represents a LunarPod, which is a container for managing various processes and databases.
  * @category Pod
@@ -12,6 +13,7 @@ declare class LunarPod {
     libp2p?: Libp2pProcess;
     ipfs?: IpfsProcess;
     orbitDb?: OrbitDbProcess;
+    pubsub?: GossipSubProcess;
     db: Map<PodProcessId, OpenDbProcess>;
     private idReferenceFactory;
     private processIds;
@@ -68,6 +70,7 @@ declare class LunarPod {
         databaseType?: string;
         options?: Map<string, string>;
     }): Promise<OpenDbProcess | undefined>;
+    initPubSub(topic?: string): Promise<void>;
     /**
      * Get the OrbitDb process in the pod.
      */

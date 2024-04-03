@@ -3,6 +3,7 @@ import { multiaddr } from '@multiformats/multiaddr';
 import { peerIdFromString } from '@libp2p/peer-id';
 import { LogLevel, ProcessStage, isProcessStage, logger } from 'd3-artifacts';
 import { Libp2pProcessOptions } from './processOptions.js';
+import { GossipSubProcess } from './pubsub.js';
 /**
  * Create a libp2p process
  * @category Libp2p
@@ -30,6 +31,10 @@ const createLibp2pProcess = async (options) => {
  * @category Libp2p
  */
 class Libp2pProcess {
+    id;
+    process;
+    options;
+    gossipSub;
     processStatus = ProcessStage.NEW;
     /**
      * Create a new libp2p process
@@ -82,6 +87,31 @@ class Libp2pProcess {
             });
             this.processStatus = ProcessStage.INITIALIZED;
         }
+    }
+    async initPubSub(id) {
+        try {
+            this.gossipSub = new GossipSubProcess({
+                id: id,
+                libp2pProcess: this
+            });
+            await this.gossipSub.init();
+        }
+        catch {
+            const message = `Error initializing pubsub for ${this.id.name}`;
+            logger({
+                level: LogLevel.ERROR,
+                stage: ProcessStage.ERROR,
+                processId: this.id,
+                message: message
+            });
+            throw new Error(message);
+        }
+        logger({
+            level: LogLevel.INFO,
+            stage: ProcessStage.INITIALIZED,
+            processId: this.id,
+            message: `PubSub initialized for ${this.id.podId.name}`
+        });
     }
     status() {
         const updatedStatus = this.process?.status;

@@ -1,13 +1,11 @@
 
-import { PubSubRPC, PublishResult, PubSubRPCMessage } from '@libp2p/interface'
-import { Uint8ArrayList } from 'uint8arraylist'
-import { LogLevel, PodProcessId, ProcessStage, logger } from 'd3-artifacts';
+import { PublishResult } from '@libp2p/interface'
+import { IProcess, LogLevel, PodProcessId, ProcessStage, logger } from 'd3-artifacts';
 import { Libp2pProcess } from './process';
 import { GossipSub } from '@chainsafe/libp2p-gossipsub';
 
-class GossipSubProcess {
+class GossipSubProcess implements IProcess {
     id: PodProcessId;
-    // pubsub: GossipSub;
     topic: string;
     process: GossipSub;
 
@@ -36,6 +34,10 @@ class GossipSubProcess {
 
     async init(): Promise<void> {
         await this.process.start()
+
+        if (this.topic) {
+            this.subscribe(this.topic);
+        }
     }
 
     async start(): Promise<void> {
@@ -47,49 +49,11 @@ class GossipSubProcess {
     }
 
     async restart(): Promise<void> {
-        await this.process.stop();
-        await this.process.start();
-    }
-
-    decodeRpc(bytes: Uint8ArrayList | Uint8Array): PubSubRPC {
-        // take the bytes and decode them into a PubSubRPC object
-
-        const decoder = new TextDecoder();
-        const buffer = new ArrayBuffer(bytes.length);;
-        const view = new Uint8Array(buffer);
-        
-        if (bytes instanceof Uint8Array) {
-            view.set(bytes);
-        }
-
-        // if (bytes instanceof Uint8ArrayList) {
-        //     const bytesArray = new Array(bytes);
-        //     view.set(bytesArra);
-        // }
-        const rpcString = decoder.decode(view);
-        return JSON.parse(rpcString);
-    }
-
-    encodeRpc(rpc: PubSubRPC): Uint8Array{
-        // take the rpc object and encode it into a Uint8Array
-
-        const encoder = new TextEncoder();
-        const rpcString = JSON.stringify(rpc);
-        return encoder.encode(rpcString);
-    }
-
-    encodeMessage(message: PubSubRPCMessage): Uint8Array {
-        // take the message object and encode it into a Uint8Array
-
-        const encoder = new TextEncoder();
-        const messageString = JSON.stringify(message);
-        return encoder.encode(messageString);
+        await this.stop();
+        await this.start();
     }
 
     subscribe(topic: string): void {
-        // this.process.addEventListener('gossipsub:heartbeat', (msg: any) => {
-        //     console.log(msg)
-        // })
         this.process.addEventListener('message', (msg: any) => {
             if (msg.detail.topic !== topic) {
                 return;
@@ -102,11 +66,12 @@ class GossipSubProcess {
         this.process.subscribe(topic);
     }
 
-    async publishMessage(message: Uint8Array): Promise<PublishResult> {
+    getSubscriptions(): string[] {
+        return this.process.getTopics();
+    }
 
-        const result = await this.process.publish(this.topic, message);
-
-        return result;
+    async publish(message: Uint8Array): Promise<PublishResult> {
+        return await this.process.publish(this.topic, message);
     }
 }
 

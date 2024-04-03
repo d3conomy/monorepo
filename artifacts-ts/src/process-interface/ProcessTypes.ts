@@ -5,6 +5,7 @@ enum ProcessType {
     IPFS = 'ipfs',
     ORBITDB = 'orbitdb',
     OPEN_DB = 'open-db',
+    PUB_SUB = 'pub-sub'
 }
 
 const isProcessType = (value: any): ProcessType => {
