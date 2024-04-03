@@ -2,7 +2,7 @@ import { PubSubBaseProtocol, PubSubComponents } from '@libp2p/pubsub'
 import { PubSubRPC, PublishResult, PubSubRPCMessage, PeerId, Message, PubSubInit, Logger, LoggerOptions } from '@libp2p/interface'
 import { Uint8ArrayList } from 'uint8arraylist'
 import { SignaturePolicy } from '@chainsafe/libp2p-gossipsub/dist/src/types'
-import { IProcess, PodProcessId, ProcessStage, ProcessType } from 'd3-artifacts';
+import { IProcess, LogLevel, PodProcessId, ProcessStage, ProcessType, logger } from 'd3-artifacts';
 import { create } from 'domain';
 import { Registrar } from '@libp2p/interface-internal';
 import { createPeerId } from '@libp2p/peer-id';
@@ -244,12 +244,18 @@ class GossipSubProcess {
         //     console.log(msg)
         // })
         this.process.addEventListener('message', (msg: any) => {
-            console.log(`${this.id.podId} ${new Date()} : ${msg}`)
-        })
+            if (msg.detail.topic !== topic) {
+                return;
+            }
+            logger({
+                message: `[${msg.detail.topic}] ${new TextDecoder().decode(msg.detail.data)}`,
+                level: LogLevel.INFO
+            })
+        });
         this.process.subscribe(topic);
     }
 
-    async publishMessage(sender: PeerId, message: Uint8Array): Promise<PublishResult> {
+    async publishMessage(message: Uint8Array): Promise<PublishResult> {
         // publish a message to the network
 
         // const rpcMessage: PubSubRPCMessage = {

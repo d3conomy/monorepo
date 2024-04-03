@@ -1,4 +1,4 @@
-import { PubSubRPC, PublishResult, PubSubRPCMessage, PeerId } from '@libp2p/interface';
+import { PubSubRPC, PublishResult, PubSubRPCMessage } from '@libp2p/interface';
 import { Uint8ArrayList } from 'uint8arraylist';
 import { PodProcessId, ProcessStage } from 'd3-artifacts';
 import { Libp2pProcess } from './process';
@@ -22,7 +22,7 @@ declare class GossipSubProcess {
     encodeRpc(rpc: PubSubRPC): Uint8Array;
     encodeMessage(message: PubSubRPCMessage): Uint8Array;
     subscribe(topic: string): void;
-    publishMessage(sender: PeerId, message: Uint8Array): Promise<PublishResult>;
+    publishMessage(message: Uint8Array): Promise<PublishResult>;
 }
 export { GossipSubProcess };
 //# sourceMappingURL=pubsub.d.ts.map

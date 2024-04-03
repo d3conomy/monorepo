@@ -1,4 +1,4 @@
-import { ProcessStage } from 'd3-artifacts';
+import { LogLevel, ProcessStage, logger } from 'd3-artifacts';
 // class PubSubProcessInit implements PubSubInit {
 //     topic: string;
 //     enabled: boolean;
@@ -184,11 +184,17 @@ class GossipSubProcess {
         //     console.log(msg)
         // })
         this.process.addEventListener('message', (msg) => {
-            console.log(`${this.id.podId} ${new Date()} : ${msg}`);
+            if (msg.detail.topic !== topic) {
+                return;
+            }
+            logger({
+                message: `[${msg.detail.topic}] ${new TextDecoder().decode(msg.detail.data)}`,
+                level: LogLevel.INFO
+            });
         });
         this.process.subscribe(topic);
     }
-    async publishMessage(sender, message) {
+    async publishMessage(message) {
         // publish a message to the network
         // const rpcMessage: PubSubRPCMessage = {
         //     from: sender.toCID().bytes,

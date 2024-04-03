@@ -33,9 +33,10 @@ describe('PubSubProcess', () => {
         pubSubProcess = new GossipSubProcess({ id: pubsubprocessId, topic: 'moonbase-pubsub', libp2pProcess: libp2p });
         // pubSubProcess = new PubSubProcess({id: pubsubprocessId, peerId: libp2p.peerId(), options, libp2pProcess: libp2p});
         await pubSubProcess.init();
-        pubSubProcess.process.addEventListener('message', (msg) => {
-            console.log(`${msg.detail.topic} : ${new TextDecoder().decode(msg.detail.data)}`);
-        });
+        // pubSubProcess.process.addEventListener('message', (msg: any) => {
+        //     console.log(`${msg.detail.topic} : ${new TextDecoder().decode(msg.detail.data)}`)
+        // });
+        // pubSubProcess.subscribe('moonbase-pubsub');
         pubSubProcess.subscribe('moonbase-pubsub');
         // pubSubProcess.process.addEventListener('subscription-change', (msg: Message) => {
         //     console.log(msg.data)
@@ -115,13 +116,14 @@ describe('PubSubProcess', () => {
             // key: new Uint8Array(32),
         };
         await pubSubProcess.start();
-        const result = await pubSubProcess.process.publish('moonbase-pubsub', uint8ArrayFromString('hello'));
+        const result = await pubSubProcess.publishMessage(uint8ArrayFromString('hello'));
         logger({
             level: LogLevel.INFO,
             message: JSON.stringify(result)
         });
         console.log(pubSubProcess.process.getTopics());
         await pubSubProcess.process.publish('moonbase-pubsub', uint8ArrayFromString('hello world'));
+        await pubSubProcess.process.publish('moonbase-pubsub', uint8ArrayFromString('hola mundo'));
         // Add your assertions here
     });
 });
