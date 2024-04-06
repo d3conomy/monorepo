@@ -261,3 +261,4 @@ class IpfsProcess {
 }
 export { createIpfsProcess, IpfsProcess };
 export * from "./IpfsOptions.js";
+export * from "./IpfsFileSystem.js";

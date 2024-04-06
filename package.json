@@ -5,6 +5,7 @@
     "typedoc-plugin-inline-sources": "^1.0.2"
   },
   "dependencies": {
+    "@helia/ipns": "^7.2.0",
     "chance": "^1.1.11",
     "uuid": "^9.0.1"
   }

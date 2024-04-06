@@ -66,4 +66,5 @@ declare class IpfsProcess implements IProcess {
 }
 export { createIpfsProcess, IpfsProcess };
 export * from "./IpfsOptions.js";
+export * from "./IpfsFileSystem.js";
 //# sourceMappingURL=index.d.ts.map

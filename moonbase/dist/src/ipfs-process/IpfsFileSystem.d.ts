@@ -14,8 +14,6 @@ declare class IpfsFileSystem {
     ipfs: IpfsProcess;
     filesystemType: IpfsFileSystemType;
     filesystem: UnixFS;
-    private encoder;
-    private decoder;
     /**
      * Constructor for the IPFS file system
      */

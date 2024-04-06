@@ -304,3 +304,5 @@ export {
 }
 
 export * from "./IpfsOptions.js"
+export * from "./IpfsFileSystem.js"
+

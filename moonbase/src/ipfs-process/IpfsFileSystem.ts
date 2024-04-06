@@ -42,7 +42,7 @@ const createIpfsFileSystem = ({
 const onEventProgress = (event: AddEvents | GetEvents) => {
     logger({
         level: LogLevel.INFO,
-        message: `IPFS file ${event.type} progress ${event.detail}`
+        message: `IPFS file ${event.type} progress ${event.detail.toString()}`
     })
 }
 
@@ -56,8 +56,6 @@ class IpfsFileSystem {
     public ipfs: IpfsProcess
     public filesystemType: IpfsFileSystemType
     public filesystem: UnixFS
-    private encoder: any
-    private decoder: any
 
     /**
      * Constructor for the IPFS file system
@@ -83,9 +81,6 @@ class IpfsFileSystem {
             type: this.filesystemType,
             ipfs: this.ipfs
         })
-
-        this.encoder = encoder || new TextEncoder()
-        this.decoder = decoder || new TextDecoder()
     }
 
     /**
