@@ -7,7 +7,6 @@ import { Libp2p } from "libp2p";
 
 import { IpfsOptions } from "./IpfsOptions.js";
 import { IProcess, IdReference, LogLevel, PodProcessId, ProcessStage, logger } from "d3-artifacts";
-import { Libp2pProcess } from "../libp2p-process/process.js";
 
 // class HeliaLibp2pProcess extends HeliaLibp2p {
 

@@ -129,6 +129,27 @@ class IpfsFileSystem {
     }
 
     /**
+     * Add a directory to the IPFS file system
+     * @param path The directory path
+     */
+    public async addDirectory({
+        path,
+        mode
+    }: {
+        path: string,
+        mode?: number
+    }): Promise<CID> {
+        return await this.filesystem.addDirectory({
+            path: path,
+            mode: mode || 0x755,
+            mtime: {
+                secs: 10n,
+                nsecs: 0
+            }
+        }, { onProgress: onEventProgress })
+    }
+
+    /**
      * Make a new directory in the IPFS file system
      * @param path The directory path
      */
@@ -140,8 +161,14 @@ class IpfsFileSystem {
      * List the contents of a directory in the IPFS file system
      * @param cid The content id
      */
-    public ls(cid: CID): AsyncIterable<any> {
-        return this.filesystem.ls(cid, { onProgress: onEventProgress })
+    public ls(cid: CID, path?: string): AsyncIterable<any> {
+        return this.filesystem.ls(
+            cid, 
+            { 
+                path,
+                onProgress: onEventProgress 
+            }
+        )
     }
 
     /**
@@ -226,4 +253,9 @@ class IpfsFileSystem {
         )
     }
 
+}
+
+export {
+    IpfsFileSystem,
+    IpfsFileSystemType
 }
