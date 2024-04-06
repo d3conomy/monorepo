@@ -46,7 +46,7 @@ class IdReferenceFactory {
                 level: LogLevel.WARN,
                 message: `IdReferenceFactory: name ${name} already exists, creaating new name`
             });
-            name = `${name}-${createRandomId('string')}}`
+            name = `${name}-${createRandomId('string')}`
         }
         if (!format && !name) {
             format = this.config.idReferenceFormat;
