@@ -133,8 +133,13 @@ router.get('/fs/:ipfsProcessId', async function(req: Request, res: Response) {
     const files = ipfsFS.ls();
     const filesArray = [];
     for await (const file of files) {
-        console.log(file)
-        filesArray.push(file);
+        filesArray.push({
+            type: file.type,
+            name: file.name,
+            path: file.path,
+            cid: file.cid.toString(),
+            size: file.size
+        });
     }
     res.send({
         files: filesArray
@@ -207,22 +212,30 @@ router.post('/fs/:ipfsFSProcessId', async function(req: Request, res: Response) 
     }
     const buffer = Buffer.concat(chunks);
 
-    const boundary = `--${req.headers['content-type']?.split('; ')[1].split('=')[1]}`;
-    const parts = buffer.toString().split(boundary).slice(1, -1);
+    const boundary = `--${req.headers['content-type']?.split(': ')[1]}`;
 
-    for (const part of parts) {
-        const [header, body] = part.split('\r\n\r\n');
-        const nameMatch = header.match(/name="([^"]+)"/);
-        const filenameMatch = header.match(/filename="([^"]+)"/);
+    if(boundary === 'application/json') {
+        data = new TextEncoder().encode(req.body.data);
+        path = req.body.path;
+    }
 
-        if (nameMatch && filenameMatch) {
-            const name = nameMatch[1];
-            path = filenameMatch[1];
-            const bodydata = body.slice(0, -2);
+    if (boundary === 'multipart/form-data') {
+        const parts = buffer.toString().split(boundary).slice(1, -1);
 
-            if (name === 'file') {
-                data = new TextEncoder().encode(bodydata);
-                break;
+        for (const part of parts) {
+            const [header, body] = part.split('\r\n\r\n');
+            const nameMatch = header.match(/name="([^"]+)"/);
+            const filenameMatch = header.match(/filename="([^"]+)"/);
+
+            if (nameMatch && filenameMatch) {
+                const name = nameMatch[1];
+                path = filenameMatch[1];
+                const bodydata = body.slice(0, -2);
+
+                if (name === 'file') {
+                    data = new TextEncoder().encode(bodydata);
+                    break;
+                }
             }
         }
     }
