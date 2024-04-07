@@ -7,7 +7,8 @@ import {
     podBayRouter,
     metricsRouter,
     dbRouter,
-    pubSubRouter
+    pubSubRouter,
+    fileSystemRouter
 } from './routes/index.js';
 import { LogLevel, logger } from 'd3-artifacts';
 import { PodBay } from '../pod-bay/index.js';
@@ -132,7 +133,8 @@ class ApiServer {
             metricsRouter,
             podBayRouter,
             dbRouter,
-            pubSubRouter
+            pubSubRouter,
+            fileSystemRouter
         );
 
         const specs = swaggerJsdoc(options);

@@ -2,6 +2,7 @@ import { createHelia, } from "helia";
 import { dagJson } from "@helia/dag-json";
 import { CID } from "multiformats";
 import { LogLevel, ProcessStage, logger } from "d3-artifacts";
+import { IpfsFileSystem } from "./IpfsFileSystem.js";
 // class HeliaLibp2pProcess extends HeliaLibp2p {
 // }
 /**
@@ -27,6 +28,7 @@ class IpfsProcess {
     id;
     process;
     options;
+    filesystem = new Map();
     processStatus = ProcessStage.NEW;
     /**
      * Constructor for the Ipfs process
@@ -103,6 +105,15 @@ class IpfsProcess {
             stage: ProcessStage.INITIALIZED
         });
         this.processStatus = ProcessStage.INITIALIZED;
+    }
+    addFileSystem({ id, fileSystemType }) {
+        if (this.process) {
+            this.filesystem.set(id, new IpfsFileSystem({
+                id: id,
+                ipfs: this,
+                filesystemType: fileSystemType
+            }));
+        }
     }
     /**
      * Get the status of the IPFS process

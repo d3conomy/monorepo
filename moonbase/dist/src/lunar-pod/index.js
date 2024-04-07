@@ -1,6 +1,6 @@
 import { IdReferenceTypes, LogLevel, MetaData, PodProcessId, ProcessStage, ProcessType, isProcessType, logger } from "d3-artifacts";
 import { Libp2pProcess } from "../libp2p-process/index.js";
-import { IpfsOptions, IpfsProcess } from "../ipfs-process/index.js";
+import { IpfsFileSystem, IpfsOptions, IpfsProcess } from "../ipfs-process/index.js";
 import { OrbitDbOptions, OrbitDbProcess } from "../orbitdb-process/index.js";
 import { OpenDbOptions, OpenDbProcess, OrbitDbTypes } from "../open-db-process/index.js";
 import { createProcessIds } from "d3-artifacts";
@@ -15,6 +15,7 @@ class LunarPod {
     ipfs;
     orbitDb;
     pubsub;
+    fs = new Map();
     db = new Map();
     idReferenceFactory;
     processIds = new Map();
@@ -274,6 +275,27 @@ class LunarPod {
                 libp2pProcess: this.libp2p
             });
             await this.pubsub.init();
+        }
+    }
+    async initFileSystem({ type, processId, name } = {}) {
+        if (this.ipfs) {
+            processId = processId ? processId :
+                this.idReferenceFactory.createIdReference({
+                    name: name ? name : `${this.id.name}-fs`,
+                    type: IdReferenceTypes.PROCESS,
+                    dependsOn: this.id
+                });
+            const fs = new IpfsFileSystem({
+                id: processId,
+                ipfs: this.ipfs,
+                filesystemType: type
+            });
+            await fs.init();
+            this.fs.set(processId, fs);
+            return processId;
+        }
+        else {
+            throw new Error('IPFS process not initialized');
         }
     }
     /**

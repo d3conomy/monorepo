@@ -3,6 +3,7 @@ import { CID } from "multiformats";
 import { Libp2p } from "libp2p";
 import { IpfsOptions } from "./IpfsOptions.js";
 import { IProcess, PodProcessId, ProcessStage } from "d3-artifacts";
+import { IpfsFileSystem, IpfsFileSystemType } from "./IpfsFileSystem.js";
 /**
  * Create an IPFS process
  * @category IPFS
@@ -18,6 +19,7 @@ declare class IpfsProcess implements IProcess {
     id: PodProcessId;
     process?: HeliaLibp2p<Libp2p>;
     options?: IpfsOptions;
+    filesystem: Map<PodProcessId, IpfsFileSystem>;
     private processStatus;
     /**
      * Constructor for the Ipfs process
@@ -35,6 +37,10 @@ declare class IpfsProcess implements IProcess {
      * Initialize the IPFS Process
      */
     init(): Promise<void>;
+    addFileSystem({ id, fileSystemType }: {
+        id: PodProcessId;
+        fileSystemType: IpfsFileSystemType;
+    }): void;
     /**
      * Get the status of the IPFS process
      */

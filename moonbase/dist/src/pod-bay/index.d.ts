@@ -3,6 +3,7 @@ import { LunarPod } from "../lunar-pod/index.js";
 import { IdReferenceFactory, PodBayId, PodId, PodProcessId, ProcessStage, ProcessType } from "d3-artifacts";
 import { OrbitDbTypes } from "../open-db-process/OpenDbOptions.js";
 import { OpenDbProcess } from "../open-db-process/index.js";
+import { IpfsFileSystem, IpfsFileSystemType } from "../ipfs-process/IpfsFileSystem.js";
 /**
  * Represents a collection of LunarPods and provides methods for managing and interacting with them.
  * @category PodBay
@@ -108,6 +109,22 @@ declare class PodBay {
         message: string;
         podId: PodId;
     }): Promise<any>;
+    /**
+     * Get the list of open filesystems in the PodBay.
+     */
+    getOpenFs(): Array<string>;
+    /**
+     * Get the filesystem with the specified name or ID.
+     */
+    getFs(fsName: PodProcessId | string): IpfsFileSystem;
+    /**
+     * Create a new filesystem in the PodBay.
+     */
+    createFs({ podId, filesystemName, filesystemType }?: {
+        podId?: PodId | string;
+        filesystemName?: string;
+        filesystemType?: string | IpfsFileSystemType;
+    }): Promise<PodProcessId>;
 }
 export { PodBay };
 //# sourceMappingURL=index.d.ts.map

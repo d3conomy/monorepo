@@ -2,5 +2,6 @@ import { metricsRouter } from "./metrics.js";
 import { podBayRouter } from "./podBay.js";
 import { dbRouter } from "./openDb.js";
 import { pubSubRouter } from "./pubSub.js";
-export { dbRouter, podBayRouter, metricsRouter, pubSubRouter };
+import { fileSystemRouter } from "./fileSystem.js";
+export { dbRouter, podBayRouter, metricsRouter, pubSubRouter, fileSystemRouter };
 //# sourceMappingURL=index.d.ts.map

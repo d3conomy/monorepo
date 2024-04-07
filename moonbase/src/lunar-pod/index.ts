@@ -1,7 +1,7 @@
 
 import { IdReference, IdReferenceFactory, IdReferenceTypes, LogLevel, MetaData, PodBayId, PodId, PodProcessId, ProcessStage, ProcessType, isProcessType, logger } from "d3-artifacts";
 import { Libp2pProcess, Libp2pProcessOptions } from "../libp2p-process/index.js";
-import { IpfsOptions, IpfsProcess } from "../ipfs-process/index.js";
+import { IpfsFileSystem, IpfsFileSystemType, IpfsOptions, IpfsProcess, isIpfsFileSystemType } from "../ipfs-process/index.js";
 import { OrbitDbOptions, OrbitDbProcess } from "../orbitdb-process/index.js";
 import { OpenDbOptions, OpenDbProcess, OrbitDbTypes } from "../open-db-process/index.js";
 import { createProcessIds } from "d3-artifacts"
@@ -19,6 +19,7 @@ class LunarPod {
     public ipfs?: IpfsProcess;
     public orbitDb?: OrbitDbProcess;
     public pubsub?: GossipSubProcess;
+    public fs: Map<PodProcessId, IpfsFileSystem> = new Map<PodProcessId, IpfsFileSystem>();
     public db: Map<PodProcessId, OpenDbProcess> = new Map<PodProcessId, OpenDbProcess>();
     private idReferenceFactory: IdReferenceFactory;
     private processIds: Map<ProcessType, PodProcessId> = new Map<ProcessType, PodProcessId>();
@@ -353,6 +354,39 @@ class LunarPod {
 
             await this.pubsub.init();
 
+        }
+    }
+
+    public async initFileSystem({
+        type,
+        processId,
+        name
+    }: {
+        type?: IpfsFileSystemType,
+        processId?: PodProcessId,
+        name?: string
+    } = {}): Promise<PodProcessId> {
+        if (this.ipfs) {
+            processId = processId ? processId :
+                this.idReferenceFactory.createIdReference({
+                    name: name ? name : `${this.id.name}-fs`,
+                    type: IdReferenceTypes.PROCESS,
+                    dependsOn: this.id
+                }) as PodProcessId;
+
+            const fs = new IpfsFileSystem({
+                id: processId,
+                ipfs: this.ipfs,
+                filesystemType: type
+            });
+
+            await fs.init();
+            this.fs.set(processId, fs);
+
+            return processId;
+        }
+        else {
+            throw new Error('IPFS process not initialized');
         }
     }
 

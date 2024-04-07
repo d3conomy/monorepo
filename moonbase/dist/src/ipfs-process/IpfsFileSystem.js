@@ -1,5 +1,5 @@
 import { unixfs } from '@helia/unixfs';
-import { LogLevel, logger } from 'd3-artifacts';
+import { LogLevel, ProcessStage, logger } from 'd3-artifacts';
 var IpfsFileSystemType;
 (function (IpfsFileSystemType) {
     IpfsFileSystemType["UNIXFS"] = "unixfs";
@@ -39,54 +39,94 @@ class IpfsFileSystem {
     id;
     ipfs;
     filesystemType;
-    filesystem;
+    process;
+    activeCid;
     /**
      * Constructor for the IPFS file system
      */
-    constructor({ id, ipfs, filesystem, encoder, decoder }) {
+    constructor({ id, ipfs, filesystemType, filesystem, cid }) {
         this.id = id;
         this.ipfs = ipfs;
-        this.filesystemType = isIpfsFileSystemType(filesystem);
-        this.filesystem = createIpfsFileSystem({
-            type: this.filesystemType,
-            ipfs: this.ipfs
-        });
+        this.filesystemType = isIpfsFileSystemType(filesystemType);
+        this.process = filesystem;
+        this.activeCid = cid;
+    }
+    async init() {
+        if (!this.checkProcess()) {
+            this.process = createIpfsFileSystem({
+                type: this.filesystemType,
+                ipfs: this.ipfs
+            });
+        }
+    }
+    checkProcess() {
+        if (this.process) {
+            return true;
+        }
+        return false;
+    }
+    async start() {
+        await this.init();
+    }
+    async stop() {
+        if (this.process) {
+            this.process = undefined;
+        }
+    }
+    async restart() {
+        await this.stop();
+        await this.start();
+    }
+    status() {
+        return ProcessStage.STARTED;
     }
     /**
      * Add a file to the IPFS file system
      * @param data The file data
      */
     async addBytes(data) {
-        return await this.filesystem.addBytes(data, { onProgress: onEventProgress });
+        if (this.process) {
+            return await this.process.addBytes(data, { onProgress: onEventProgress });
+        }
+        throw new Error('IPFS file system not found');
     }
     /**
      * Get a file from the IPFS file system
      * @param cid The content id
      */
     getBytes(cid) {
-        return this.filesystem.cat(cid, { onProgress: onEventProgress });
+        if (this.process) {
+            return this.process.cat(cid, { onProgress: onEventProgress });
+        }
+        throw new Error('IPFS file system not found');
     }
     /**
      * Add a File to the IPFS file system
      * @param data The File data
      */
     async addFile({ data, path, mode }) {
-        return await this.filesystem.addFile({
-            content: data,
-            path: path,
-            mode: mode || 0x755,
-            mtime: {
-                secs: 10n,
-                nsecs: 0
-            }
-        }, { onProgress: onEventProgress });
+        if (this.process) {
+            return await this.process.addFile({
+                content: data,
+                path: path,
+                mode: mode || 0x755,
+                mtime: {
+                    secs: 10n,
+                    nsecs: 0
+                }
+            }, { onProgress: onEventProgress });
+        }
+        throw new Error('IPFS file system not found');
     }
     /**
      * Add a directory to the IPFS file system
      * @param path The directory path
      */
     async addDirectory({ path, mode }) {
-        return await this.filesystem.addDirectory({
+        if (!this.process) {
+            throw new Error('IPFS file system not found');
+        }
+        return await this.process.addDirectory({
             path: path,
             mode: mode || 0x755,
             mtime: {
@@ -100,15 +140,21 @@ class IpfsFileSystem {
      * @param path The directory path
      */
     async mkdir(cid, path) {
-        return await this.filesystem.mkdir(cid, path, { onProgress: onEventProgress });
+        if (!this.process) {
+            throw new Error('IPFS file system not found');
+        }
+        return await this.process.mkdir(cid, path, { onProgress: onEventProgress });
     }
     /**
      * List the contents of a directory in the IPFS file system
      * @param cid The content id
      */
     ls(cid, path) {
-        return this.filesystem.ls(cid, {
-            path,
+        if (!this.process) {
+            throw new Error('IPFS file system not found');
+        }
+        return this.process.ls(cid ? cid : this.activeCid, {
+            path: path ? path : undefined,
             onProgress: onEventProgress
         });
     }
@@ -116,13 +162,19 @@ class IpfsFileSystem {
      * Remove a file from the IPFS file system
      */
     async rm(cid, path) {
-        return await this.filesystem.rm(cid, path, { onProgress: onEventProgress });
+        if (!this.process) {
+            throw new Error('IPFS file system not found');
+        }
+        return await this.process.rm(cid, path, { onProgress: onEventProgress });
     }
     /**
      * Get the file system stats
      */
     async stat(cid) {
-        return await this.filesystem.stat(cid, { onProgress: onEventProgress });
+        if (!this.process) {
+            throw new Error('IPFS file system not found');
+        }
+        return await this.process.stat(cid, { onProgress: onEventProgress });
     }
     /**
      * Create a new Empty file in the IPFS file system
@@ -131,7 +183,10 @@ class IpfsFileSystem {
      * @param mtime The file modification time
      */
     async touch({ cid, options: { mtime } }) {
-        return await this.filesystem.touch(cid, {
+        if (!this.process) {
+            throw new Error('IPFS file system not found');
+        }
+        return await this.process.touch(cid, {
             mtime: mtime || {
                 secs: 10n,
                 nsecs: 0
@@ -143,13 +198,19 @@ class IpfsFileSystem {
      * Chandge the file mode in the IPFS file system
      */
     async chmod({ cid, mode }) {
-        return await this.filesystem.chmod(cid, mode);
+        if (!this.process) {
+            throw new Error('IPFS file system not found');
+        }
+        return await this.process.chmod(cid, mode);
     }
     /**
      * Copy a file in the IPFS file system
      */
     async cp({ source, target, name }) {
-        return await this.filesystem.cp(source, target, name);
+        if (!this.process) {
+            throw new Error('IPFS file system not found');
+        }
+        return await this.process.cp(source, target, name);
     }
 }
-export { IpfsFileSystem, IpfsFileSystemType };
+export { IpfsFileSystem, IpfsFileSystemType, isIpfsFileSystemType };

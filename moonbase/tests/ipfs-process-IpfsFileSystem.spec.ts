@@ -30,8 +30,9 @@ describe('IpfsFileSystem', () => {
         ipfsFileSystem = new IpfsFileSystem({
             id: filesystemId,
             ipfs,
-            filesystem: IpfsFileSystemType.UNIXFS,
+            filesystemType: IpfsFileSystemType.UNIXFS,
         });
+        await ipfsFileSystem.init()
     });
 
     afterEach( async () => {

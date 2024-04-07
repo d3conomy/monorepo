@@ -1,6 +1,6 @@
 import { IdReferenceFactory, PodBayId, PodId, PodProcessId, ProcessStage, ProcessType } from "d3-artifacts";
 import { Libp2pProcess, Libp2pProcessOptions } from "../libp2p-process/index.js";
-import { IpfsOptions, IpfsProcess } from "../ipfs-process/index.js";
+import { IpfsFileSystem, IpfsFileSystemType, IpfsOptions, IpfsProcess } from "../ipfs-process/index.js";
 import { OrbitDbOptions, OrbitDbProcess } from "../orbitdb-process/index.js";
 import { OpenDbProcess } from "../open-db-process/index.js";
 import { GossipSubProcess } from "../libp2p-process/pubsub.js";
@@ -14,6 +14,7 @@ declare class LunarPod {
     ipfs?: IpfsProcess;
     orbitDb?: OrbitDbProcess;
     pubsub?: GossipSubProcess;
+    fs: Map<PodProcessId, IpfsFileSystem>;
     db: Map<PodProcessId, OpenDbProcess>;
     private idReferenceFactory;
     private processIds;
@@ -71,6 +72,11 @@ declare class LunarPod {
         options?: Map<string, string>;
     }): Promise<OpenDbProcess | undefined>;
     initPubSub(topic?: string): Promise<void>;
+    initFileSystem({ type, processId, name }?: {
+        type?: IpfsFileSystemType;
+        processId?: PodProcessId;
+        name?: string;
+    }): Promise<PodProcessId>;
     /**
      * Get the OrbitDb process in the pod.
      */

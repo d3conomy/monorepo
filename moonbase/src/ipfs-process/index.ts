@@ -7,6 +7,7 @@ import { Libp2p } from "libp2p";
 
 import { IpfsOptions } from "./IpfsOptions.js";
 import { IProcess, IdReference, LogLevel, PodProcessId, ProcessStage, logger } from "d3-artifacts";
+import { IpfsFileSystem, IpfsFileSystemType } from "./IpfsFileSystem.js";
 
 // class HeliaLibp2pProcess extends HeliaLibp2p {
 
@@ -43,6 +44,7 @@ class IpfsProcess
     public id: PodProcessId
     public process?: HeliaLibp2p<Libp2p>
     public options?: IpfsOptions
+    public filesystem: Map<PodProcessId, IpfsFileSystem> = new Map()
     private processStatus: ProcessStage = ProcessStage.NEW
 
     /**
@@ -135,6 +137,23 @@ class IpfsProcess
 
         this.processStatus = ProcessStage.INITIALIZED
     }
+
+    public addFileSystem({
+         id,
+         fileSystemType
+    }: { 
+        id: PodProcessId,
+        fileSystemType: IpfsFileSystemType
+    }): void {
+        if (this.process) {
+            this.filesystem.set(id, new IpfsFileSystem({
+                id: id,
+                ipfs: this,
+                filesystemType: fileSystemType
+            }))
+        }
+    }
+    
 
     /**
      * Get the status of the IPFS process

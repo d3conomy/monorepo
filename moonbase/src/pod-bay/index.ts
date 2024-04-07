@@ -5,6 +5,8 @@ import { IdReferenceFactory, IdReferenceTypes, LogLevel, MetaData, PodBayId, Pod
 import { OrbitDbProcess } from "../orbitdb-process/index.js";
 import { OrbitDbTypes } from "../open-db-process/OpenDbOptions.js";
 import { OpenDbProcess } from "../open-db-process/index.js";
+import { IpfsFileSystem, IpfsFileSystemType, isIpfsFileSystemType } from "../ipfs-process/IpfsFileSystem.js";
+import { open } from "fs";
 
 
 /**
@@ -478,6 +480,101 @@ class PodBay {
         return await pod?.pubsub?.publish(new TextEncoder().encode(message));
 
     }
+
+    /**
+     * Get the list of open filesystems in the PodBay.
+     */
+    public getOpenFs(): Array<string> {
+        const fs: Array<string> = new Array<string>();
+        this.pods.forEach(pod => {
+            pod.fs?.forEach(fsName => {
+                fs.push(fsName.id.name);
+            });
+        });
+        return fs;
+    }
+
+    /**
+     * Get the filesystem with the specified name or ID.
+     */
+    public getFs(fsName: PodProcessId | string): IpfsFileSystem {
+        let podId: PodId | undefined;
+        let processId: PodProcessId | undefined;
+
+        if (fsName instanceof PodProcessId) {
+            processId = fsName;
+            podId = processId.podId;
+        }
+        else {
+            let openFsIds = this.getOpenFs();
+            console.log(openFsIds)
+            
+            openFsIds.forEach(id => {
+                console.log(id)
+                let idReference = this.idReferenceFactory.getIdReference(id);
+                console.log(idReference)
+                if (idReference && idReference instanceof PodProcessId) {
+                    if (idReference.name === fsName) {
+                        processId = idReference;
+                        podId = processId.podId;
+                    }
+                    console.log(processId)
+                }
+            });
+        }
+
+        console.log(`podId: ${podId}, processId: ${processId}`)
+        if (podId) {
+            const pod = this.getPod(podId);
+            if (pod && processId) {
+                const process = pod.fs.get(processId);
+                if (process) {
+                    return process;
+                }
+            }
+        }
+
+        throw new Error(`FileSystem ${fsName} not found`);
+    }
+
+    /**
+     * Create a new filesystem in the PodBay.
+     */
+    public async createFs({
+        podId,
+        filesystemName,
+        filesystemType
+    }: {
+        podId?: PodId | string,
+        filesystemName?: string,
+        filesystemType?: string | IpfsFileSystemType
+    } ={}): Promise<PodProcessId> {
+        const pod = this.getPod(podId);
+
+        if (!pod) {
+            logger({
+                level: LogLevel.ERROR,
+                message: `Pod with id ${podId} not found`
+            });
+            throw new Error(`Pod with id ${podId} not found`);
+        }
+
+        return await pod?.initFileSystem({
+            processId: this.idReferenceFactory.createIdReference({
+                name: filesystemName,
+                type: IdReferenceTypes.PROCESS,
+                metadata: new MetaData({
+                    mapped: new Map<string, any>([
+                        ["filesystemType", filesystemType],
+                        ["createdBy", this.id.name]
+                    ])
+                }),
+                dependsOn: podId
+            }),
+            type: isIpfsFileSystemType(filesystemType),
+            name: filesystemName
+        });
+    }   
 }
 
 export {

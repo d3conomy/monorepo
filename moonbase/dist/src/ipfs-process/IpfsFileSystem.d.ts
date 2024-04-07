@@ -1,29 +1,37 @@
 import { UnixFS, UnixFSStats } from '@helia/unixfs';
 import { CID } from 'multiformats';
 import { IpfsProcess } from './index.js';
-import { PodProcessId } from 'd3-artifacts';
+import { IProcess, PodProcessId, ProcessStage } from 'd3-artifacts';
 declare enum IpfsFileSystemType {
     UNIXFS = "unixfs"
 }
+declare const isIpfsFileSystemType: (value: any) => IpfsFileSystemType;
 /**
  * The IPFS file system
  * @category IPFS
  */
-declare class IpfsFileSystem {
+declare class IpfsFileSystem implements IProcess {
     id: PodProcessId;
     ipfs: IpfsProcess;
     filesystemType: IpfsFileSystemType;
-    filesystem: UnixFS;
+    process?: UnixFS;
+    activeCid?: CID;
     /**
      * Constructor for the IPFS file system
      */
-    constructor({ id, ipfs, filesystem, encoder, decoder }: {
+    constructor({ id, ipfs, filesystemType, filesystem, cid }: {
         id: PodProcessId;
         ipfs: IpfsProcess;
-        filesystem: IpfsFileSystemType;
-        encoder?: any;
-        decoder?: any;
+        filesystemType?: IpfsFileSystemType;
+        filesystem?: UnixFS;
+        cid?: CID;
     });
+    init(): Promise<void>;
+    checkProcess(): boolean;
+    start(): Promise<void>;
+    stop(): Promise<void>;
+    restart(): Promise<void>;
+    status(): ProcessStage;
     /**
      * Add a file to the IPFS file system
      * @param data The file data
@@ -60,7 +68,7 @@ declare class IpfsFileSystem {
      * List the contents of a directory in the IPFS file system
      * @param cid The content id
      */
-    ls(cid: CID, path?: string): AsyncIterable<any>;
+    ls(cid?: CID, path?: string): AsyncIterable<any>;
     /**
      * Remove a file from the IPFS file system
      */
@@ -101,5 +109,5 @@ declare class IpfsFileSystem {
         name: string;
     }): Promise<CID>;
 }
-export { IpfsFileSystem, IpfsFileSystemType };
+export { IpfsFileSystem, IpfsFileSystemType, isIpfsFileSystemType };
 //# sourceMappingURL=IpfsFileSystem.d.ts.map

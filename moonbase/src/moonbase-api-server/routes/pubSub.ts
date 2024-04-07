@@ -1,7 +1,5 @@
 import express, { Request, Response } from 'express';
 
-import { GossipSubProcess } from '../../libp2p-process/pubsub.js';
-
 /**
  * Handles the API routes for pubsub operations
  * @category API
