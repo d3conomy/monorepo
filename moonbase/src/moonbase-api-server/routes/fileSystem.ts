@@ -138,7 +138,7 @@ router.get('/fs/:ipfsProcessId', async function(req: Request, res: Response) {
             name: file.name,
             path: file.path,
             cid: file.cid.toString(),
-            size: file.size
+            size: BigInt(file.size).toString()
         });
     }
     res.send({
@@ -149,7 +149,7 @@ router.get('/fs/:ipfsProcessId', async function(req: Request, res: Response) {
 
 /**
  * @openapi
- * /api/v0/fs/{ipfsProcessId}:
+ * /api/v0/fs/{ipfsFSProcessId}:
  *  post:
  *   tags:
  *    - filesystem

@@ -142,7 +142,7 @@ router.get('/fs/:ipfsProcessId', async function (req, res) {
 });
 /**
  * @openapi
- * /api/v0/fs/{ipfsProcessId}:
+ * /api/v0/fs/{ipfsFSProcessId}:
  *  post:
  *   tags:
  *    - filesystem
