@@ -1,1 +1,1 @@
-{"version":3,"file":"fileSystem.d.ts","sourceRoot":"","sources":["../../../../src/moonbase-api-server/routes/fileSystem.ts"],"names":[],"mappings":"AAGA,QAAA,MAAM,MAAM,4CAAmB,CAAC;AAwPhC,OAAO,EACH,MAAM,IAAI,gBAAgB,EAC7B,CAAA"}
+{"version":3,"file":"fileSystem.d.ts","sourceRoot":"","sources":["../../../../src/moonbase-api-server/routes/fileSystem.ts"],"names":[],"mappings":"AAGA,QAAA,MAAM,MAAM,4CAAmB,CAAC;AAyPhC,OAAO,EACH,MAAM,IAAI,gBAAgB,EAC7B,CAAA"}

@@ -212,13 +212,14 @@ router.post('/fs/:ipfsFSProcessId', async function (req, res) {
         const parts = buffer.toString().split(boundary).slice(1, -1);
         for (const part of parts) {
             const [header, body] = part.split('\r\n\r\n');
-            const nameMatch = header.match(/name="([^"]+)"/);
-            const filenameMatch = header.match(/filename="([^"]+)"/);
-            if (nameMatch && filenameMatch) {
-                const name = nameMatch[1];
-                path = filenameMatch[1];
+            const nameMatch = body.match(/file="([^"]+)"/);
+            // const filenameMatch = header.match(/filename="([^"]+)"/);
+            if (nameMatch) {
+                // const name = nameMatch[1];
+                // path = filenameMatch[1];
+                path = nameMatch[0];
                 const bodydata = body.slice(0, -2);
-                if (name === 'file') {
+                if (path === 'file') {
                     data = new TextEncoder().encode(bodydata);
                     break;
                 }
