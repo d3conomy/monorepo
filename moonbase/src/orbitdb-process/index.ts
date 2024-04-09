@@ -5,7 +5,6 @@ import {
 } from '@orbitdb/core';
 import { IProcess, IdReference, LogLevel, PodProcessId, ProcessStage, ResponseCode, logger } from 'd3-artifacts';
 import { OrbitDbOptions } from './OrbitDbOptions.js';
-import { openDb } from '../open-db-process/index.js';
 
 
 /**

@@ -1,4 +1,3 @@
-import { IdReference } from 'd3-artifacts';
 import { createIdentityProvider } from './OrbitDbIdentityProvider.js';
 /**
 * The options for creating an OrbitDb process
@@ -18,7 +17,7 @@ class OrbitDbOptions {
         this.enableDID = enableDID ? enableDID : false;
         this.identitySeed = identitySeed;
         this.identityProvider = identityProvider;
-        this.directory = directory ? directory : `./orbitdb/${new IdReference().name}`;
+        this.directory = directory ? directory : `./orbitdb/${this.ipfs.id.podId.toString()}`;
         if (this.enableDID) {
             this.identityProvider = createIdentityProvider({
                 identitySeed: this.identitySeed,

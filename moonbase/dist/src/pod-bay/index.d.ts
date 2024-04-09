@@ -37,8 +37,9 @@ declare class PodBay {
     /**
      * Creates a new pod in the PodBay.
      */
-    newPod({ id, processType }?: {
+    newPod({ id, podName, processType }?: {
         id?: PodId;
+        podName?: string;
         processType?: ProcessType;
     }): Promise<PodId | undefined>;
     /**
@@ -70,7 +71,8 @@ declare class PodBay {
     /**
      * Opens a database in the PodBay.
      */
-    openDb({ orbitDbId, dbName, dbType, options }: {
+    openDb({ podId, orbitDbId, dbName, dbType, options }: {
+        podId?: PodId;
         orbitDbId?: PodProcessId;
         dbName: string;
         dbType: OrbitDbTypes | string;

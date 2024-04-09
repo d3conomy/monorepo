@@ -110,9 +110,12 @@ class LunarPod {
             case ProcessType.ORBITDB:
                 await this.initOrbitDb();
                 break;
-            case ProcessType.OPEN_DB:
-                await this.initOpenDb();
-                break;
+            // case ProcessType.OPEN_DB:
+            //     await this.initOpenDb();
+            //     break;
+            // case ProcessType.FILE_SYSTEM:
+            //     await this.initFileSystem();
+            //     break;
             default:
                 await this.initAll();
                 break;

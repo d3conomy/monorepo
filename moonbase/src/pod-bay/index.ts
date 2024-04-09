@@ -7,6 +7,7 @@ import { OrbitDbTypes } from "../open-db-process/OpenDbOptions.js";
 import { OpenDbProcess } from "../open-db-process/index.js";
 import { IpfsFileSystem, IpfsFileSystemType, isIpfsFileSystemType } from "../ipfs-process/IpfsFileSystem.js";
 import { open } from "fs";
+import { or } from "multiformats/dist/src/bases/base.js";
 
 
 /**
@@ -69,13 +70,16 @@ class PodBay {
      */
     public async newPod({
         id,
+        podName,
         processType
     }:{
         id?: PodId,
+        podName?: string,
         processType?: ProcessType
     } = {}): Promise<PodId | undefined> {
         if (!id) {
             id = this.idReferenceFactory.createIdReference({
+                name: podName ? podName : `pod-${this.pods.length + 1}`,
                 type: IdReferenceTypes.POD,
                 metadata: new MetaData({
                     mapped: new Map<string, any>([
@@ -254,11 +258,13 @@ class PodBay {
      * Opens a database in the PodBay.
      */
     public async openDb({
+        podId,
         orbitDbId,
         dbName,
         dbType,
         options
     } : {
+        podId?: PodId,
         orbitDbId?: PodProcessId,
         dbName: string,
         dbType: OrbitDbTypes | string,
@@ -283,36 +289,45 @@ class PodBay {
         if(this.checkIfOpenDbExists(dbName)) {
             
         }
+
+        // if (!orbitDbId && !podId) {
+        //     orbitDbPod = this.pods.find(pod => pod.orbitDb && pod.db.size >= 0);
+
+        //     if (!orbitDbPod) {
+        //         const podId = await this.newPod({
+        //             id: this.idReferenceFactory.createIdReference({
+        //                 type: IdReferenceTypes.POD,
+        //                 metadata: new MetaData({
+        //                     mapped: new Map<string, any>([
+        //                         ["processType", ProcessType.ORBITDB],
+        //                         ["createdBy", this.id.name]
+        //                     ])
+        //                 }),
+        //                 dependsOn: this.id
+        //             }),
+        //             processType: ProcessType.ORBITDB
+        //         });
+
+        //         orbitDbPod = this.getPod(podId);
+        //     }
+        // }
         
 
-        if (orbitDbId) {
-            orbitDbPod = this.pods.find(pod => {
-                logger({
-                    level: LogLevel.INFO,
-                    message: `Checking pod ${pod.id.name} for orbitDb`
-                })
-
-                if (pod.orbitDb &&
-                    pod.id.name === orbitDbId.name &&
-                    pod.db.size > 0
-                ) {
-                    openDb = pod.getOpenDb(dbName);
-                    return {
-                        openDb,
-                        type: openDb?.options?.databaseType,
-                        address: openDb?.address(),
-                        multiaddrs: pod.libp2p?.getMultiaddrs(),
-                    }
-                }
-            });
-        }
-        else {
-            orbitDbPod = this.pods.find(pod => pod.db.size === 0);
+        if (orbitDbId || podId) {
+            orbitDbPod = this.getPod(podId);
+            if (!orbitDbPod) {
+                // if (orbitDbPod.id.name !== orbitDbId.podId.name) {
+                    orbitDbPod = this.getPod(orbitDbId?.podId);
+                // }
+            }
+            
+            if (!orbitDbPod) {
+                orbitDbPod = this.pods.find(pod => pod.orbitDb && pod.db.size >= 0);
+            }
         }
 
         if (!orbitDbPod ||
-            !orbitDbPod.orbitDb ||
-            orbitDbPod?.db?.size > 0
+            !orbitDbPod.orbitDb
         ) {
             const podId = await this.newPod({
                 id: this.idReferenceFactory.createIdReference({
@@ -335,7 +350,6 @@ class PodBay {
             
             })
         }
-
 
         if (orbitDbPod && orbitDbPod.orbitDb) {
             openDbOptions = {

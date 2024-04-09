@@ -4,21 +4,16 @@ import { LogLevel, ProcessStage, logger } from 'd3-artifacts';
  * @category Database
  */
 const openDb = async ({ orbitDb, databaseName, databaseType, options }) => {
-    logger({
-        level: LogLevel.INFO,
-        message: `Opening database: ${databaseName}\n` +
-            `Type: ${databaseType}\n` +
-            `process: ${orbitDb.id.name}\n` +
-            `options: ${JSON.stringify(options, null, 2)}`
-    });
     try {
+        await orbitDb.start();
         if (databaseName.startsWith('/orbitdb')) {
             return await orbitDb.process.open(databaseName);
         }
-        await orbitDb.start();
-        return await orbitDb.process.open(databaseName, {
-            type: databaseType
-        }, options?.entries());
+        else {
+            return await orbitDb.process.open(databaseName, {
+                type: databaseType
+            }, options?.entries());
+        }
     }
     catch (error) {
         logger({
@@ -82,11 +77,6 @@ class OpenDbProcess {
             this.processStatus = ProcessStage.ERROR;
             throw new Error(`No database options found`);
         }
-        logger({
-            level: LogLevel.INFO,
-            processId: this.id,
-            message: `Database process created`
-        });
     }
     /**
      * Starts the database process.
