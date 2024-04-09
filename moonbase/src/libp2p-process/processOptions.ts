@@ -9,7 +9,7 @@ import { connectionGater } from './connectionGater.js'
 import { libp2pPeerId } from './peerId.js'
 import { Libp2pProcessConfig } from "./processConfig.js";
 import { PeerId } from "@libp2p/interface";
-import { connectionProtector } from "./protector.js";
+import { connectionProtector } from "./connectionProtector.js";
 
 class Libp2pProcessOptions {
     public processOptions?: Libp2pOptions;

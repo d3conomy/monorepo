@@ -7,7 +7,7 @@ import { connectionEncryption } from './connectionEncryption.js';
 import { connectionGater } from './connectionGater.js';
 import { libp2pPeerId } from './peerId.js';
 import { Libp2pProcessConfig } from "./processConfig.js";
-import { connectionProtector } from "./protector.js";
+import { connectionProtector } from "./connectionProtector.js";
 class Libp2pProcessOptions {
     processOptions;
     processConfig;

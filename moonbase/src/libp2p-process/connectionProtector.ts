@@ -20,8 +20,8 @@ const createSwarmKey = (
     const swarmKey = swarmKeyAsHex ? swarmKeyAsHex : key.toString('hex');
 
     // append the propers headers
-    const headers = '/key/swarm/psk/1.0.0/';
-    const base = '/base16/';
+    const headers = '/key/swarm/psk/1.0.0/\n';
+    const base = '/base16/\n';
     const fullKey = headers + base + swarmKey;
 
     return new TextEncoder().encode(fullKey);
@@ -38,8 +38,8 @@ function connectionProtector({
     swarmKeyAsHex
 }: {
     swarmKeyAsHex?: string
-}): 
-    (compnents: ProtectorComponents) => ConnectionProtector {
+} = {}): 
+    (components: ProtectorComponents) => ConnectionProtector {
     const swarmKey = createSwarmKey(swarmKeyAsHex);
 
     const protector: any = preSharedKey({
@@ -50,5 +50,6 @@ function connectionProtector({
 }
 
 export {
+    createSwarmKey,
     connectionProtector
 }

@@ -4,6 +4,7 @@ import { MemoryBlockstore } from "blockstore-core";
 import { Libp2pProcess, createLibp2pProcess } from "../src/libp2p-process/index.js";
 import { IpfsOptions } from "../src/ipfs-process/IpfsOptions.js";
 import { MoonbaseId, PodBayId, PodId, PodProcessId, SystemId } from "d3-artifacts";
+import { LevelBlockstore } from "blockstore-level";
 
 describe("IpfsOptions", () => {
     const systemId = new SystemId()
@@ -22,7 +23,7 @@ describe("IpfsOptions", () => {
         const ipfsOptions = new IpfsOptions({ libp2p });
 
         expect(ipfsOptions.datastore).to.be.an.instanceOf(MemoryDatastore);
-        expect(ipfsOptions.blockstore).to.be.an.instanceOf(MemoryBlockstore);
+        expect(ipfsOptions.blockstore).to.be.an.instanceOf(LevelBlockstore);
         expect(ipfsOptions.start).to.be.false;
     });
 

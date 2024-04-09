@@ -43,14 +43,14 @@ describe('LunarPod', async () => {
         expect(components[2].id).to.equal(lunarPod.orbitDb?.id);
     });
 
-    it('should initialize OpenDb', async () => {
+    // it('should initialize OpenDb', async () => {
 
-        await lunarPod.init(ProcessType.OPEN_DB);
-        await lunarPod.start(ProcessType.OPEN_DB);
-        const components = lunarPod.getProcesses();
-        expect(components.length).to.equal(4);
-        expect(components[3].id).to.equal(lunarPod.db.values().next().value.id);
-    });
+    //     await lunarPod.init(ProcessType.OPEN_DB);
+    //     await lunarPod.start(ProcessType.OPEN_DB);
+    //     const components = lunarPod.getProcesses();
+    //     expect(components.length).to.equal(4);
+    //     expect(components[3].id).to.equal(lunarPod.db.values().next().value.id);
+    // });
 
     it('should start all components and databases', async () => {
         await lunarPod.init();

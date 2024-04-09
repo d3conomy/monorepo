@@ -91,8 +91,8 @@ class Libp2pProcess
                 this.processStatus = ProcessStage.INITIALIZING
                 this.process = await createLibp2pProcess(this.options)
             }
-            catch {
-                const message = `Error initializing process for ${this.id.name}`
+            catch (error: any) {
+                const message = `Error initializing process for ${this.id.name} - ${error.message}`
                 logger({
                     level: LogLevel.ERROR,
                     stage: ProcessStage.ERROR,
