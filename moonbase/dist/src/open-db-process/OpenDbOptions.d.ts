@@ -20,16 +20,18 @@ declare class OpenDbOptions {
     orbitDb: OrbitDbProcess;
     databaseName: string;
     databaseType: OrbitDbTypes;
-    options?: Map<string, string>;
+    dbOptions?: Map<string, string>;
+    processOptions?: any;
     /**
      * Constructs a new instance of the _OpenDbOptions class.
      */
-    constructor({ id, orbitDb, databaseName, databaseType, options }: {
+    constructor({ id, orbitDb, databaseName, databaseType, dbOptions, options }: {
         id: PodProcessId;
         orbitDb: OrbitDbProcess;
         databaseName: string;
         databaseType?: OrbitDbTypes | string;
-        options?: Map<string, string>;
+        dbOptions?: Map<string, string>;
+        options?: any | undefined;
     });
 }
 export { OrbitDbTypes, isOrbitDbType, OpenDbOptions };

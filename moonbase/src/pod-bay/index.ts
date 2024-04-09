@@ -68,11 +68,13 @@ class PodBay {
     public async newPod({
         id,
         podName,
-        processType
+        processType,
+        options
     }:{
         id?: PodId,
         podName?: string,
-        processType?: ProcessType
+        processType?: ProcessType,
+        options?: any
     } = {}): Promise<PodId | undefined> {
         if (!id) {
             id = this.idReferenceFactory.createIdReference({
@@ -91,7 +93,7 @@ class PodBay {
 
             let pod = new LunarPod({id, idReferenceFactory: this.idReferenceFactory});
             if (processType) {
-                await pod.init(processType);
+                await pod.init(processType, options);
             }
             this.addPod(pod);
             return pod.id;
@@ -278,7 +280,8 @@ class PodBay {
         let openDbOptions: {
             databaseName: string,
             databaseType: OrbitDbTypes | string,
-            options: Map<string, string>
+            dbOptions: Map<string, string>,
+            options: any
         };
         let openDb: OpenDbProcess | undefined;
 
@@ -352,7 +355,8 @@ class PodBay {
             openDbOptions = {
                 databaseName: dbName,
                 databaseType: dbType,
-                options: options? options : new Map<string, string>()
+                dbOptions: options? options : new Map<string, string>(),
+                options: options
             };
 
             try {

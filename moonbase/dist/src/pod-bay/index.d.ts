@@ -37,10 +37,11 @@ declare class PodBay {
     /**
      * Creates a new pod in the PodBay.
      */
-    newPod({ id, podName, processType }?: {
+    newPod({ id, podName, processType, options }?: {
         id?: PodId;
         podName?: string;
         processType?: ProcessType;
+        options?: any;
     }): Promise<PodId | undefined>;
     /**
      * Adds a pod to the PodBay.

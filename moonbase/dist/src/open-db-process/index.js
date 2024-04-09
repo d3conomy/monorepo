@@ -64,7 +64,7 @@ class OpenDbProcess {
                 orbitDb: this.options.orbitDb,
                 databaseName: this.options.databaseName,
                 databaseType: this.options.databaseType,
-                options: this.options.options
+                options: this.options.processOptions
             });
             this.processStatus = ProcessStage.INITIALIZED;
         }

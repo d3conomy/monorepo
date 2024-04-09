@@ -24,16 +24,18 @@ class OpenDbOptions {
     orbitDb;
     databaseName;
     databaseType;
-    options;
+    dbOptions;
+    processOptions;
     /**
      * Constructs a new instance of the _OpenDbOptions class.
      */
-    constructor({ id, orbitDb, databaseName, databaseType, options }) {
+    constructor({ id, orbitDb, databaseName, databaseType, dbOptions, options }) {
         this.id = id;
         this.orbitDb = orbitDb;
         this.databaseName = databaseName;
         this.databaseType = databaseType ? isOrbitDbType(databaseType) : OrbitDbTypes.EVENTS;
-        this.options = options ? options : new Map();
+        this.dbOptions = dbOptions ? dbOptions : new Map();
+        this.processOptions = options ? options : undefined;
     }
 }
 export { OrbitDbTypes, isOrbitDbType, OpenDbOptions };

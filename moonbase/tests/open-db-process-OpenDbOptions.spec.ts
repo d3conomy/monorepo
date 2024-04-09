@@ -52,8 +52,8 @@ describe('OpenDbOptions', () => {
         expect(openDbOptions.orbitDb).to.equal(orbitDb);
         expect(openDbOptions.databaseName).to.equal('myDatabase');
         expect(openDbOptions.databaseType).to.equal(OrbitDbTypes.EVENTS);
-        expect(openDbOptions.options).to.be.an.instanceOf(Map);
-        expect(openDbOptions.options?.size).to.equal(0);
+        expect(openDbOptions.processOptions).to.be.an.instanceOf(Map);
+        expect(openDbOptions.processOptions?.size).to.equal(0);
     });
 
     it('should create an instance of OpenDbOptions with provided values', () => {
@@ -72,7 +72,7 @@ describe('OpenDbOptions', () => {
         expect(openDbOptions.orbitDb).to.equal(orbitDb);
         expect(openDbOptions.databaseName).to.equal('myDatabase');
         expect(openDbOptions.databaseType).to.equal(OrbitDbTypes.KEYVALUE);
-        expect(openDbOptions.options).to.equal(options);
+        expect(openDbOptions.processOptions).to.equal(options);
     });
 
     it('should throw an error for invalid OrbitDb type', () => {

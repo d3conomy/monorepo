@@ -2,7 +2,7 @@ import { IdReferenceFactory, PodBayId, PodId, PodProcessId, ProcessStage, Proces
 import { Libp2pProcess, Libp2pProcessOptions } from "../libp2p-process/index.js";
 import { IpfsFileSystem, IpfsFileSystemType, IpfsOptions, IpfsProcess } from "../ipfs-process/index.js";
 import { OrbitDbOptions, OrbitDbProcess } from "../orbitdb-process/index.js";
-import { OpenDbProcess } from "../open-db-process/index.js";
+import { OpenDbOptions, OpenDbProcess } from "../open-db-process/index.js";
 import { GossipSubProcess } from "../libp2p-process/pubsub.js";
 /**
  * Represents a LunarPod, which is a container for managing various processes and databases.
@@ -44,7 +44,13 @@ declare class LunarPod {
     /**
      * Initialize a specific process or all processes in the pod.
      */
-    init(processType?: string | ProcessType): Promise<void>;
+    init(processType?: string | ProcessType, options?: {
+        libp2pOptions?: Libp2pProcessOptions;
+        ipfsOptions?: IpfsOptions;
+        orbitDbOptions?: OrbitDbOptions;
+        openDbOptions?: OpenDbOptions;
+        pubsubTopic?: string;
+    }): Promise<void>;
     /**
      * Start the Libp2p process in the pod.
      */
@@ -54,22 +60,30 @@ declare class LunarPod {
     /**
      * Start the IPFS process in the pod.
      */
-    initIpfs({ ipfsOptions }?: {
+    initIpfs({ ipfsOptions, libp2pOptions }?: {
         ipfsOptions?: IpfsOptions;
+        libp2pOptions?: Libp2pProcessOptions;
     }): Promise<void>;
     /**
      * Start the OrbitDb process in the pod.
      */
-    initOrbitDb({ orbitDbOptions }?: {
+    initOrbitDb({ orbitDbOptions, ipfsOptions, libp2pOptions }?: {
         orbitDbOptions?: OrbitDbOptions;
+        ipfsOptions?: IpfsOptions;
+        libp2pOptions?: Libp2pProcessOptions;
     }): Promise<void>;
     /**
      * Start the OrbitDb process in the pod.
      */
-    initOpenDb({ databaseName, databaseType, options }?: {
+    initOpenDb({ databaseName, databaseType, dbOptions, options }?: {
         databaseName?: string;
         databaseType?: string;
-        options?: Map<string, string>;
+        dbOptions?: Map<string, string>;
+        options?: {
+            libp2pOptions?: Libp2pProcessOptions;
+            ipfsOptions?: IpfsOptions;
+            orbitDbOptions?: OrbitDbOptions;
+        };
     }): Promise<OpenDbProcess | undefined>;
     initPubSub(topic?: string): Promise<void>;
     initFileSystem({ type, processId, name }?: {

@@ -69,7 +69,7 @@ class LunarPod {
     /**
      * Initialize all processes and databases in the pod.
      */
-    async initAll() {
+    async initAll(options) {
         if ((this.orbitDb && !this.ipfs) || (this.orbitDb && !this.libp2p)) {
             throw new Error('OrbitDb requires both IPFS and libp2p to be initialized');
         }
@@ -77,42 +77,58 @@ class LunarPod {
             throw new Error('IPFS requires libp2p to be initialized');
         }
         if (!this.libp2p) {
-            await this.initLibp2p({});
+            await this.initLibp2p({ libp2pOptions: options?.libp2pOptions });
         }
         if (!this.ipfs) {
-            await this.initIpfs({});
+            await this.initIpfs({ ipfsOptions: options?.ipfsOptions });
         }
         if (!this.orbitDb) {
-            await this.initOrbitDb({});
+            await this.initOrbitDb({ orbitDbOptions: options?.orbitDbOptions });
+        }
+        if (options?.openDbOptions) {
+            await this.initOpenDb({
+                databaseName: options?.openDbOptions.databaseName,
+                databaseType: options?.openDbOptions.databaseType,
+                options: options?.openDbOptions.options
+            });
         }
     }
     /**
      * Initialize a specific process or all processes in the pod.
      */
-    async init(processType) {
+    async init(processType, options) {
         if (processType) {
             processType = isProcessType(processType);
         }
         else {
-            await this.initAll();
+            await this.initAll(options);
             return;
         }
         switch (processType) {
             case ProcessType.LIBP2P:
-                await this.initLibp2p();
+                await this.initLibp2p(options);
                 break;
             case ProcessType.PUB_SUB:
-                await this.initPubSub();
+                await this.initPubSub(options?.pubsubTopic);
                 break;
             case ProcessType.IPFS:
-                await this.initIpfs();
+                await this.initIpfs(options);
                 break;
             case ProcessType.ORBITDB:
-                await this.initOrbitDb();
+                await this.initOrbitDb(options);
                 break;
-            // case ProcessType.OPEN_DB:
-            //     await this.initOpenDb();
-            //     break;
+            case ProcessType.OPEN_DB:
+                await this.initOpenDb({
+                    databaseName: options?.openDbOptions?.databaseName,
+                    databaseType: options?.openDbOptions?.databaseType,
+                    dbOptions: options?.openDbOptions?.dbOptions,
+                    options: {
+                        libp2pOptions: options?.libp2pOptions,
+                        ipfsOptions: options?.ipfsOptions,
+                        orbitDbOptions: options?.orbitDbOptions
+                    }
+                });
+                break;
             // case ProcessType.FILE_SYSTEM:
             //     await this.initFileSystem();
             //     break;
@@ -141,9 +157,9 @@ class LunarPod {
     /**
      * Start the IPFS process in the pod.
      */
-    async initIpfs({ ipfsOptions } = {}) {
+    async initIpfs({ ipfsOptions, libp2pOptions } = {}) {
         if (!this.libp2p) {
-            await this.initLibp2p();
+            await this.initLibp2p({ libp2pOptions: libp2pOptions });
         }
         if (!this.ipfs) {
             ipfsOptions = new IpfsOptions({
@@ -167,9 +183,12 @@ class LunarPod {
     /**
      * Start the OrbitDb process in the pod.
      */
-    async initOrbitDb({ orbitDbOptions } = {}) {
+    async initOrbitDb({ orbitDbOptions, ipfsOptions, libp2pOptions } = {}) {
         if (!this.ipfs) {
-            await this.initIpfs();
+            await this.initIpfs({
+                ipfsOptions: ipfsOptions,
+                libp2pOptions: libp2pOptions
+            });
         }
         if (this.libp2p?.status() !== 'started') {
             await this.libp2p?.start();
@@ -197,9 +216,9 @@ class LunarPod {
     /**
      * Start the OrbitDb process in the pod.
      */
-    async initOpenDb({ databaseName, databaseType, options } = {}) {
+    async initOpenDb({ databaseName, databaseType, dbOptions, options } = {}) {
         if (!this.orbitDb) {
-            await this.initOrbitDb();
+            await this.initOrbitDb(options);
         }
         if (!databaseName) {
             databaseName = `${this.id.name}-db`;
@@ -225,7 +244,7 @@ class LunarPod {
                 orbitDb: this.orbitDb,
                 databaseName,
                 databaseType,
-                options
+                options: dbOptions
             });
             if (openDbOptions) {
                 // check if the orbitdb is already open

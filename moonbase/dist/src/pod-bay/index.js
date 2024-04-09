@@ -44,7 +44,7 @@ class PodBay {
     /**
      * Creates a new pod in the PodBay.
      */
-    async newPod({ id, podName, processType } = {}) {
+    async newPod({ id, podName, processType, options } = {}) {
         if (!id) {
             id = this.idReferenceFactory.createIdReference({
                 name: podName ? podName : `pod-${this.pods.length + 1}`,
@@ -61,7 +61,7 @@ class PodBay {
         if (id && !this.checkPodId(id)) {
             let pod = new LunarPod({ id, idReferenceFactory: this.idReferenceFactory });
             if (processType) {
-                await pod.init(processType);
+                await pod.init(processType, options);
             }
             this.addPod(pod);
             return pod.id;
@@ -263,7 +263,8 @@ class PodBay {
             openDbOptions = {
                 databaseName: dbName,
                 databaseType: dbType,
-                options: options ? options : new Map()
+                dbOptions: options ? options : new Map(),
+                options: options
             };
             try {
                 openDb = await orbitDbPod.initOpenDb(openDbOptions);
