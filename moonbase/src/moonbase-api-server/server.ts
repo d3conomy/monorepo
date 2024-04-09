@@ -3,6 +3,7 @@ import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
+import { apiMonitor } from './monitor.js';
 import {
     podBayRouter,
     metricsRouter,
@@ -12,6 +13,7 @@ import {
 } from './routes/index.js';
 import { LogLevel, logger } from 'd3-artifacts';
 import { PodBay } from '../pod-bay/index.js';
+// import { apiAuth } from './auth.js';
 
 
 /**
@@ -129,6 +131,8 @@ class ApiServer {
 
         this.app.use(express.json());
         this.app.use('/api/v0',
+            // apiAuth,
+            apiMonitor,
             podBayMiddleware,
             metricsRouter,
             podBayRouter,

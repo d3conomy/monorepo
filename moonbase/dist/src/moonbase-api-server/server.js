@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
+import { apiMonitor } from './monitor.js';
 import { podBayRouter, metricsRouter, dbRouter, pubSubRouter, fileSystemRouter } from './routes/index.js';
 import { LogLevel, logger } from 'd3-artifacts';
 /**
@@ -75,7 +76,9 @@ class ApiServer {
             next();
         };
         this.app.use(express.json());
-        this.app.use('/api/v0', podBayMiddleware, metricsRouter, podBayRouter, dbRouter, pubSubRouter, fileSystemRouter);
+        this.app.use('/api/v0', 
+        // apiAuth,
+        apiMonitor, podBayMiddleware, metricsRouter, podBayRouter, dbRouter, pubSubRouter, fileSystemRouter);
         const specs = swaggerJsdoc(options);
         this.app.use('/api/v0/docs', swaggerUi.serve);
         this.app.get('/api/v0/docs', swaggerUi.setup(specs, { explorer: true }));

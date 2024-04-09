@@ -1,4 +1,5 @@
 .DS_Store
 d3conomy.code-workspace
 moonbase/orbitdb
+moonbase/ipfs
 node_modules
