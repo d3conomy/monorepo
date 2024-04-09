@@ -18,6 +18,8 @@ class Libp2pProcessConfig {
     enableCircuitRelayTransport = true;
     enableNoise = true;
     enableTls = true;
+    enablePrivateSwarm = false;
+    privateSwarmKey = '';
     enableBootstrap = true;
     defaultBootstrapConfig = true;
     bootstrapMultiaddrs = new Array();
@@ -42,7 +44,7 @@ class Libp2pProcessConfig {
     denyDialMultiaddr = false;
     enableYamux = true;
     enableMplex = false;
-    constructor({ autoStart, peerId, enableTcp, tcpPort, enableIp4, ip4Domain, enableUdp, udpPort, enableIp6, ip6Domain, enableQuicv1, enableWebTransport, enableWebSockets, enableWebRTC, enableWebRTCStar, webRTCStarAddress, enableCircuitRelayTransport, enableNoise, enableTls, enableBootstrap, bootstrapMultiaddrs, enableMDNS, enableGossipSub, enablePublishToZeroTopicPeers, enableAutoNAT, enableIdentify, enableUPnPNAT, enableDHT, enableDHTClient, enableIpnsValidator, enableIpnsSelector, enableLanDHT, lanDhtProtocol, lanDhtPeerInfoMapperRemovePublicAddresses, lanDhtClientMode, enableRelay, enableDCUTR, enablePing, enableDenyDialMultiaddr, denyDialMultiaddr, enableYamux, enableMplex } = {}) {
+    constructor({ autoStart, peerId, enableTcp, tcpPort, enableIp4, ip4Domain, enableUdp, udpPort, enableIp6, ip6Domain, enableQuicv1, enableWebTransport, enableWebSockets, enableWebRTC, enableWebRTCStar, webRTCStarAddress, enableCircuitRelayTransport, enableNoise, enableTls, enablePrivateSwarm, privateSwarmKey, enableBootstrap, bootstrapMultiaddrs, enableMDNS, enableGossipSub, enablePublishToZeroTopicPeers, enableAutoNAT, enableIdentify, enableUPnPNAT, enableDHT, enableDHTClient, enableIpnsValidator, enableIpnsSelector, enableLanDHT, lanDhtProtocol, lanDhtPeerInfoMapperRemovePublicAddresses, lanDhtClientMode, enableRelay, enableDCUTR, enablePing, enableDenyDialMultiaddr, denyDialMultiaddr, enableYamux, enableMplex } = {}) {
         this.autoStart = autoStart ? autoStart : this.autoStart;
         this.peerId = peerId ? peerId : this.peerId;
         this.enableTcp = enableTcp ? enableTcp : this.enableTcp;
@@ -62,6 +64,8 @@ class Libp2pProcessConfig {
         this.enableCircuitRelayTransport = enableCircuitRelayTransport ? enableCircuitRelayTransport : this.enableCircuitRelayTransport;
         this.enableNoise = enableNoise ? enableNoise : this.enableNoise;
         this.enableTls = enableTls ? enableTls : this.enableTls;
+        this.enablePrivateSwarm = enablePrivateSwarm ? enablePrivateSwarm : this.enablePrivateSwarm;
+        this.privateSwarmKey = privateSwarmKey ? privateSwarmKey : this.privateSwarmKey;
         this.enableBootstrap = enableBootstrap ? enableBootstrap : this.enableBootstrap;
         this.bootstrapMultiaddrs = bootstrapMultiaddrs ? bootstrapMultiaddrs : this.bootstrapMultiaddrs;
         this.enableMDNS = enableMDNS ? enableMDNS : this.enableMDNS;

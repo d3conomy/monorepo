@@ -2,12 +2,9 @@
 import { Multiaddr } from "@multiformats/multiaddr";
 import { LunarPod } from "../lunar-pod/index.js";
 import { IdReferenceFactory, IdReferenceTypes, LogLevel, MetaData, PodBayId, PodId, PodProcessId, ProcessStage, ProcessType, isIdReferenceType, logger } from "d3-artifacts";
-import { OrbitDbProcess } from "../orbitdb-process/index.js";
 import { OrbitDbTypes } from "../open-db-process/OpenDbOptions.js";
 import { OpenDbProcess } from "../open-db-process/index.js";
 import { IpfsFileSystem, IpfsFileSystemType, isIpfsFileSystemType } from "../ipfs-process/IpfsFileSystem.js";
-import { open } from "fs";
-import { or } from "multiformats/dist/src/bases/base.js";
 
 
 /**

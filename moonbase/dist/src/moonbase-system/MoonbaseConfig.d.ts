@@ -20,7 +20,7 @@ declare class Config {
      * { "names": "uuid" | "name" | "string" }
      */
     general: {
-        names: string;
+        names: "string";
     };
     /**
      * API configuration

@@ -28,7 +28,7 @@ class Config {
      * { "names": "uuid" | "name" | "string" }
      */
     public general: {
-        names: string
+        names: "string"
     }
 
     /**

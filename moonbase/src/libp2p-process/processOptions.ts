@@ -9,6 +9,7 @@ import { connectionGater } from './connectionGater.js'
 import { libp2pPeerId } from './peerId.js'
 import { Libp2pProcessConfig } from "./processConfig.js";
 import { PeerId } from "@libp2p/interface";
+import { connectionProtector } from "./protector.js";
 
 class Libp2pProcessOptions {
     public processOptions?: Libp2pOptions;
@@ -71,6 +72,8 @@ const createLibp2pOptions = async ({
     enableCircuitRelayTransport,
     enableNoise,
     enableTls,
+    enablePrivateSwarm,
+    privateSwarmKey,
     enableBootstrap,
     bootstrapMultiaddrs,
     enableMDNS,
@@ -162,6 +165,12 @@ const createLibp2pOptions = async ({
     
     if (peerId) {
         options.peerId = await libp2pPeerId({id: peerId})
+    }
+
+    if (enablePrivateSwarm) {
+        options.connectionProtector = connectionProtector({
+            swarmKeyAsHex: privateSwarmKey
+        })
     }
 
     return options

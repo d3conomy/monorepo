@@ -1,5 +1,5 @@
 import { ApiServer } from '../moonbase-api-server/index.js';
-import { Config } from '../moonbase-config/MoonbaseConfig.js';
+import { Config } from './MoonbaseConfig.js';
 import { PodBay } from '../pod-bay/index.js';
 import { LogBooksManager, MoonbaseId } from 'd3-artifacts';
 import { MoonbaseAuth } from './MoonbaseAuth.js';
@@ -28,4 +28,5 @@ declare class Moonbase {
  */
 declare const moonbase: Moonbase;
 export { Moonbase, moonbase, systemId };
+export { Config } from './MoonbaseConfig.js';
 //# sourceMappingURL=index.d.ts.map

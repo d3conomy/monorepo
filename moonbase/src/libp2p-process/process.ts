@@ -1,15 +1,11 @@
-import { PeerId, Connection, Stream, PubSub, PubSubEvents, PubSubInit, PublishResult } from '@libp2p/interface'
-import { gossipsub } from '@chainsafe/libp2p-gossipsub'
-
+import { PeerId, Connection, Stream} from '@libp2p/interface'
 import { Libp2p, createLibp2p } from 'libp2p'
-
 import { Multiaddr, multiaddr } from '@multiformats/multiaddr'
 import { peerIdFromString } from '@libp2p/peer-id'
 
 
-import { IProcess, IdReference, LogLevel, PodProcessId, ProcessStage, isProcessStage, logger } from 'd3-artifacts'
+import { IProcess, LogLevel, PodProcessId, ProcessStage, isProcessStage, logger } from 'd3-artifacts'
 import { Libp2pProcessOptions } from './processOptions.js'
-import { AddrInfo } from '@chainsafe/libp2p-gossipsub/dist/src/types.js'
 import { GossipSubProcess } from './pubsub.js'
 
 

@@ -1,4 +1,5 @@
 node_modules/
 orbitdb
 ipfs
+data
 tsconfig.tsbuildinfo

@@ -20,7 +20,7 @@ const apiMonitor = async (req, res, next) => {
         }
         logger({
             name: 'api-monitor',
-            level: LogLevel.INFO,
+            level: LogLevel.DEBUG,
             message: `API request ${req.method} ${req.path} ${req.hostname} ${req.ip} ${res.statusCode} ${duration}ms ${responseSize} bytes`
         });
     });

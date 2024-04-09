@@ -6,7 +6,7 @@ import {
     ApiServer,
     ApiServerOptions
 } from '../moonbase-api-server/index.js';
-import { Config, loadConfig } from '../moonbase-config/MoonbaseConfig.js';
+import { Config, loadConfig } from './MoonbaseConfig.js';
 
 import {
     PodBay
@@ -56,6 +56,7 @@ class Moonbase {
         config?: Config
     ) {
         this.id = this.idReferenceFactory.createIdReference({
+            name: "system-moonbase",
             type: IdReferenceTypes.MOONBASE,
             dependsOn: systemId
         });
@@ -71,6 +72,7 @@ class Moonbase {
         };
 
         const podBayId = this.idReferenceFactory.createIdReference({
+            name: "system-pod-bay",
             type: IdReferenceTypes.POD_BAY,
             dependsOn: this.id
         });
@@ -124,7 +126,7 @@ while (loadedConfig === null || loadedConfig === undefined) {
  * @category Moonbase
  */
 const moonbase = new Moonbase();
-moonbase.init();
+await moonbase.init();
 
 export {
     Moonbase,
@@ -132,3 +134,6 @@ export {
     systemId
 }
 
+export {
+    Config
+} from './MoonbaseConfig.js'

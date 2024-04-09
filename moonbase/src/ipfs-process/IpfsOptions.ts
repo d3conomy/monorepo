@@ -49,7 +49,7 @@ class IpfsOptions {
         }
         this.libp2p = libp2p 
         this.datastore = datastore ? datastore : new MemoryDatastore()
-        this.blockstore = createBlockStore(blockstore, blockstorePath ? blockstorePath : `./ipfs/${libp2p.id.podId.toString()}`)
+        this.blockstore = createBlockStore(blockstore, blockstorePath ? blockstorePath : `./data/pods/${libp2p.id.podId.toString()}/ipfs/blockstore`)
         this.start = start ? start : false
     }
 }

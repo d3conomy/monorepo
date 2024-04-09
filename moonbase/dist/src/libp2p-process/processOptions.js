@@ -7,6 +7,7 @@ import { connectionEncryption } from './connectionEncryption.js';
 import { connectionGater } from './connectionGater.js';
 import { libp2pPeerId } from './peerId.js';
 import { Libp2pProcessConfig } from "./processConfig.js";
+import { connectionProtector } from "./protector.js";
 class Libp2pProcessOptions {
     processOptions;
     processConfig;
@@ -34,7 +35,7 @@ class Libp2pProcessOptions {
  * @returns The libp2p process configuration
  * @example
  */
-const createLibp2pOptions = async ({ autoStart, peerId, enableTcp, tcpPort, enableIp4, ip4Domain, enableUdp, udpPort, enableIp6, ip6Domain, enableQuicv1, enableWebTransport, enableWebSockets, enableWebRTC, enableWebRTCStar, webRTCStarAddress, enableCircuitRelayTransport, enableNoise, enableTls, enableBootstrap, bootstrapMultiaddrs, enableMDNS, enableGossipSub, enablePublishToZeroTopicPeers, enableAutoNAT, enableIdentify, enableUPnPNAT, enableDHT, enableDHTClient, enableIpnsValidator, enableIpnsSelector, enableLanDHT, lanDhtProtocol, lanDhtPeerInfoMapperRemovePublicAddresses, lanDhtClientMode, enableRelay, enableDCUTR, enablePing, enableDenyDialMultiaddr, denyDialMultiaddr, enableYamux, enableMplex } = new Libp2pProcessConfig()) => {
+const createLibp2pOptions = async ({ autoStart, peerId, enableTcp, tcpPort, enableIp4, ip4Domain, enableUdp, udpPort, enableIp6, ip6Domain, enableQuicv1, enableWebTransport, enableWebSockets, enableWebRTC, enableWebRTCStar, webRTCStarAddress, enableCircuitRelayTransport, enableNoise, enableTls, enablePrivateSwarm, privateSwarmKey, enableBootstrap, bootstrapMultiaddrs, enableMDNS, enableGossipSub, enablePublishToZeroTopicPeers, enableAutoNAT, enableIdentify, enableUPnPNAT, enableDHT, enableDHTClient, enableIpnsValidator, enableIpnsSelector, enableLanDHT, lanDhtProtocol, lanDhtPeerInfoMapperRemovePublicAddresses, lanDhtClientMode, enableRelay, enableDCUTR, enablePing, enableDenyDialMultiaddr, denyDialMultiaddr, enableYamux, enableMplex } = new Libp2pProcessConfig()) => {
     let options = {
         start: autoStart,
         addresses: listenAddressesConfig({
@@ -99,6 +100,11 @@ const createLibp2pOptions = async ({ autoStart, peerId, enableTcp, tcpPort, enab
     };
     if (peerId) {
         options.peerId = await libp2pPeerId({ id: peerId });
+    }
+    if (enablePrivateSwarm) {
+        options.connectionProtector = connectionProtector({
+            swarmKeyAsHex: privateSwarmKey
+        });
     }
     return options;
 };

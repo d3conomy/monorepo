@@ -21,6 +21,8 @@ class Libp2pProcessConfig {
     enableCircuitRelayTransport: boolean = true;
     enableNoise: boolean = true;
     enableTls: boolean = true;
+    enablePrivateSwarm: boolean = false;
+    privateSwarmKey: string = '';
     enableBootstrap: boolean = true;
     defaultBootstrapConfig: boolean = true;
     bootstrapMultiaddrs: Array<Multiaddr | string> = new Array<Multiaddr | string>();
@@ -66,6 +68,8 @@ class Libp2pProcessConfig {
         enableCircuitRelayTransport,
         enableNoise,
         enableTls,
+        enablePrivateSwarm,
+        privateSwarmKey,
         enableBootstrap,
         bootstrapMultiaddrs,
         enableMDNS,
@@ -109,6 +113,8 @@ class Libp2pProcessConfig {
         enableCircuitRelayTransport?: boolean,
         enableNoise?: boolean,
         enableTls?: boolean,
+        enablePrivateSwarm?: boolean,
+        privateSwarmKey?: string,
         enableBootstrap?: boolean,
         bootstrapMultiaddrs?: Array<Multiaddr | string>,
         enableMDNS?: boolean,
@@ -152,6 +158,8 @@ class Libp2pProcessConfig {
         this.enableCircuitRelayTransport = enableCircuitRelayTransport ? enableCircuitRelayTransport : this.enableCircuitRelayTransport;
         this.enableNoise = enableNoise ? enableNoise : this.enableNoise;
         this.enableTls = enableTls ? enableTls : this.enableTls;
+        this.enablePrivateSwarm = enablePrivateSwarm ? enablePrivateSwarm : this.enablePrivateSwarm;
+        this.privateSwarmKey = privateSwarmKey ? privateSwarmKey : this.privateSwarmKey;
         this.enableBootstrap = enableBootstrap ? enableBootstrap : this.enableBootstrap;
         this.bootstrapMultiaddrs = bootstrapMultiaddrs ? bootstrapMultiaddrs : this.bootstrapMultiaddrs;
         this.enableMDNS = enableMDNS ? enableMDNS : this.enableMDNS;

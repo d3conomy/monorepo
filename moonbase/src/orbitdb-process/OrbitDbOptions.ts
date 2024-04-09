@@ -35,7 +35,7 @@ class OrbitDbOptions {
         this.enableDID = enableDID ? enableDID : false;
         this.identitySeed = identitySeed;
         this.identityProvider = identityProvider;
-        this.directory = directory ? directory : `./orbitdb/${this.ipfs.id.podId.toString()}`;
+        this.directory = directory ? directory : `./data/pods/${this.ipfs.id.podId.toString()}/orbitdb`;
 
         if (this.enableDID) {
             this.identityProvider = createIdentityProvider({

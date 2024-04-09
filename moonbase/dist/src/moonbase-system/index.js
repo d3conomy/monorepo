@@ -1,6 +1,6 @@
 import os from 'os';
 import { ApiServer, ApiServerOptions } from '../moonbase-api-server/index.js';
-import { loadConfig } from '../moonbase-config/MoonbaseConfig.js';
+import { loadConfig } from './MoonbaseConfig.js';
 import { PodBay } from '../pod-bay/index.js';
 import { IdReferenceFactory, IdReferenceTypes, LogLevel, logBooksManager, logger, } from 'd3-artifacts';
 import { MoonbaseAuth } from './MoonbaseAuth.js';
@@ -30,6 +30,7 @@ class Moonbase {
     idReferenceFactory = idReferenceFactory;
     constructor(config) {
         this.id = this.idReferenceFactory.createIdReference({
+            name: "system-moonbase",
             type: IdReferenceTypes.MOONBASE,
             dependsOn: systemId
         });
@@ -41,6 +42,7 @@ class Moonbase {
             pods: this.config?.pods,
         };
         const podBayId = this.idReferenceFactory.createIdReference({
+            name: "system-pod-bay",
             type: IdReferenceTypes.POD_BAY,
             dependsOn: this.id
         });
@@ -84,5 +86,6 @@ while (loadedConfig === null || loadedConfig === undefined) {
  * @category Moonbase
  */
 const moonbase = new Moonbase();
-moonbase.init();
+await moonbase.init();
 export { Moonbase, moonbase, systemId };
+export { Config } from './MoonbaseConfig.js';
