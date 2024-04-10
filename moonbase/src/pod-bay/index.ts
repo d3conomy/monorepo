@@ -224,15 +224,15 @@ class PodBay {
     }
 
     private async checkIfOpenDbExists(dbName: string): Promise<{
-        openDb?: OpenDbProcess,
+        openDb: OpenDbProcess,
         address?: string,
-        podId?: PodId,
+        podId: PodId,
         multiaddrs?: Multiaddr[]
-    }?> {
+    } | undefined> {
         const dbExists: boolean = this.getAllOpenDbNames().includes(dbName);
 
         if (!dbExists) {
-            return null
+            return;
         }
 
         logger({
@@ -246,12 +246,15 @@ class PodBay {
                 level: LogLevel.ERROR,
                 message: `Database ${dbName} not found`
             });
-            return null
+            return;
         }
 
         // get the pod that has the openDb
         const orbitDbPod: LunarPod | undefined = this.pods.find(pod => {
-            if (openDb && pod.db.has(openDb.id)) {
+            if (!openDb) {
+                return;
+            }
+            if (pod.db.has(openDb.id)) {
                 return pod;
             }
         });
@@ -300,14 +303,14 @@ class PodBay {
 
         const db = await this.checkIfOpenDbExists(dbName)
 
-        if ()
+        if (db && db.openDb) {
             return {
-                openDb: db,
-                address: db.address(),
-                podId: db.id.podId,
-                multiaddrs: this.getPod(db.id.podId)?.libp2p?.getMultiaddrs()
+                openDb: db.openDb,
+                address: db.address,
+                podId: db.podId,
+                multiaddrs: db.multiaddrs
             }
-
+        }
 
         // if (!orbitDbId && !podId) {
         //     orbitDbPod = this.pods.find(pod => pod.orbitDb && pod.db.size >= 0);
