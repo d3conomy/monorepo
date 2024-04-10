@@ -1,11 +1,14 @@
 
 
 import {
-    Database
+    Database,
+    OrbitDBAccessController
 } from '@orbitdb/core';
 import { IProcess, IdReference, LogLevel, PodProcessId, ProcessStage, logger } from 'd3-artifacts';
 import { OpenDbOptions } from './OpenDbOptions';
 import { OrbitDbProcess } from '../orbitdb-process';
+import path from 'path';
+import fs from 'fs/promises';
 
 
 /**
@@ -27,14 +30,24 @@ const openDb = async ({
         await orbitDb.start();
         if (databaseName.startsWith('/orbitdb')) {
             return await orbitDb.process.open(
-                databaseName
+                databaseName,
+                {
+                    type: databaseType,
+                    sync: true,
+                    AccessController: OrbitDBAccessController({
+                        write: ['*']
+                    })
+                }
             )
         }
         else {
             return await orbitDb.process.open(
                 databaseName, 
                 {
-                    type: databaseType
+                    type: databaseType,
+                    AccessController: OrbitDBAccessController({
+                        write: ['*']
+                    })
                 },
                 options?.entries()
             );
@@ -102,12 +115,14 @@ class OpenDbProcess
             return;
         }
 
+        await this.removeLock();
+
         if (this.options) {
             this.process = await openDb({
                 orbitDb: this.options.orbitDb,
                 databaseName: this.options.databaseName,
                 databaseType: this.options.databaseType,
-                options: this.options.processOptions
+                options: this.options.dbOptions
             });
             this.processStatus = ProcessStage.INITIALIZED;
         } 
@@ -135,6 +150,33 @@ class OpenDbProcess
      */
     public status(): ProcessStage {
         return this.processStatus;
+    }
+
+    public async removeLock(): Promise<void> {
+
+        if (this.address()) {
+            const __dirname = path.resolve();
+            const orbitDbDataPath = path.join(__dirname, `./data/pods/system/orbitdb/orbitdb/${this.address().toString().split('/')[2]}`);
+            const headLockFile = path.join(orbitDbDataPath, '/log/_heads/LOCK');
+            const indexLockFile = path.join(orbitDbDataPath, '/log/_index/LOCK');
+            try {
+                //check if the files exist
+                if (await fs.stat(headLockFile)) {
+                    await fs.unlink(headLockFile);
+                }
+                if (await fs.stat(indexLockFile)) {
+                    await fs.unlink(indexLockFile);
+                }
+            }
+            catch (error) {
+                logger({
+                    level: LogLevel.ERROR,
+                    processId: this.id,
+                    message: `Error removing lock files: ${error}`
+                });
+            }
+        }
+
     }
 
     /**
@@ -173,6 +215,7 @@ class OpenDbProcess
             this.processStatus = ProcessStage.ERROR;
             throw new Error(`No database process found`);
         }
+        await this.removeLock();
     }
 
     /**

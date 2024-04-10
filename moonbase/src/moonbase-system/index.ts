@@ -82,7 +82,13 @@ class Moonbase {
             pods: podBayOptions.pods,
         });
 
-        this.auth = new MoonbaseAuth({podBay: this.podBay})
+        this.auth = new MoonbaseAuth({
+            podBay: this.podBay,
+            swarmKey: this.config.auth.systemSwarmKey,
+            authDbCid: this.config.auth.authDbCid,
+            sessionDbCid: this.config.auth.sessionDbCid,
+            eventLogCid: this.config.auth.eventLogCid
+        })
 
         const options = new ApiServerOptions({
             port: this.config.api.port,

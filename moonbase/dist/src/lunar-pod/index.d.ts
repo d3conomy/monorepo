@@ -45,6 +45,8 @@ declare class LunarPod {
      * Initialize a specific process or all processes in the pod.
      */
     init(processType?: string | ProcessType, options?: {
+        databaseName?: string;
+        databaseType?: string;
         libp2pOptions?: Libp2pProcessOptions;
         ipfsOptions?: IpfsOptions;
         orbitDbOptions?: OrbitDbOptions;
@@ -75,15 +77,13 @@ declare class LunarPod {
     /**
      * Start the OrbitDb process in the pod.
      */
-    initOpenDb({ databaseName, databaseType, dbOptions, options }?: {
+    initOpenDb({ databaseName, databaseType, dbOptions, libp2pOptions, ipfsOptions, orbitDbOptions, }?: {
         databaseName?: string;
         databaseType?: string;
         dbOptions?: Map<string, string>;
-        options?: {
-            libp2pOptions?: Libp2pProcessOptions;
-            ipfsOptions?: IpfsOptions;
-            orbitDbOptions?: OrbitDbOptions;
-        };
+        libp2pOptions?: Libp2pProcessOptions;
+        ipfsOptions?: IpfsOptions;
+        orbitDbOptions?: OrbitDbOptions;
     }): Promise<OpenDbProcess | undefined>;
     initPubSub(topic?: string): Promise<void>;
     initFileSystem({ type, processId, name }?: {

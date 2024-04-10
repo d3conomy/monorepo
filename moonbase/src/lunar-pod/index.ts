@@ -97,7 +97,16 @@ class LunarPod {
     /**
      * Initialize all processes and databases in the pod.
      */
-    private async initAll(options?: any): Promise<void> {
+    private async initAll(options?: {
+        databaseName?: string,
+        databaseType?: string,
+        libp2pOptions?: Libp2pProcessOptions,
+        ipfsOptions?: IpfsOptions,
+        orbitDbOptions?: OrbitDbOptions,
+        openDbOptions?: OpenDbOptions,
+        pubsubTopic?: string
+    
+    }): Promise<void> {
         if ((this.orbitDb && !this.ipfs)  || (this.orbitDb && !this.libp2p)) {
             throw new Error('OrbitDb requires both IPFS and libp2p to be initialized');
         }
@@ -107,20 +116,16 @@ class LunarPod {
         }
 
         if (!this.libp2p) {
-            await this.initLibp2p({libp2pOptions: options?.libp2pOptions});
+            await this.initLibp2p(options);
         }
         if (!this.ipfs) {
-            await this.initIpfs({ipfsOptions: options?.ipfsOptions});
+            await this.initIpfs(options);
         }
         if (!this.orbitDb) {
-            await this.initOrbitDb({orbitDbOptions: options?.orbitDbOptions});
+            await this.initOrbitDb(options);
         }
         if (options?.openDbOptions) {
-            await this.initOpenDb({
-                databaseName: options?.openDbOptions.databaseName,
-                databaseType: options?.openDbOptions.databaseType,
-                options: options?.openDbOptions.options
-            });
+            await this.initOpenDb(options);
         }
     }
 
@@ -130,6 +135,9 @@ class LunarPod {
     public async init(
         processType?: string | ProcessType,
         options?: {
+            databaseName?: string,
+            databaseType?: string,
+
             libp2pOptions?: Libp2pProcessOptions,
             ipfsOptions?: IpfsOptions,
             orbitDbOptions?: OrbitDbOptions,
@@ -139,10 +147,6 @@ class LunarPod {
     ): Promise<void> {
         if (processType) {
             processType = isProcessType(processType);
-        }
-        else {
-            await this.initAll(options);
-            return;
         }
 
         switch (processType) {
@@ -159,22 +163,13 @@ class LunarPod {
                 await this.initOrbitDb(options);
                 break;
             case ProcessType.OPEN_DB:
-                await this.initOpenDb({
-                    databaseName: options?.openDbOptions?.databaseName,
-                    databaseType: options?.openDbOptions?.databaseType,
-                    dbOptions: options?.openDbOptions?.dbOptions,
-                    options: {
-                        libp2pOptions: options?.libp2pOptions,
-                        ipfsOptions: options?.ipfsOptions,
-                        orbitDbOptions: options?.orbitDbOptions
-                    }
-                });
+                await this.initOpenDb(options)
                 break;
             // case ProcessType.FILE_SYSTEM:
             //     await this.initFileSystem();
             //     break;
             default:
-                await this.initAll();
+                await this.initAll(options);
                 break;
         }
     }
@@ -291,19 +286,25 @@ class LunarPod {
         databaseName,
         databaseType,
         dbOptions,
-        options
+        libp2pOptions,
+        ipfsOptions,
+        orbitDbOptions,
     }: {
         databaseName?: string,
         databaseType?: string,
         dbOptions?: Map<string, string>,
-        options?: {
-            libp2pOptions?: Libp2pProcessOptions,
-            ipfsOptions?: IpfsOptions,
-            orbitDbOptions?: OrbitDbOptions
-        }
+
+        libp2pOptions?: Libp2pProcessOptions,
+        ipfsOptions?: IpfsOptions,
+        orbitDbOptions?: OrbitDbOptions
+
     } = {}): Promise<OpenDbProcess | undefined> {
         if (!this.orbitDb) {
-            await this.initOrbitDb(options);
+            await this.initOrbitDb({
+                orbitDbOptions: orbitDbOptions,
+                ipfsOptions: ipfsOptions,
+                libp2pOptions: libp2pOptions
+            });
         }
 
         if (!databaseName) {
@@ -339,7 +340,7 @@ class LunarPod {
             if (openDbOptions) {
                 // check if the orbitdb is already open
                 if (this.db.has(databaseId)) {
-                    return
+                    return this.db.get(databaseId);
                 }
             }
 

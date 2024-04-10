@@ -152,7 +152,7 @@ router.post('/open', async function (req, res) {
 router.get('/db/:id', async function (req, res) {
     const podBay = req.podBay;
     const id = req.params.id;
-    const db = podBay.getOpenDb(id);
+    const db = await podBay.getOpenDb(id);
     if (!db) {
         res.status(404).send(`Database ${id} not found`);
     }
@@ -233,7 +233,7 @@ router.post('/db/:id', async function (req, res) {
     const id = req.params.id;
     const command = req.body.command;
     const args = req.body.args;
-    const db = podBay.getOpenDb(id);
+    const db = await podBay.getOpenDb(id);
     if (!db) {
         res.status(404).send(`Database ${id} not found`);
     }

@@ -28,6 +28,10 @@ class Config {
      */
     api;
     /**
+     * Authentication configuration
+     */
+    auth;
+    /**
      * Lunar Pods to include in the system
      * @description Array of LunarPods to include in the system
      * @default Array<LunarPod>
@@ -64,6 +68,12 @@ class Config {
             port: process.env.PORT ? process.env.PORT : config?.server?.port || 4343,
             corsOrigin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN : config?.api?.corsOrigin || '*'
         };
+        this.auth = {
+            authDbCid: process.env.AUTH_DB_CID ? process.env.AUTH_DB_CID : config?.auth?.authDbCid || undefined,
+            sessionDbCid: process.env.SESSION_DB_CID ? process.env.SESSION_DB_CID : config?.auth?.sessionDbCid || undefined,
+            eventLogCid: process.env.EVENT_LOG_CID ? process.env.EVENT_LOG_CID : config?.auth?.eventLogCid || undefined,
+            systemSwarmKey: process.env.SYSTEM_SWARM_KEY ? process.env.SYSTEM_SWARM_KEY : config?.auth?.systemSwarmKey || undefined
+        };
         this.pods = config?.pods;
     }
 }
@@ -96,4 +106,14 @@ const loadConfig = async () => {
     }
     return config;
 };
-export { Config, loadConfig };
+const writeConfig = async (update) => {
+    const __dirname = path.resolve();
+    const configPath = path.join(__dirname, './config.json');
+    const config = await fs.readFile(configPath, 'utf8');
+    const configJson = JSON.parse(config);
+    for (const [key, value] of update) {
+        configJson[key] = value;
+    }
+    await fs.writeFile(configPath, JSON.stringify(configJson, null, 2));
+};
+export { Config, loadConfig, writeConfig };

@@ -1,9 +1,12 @@
 import { Multiaddr } from "@multiformats/multiaddr";
 import { LunarPod } from "../lunar-pod/index.js";
 import { IdReferenceFactory, PodBayId, PodId, PodProcessId, ProcessStage, ProcessType } from "d3-artifacts";
-import { OrbitDbTypes } from "../open-db-process/OpenDbOptions.js";
+import { OpenDbOptions, OrbitDbTypes } from "../open-db-process/OpenDbOptions.js";
 import { OpenDbProcess } from "../open-db-process/index.js";
 import { IpfsFileSystem, IpfsFileSystemType } from "../ipfs-process/IpfsFileSystem.js";
+import { Libp2pProcessOptions } from "../libp2p-process/processOptions.js";
+import { IpfsOptions } from "../ipfs-process/IpfsOptions.js";
+import { OrbitDbOptions } from "../orbitdb-process/OrbitDbOptions.js";
 /**
  * Represents a collection of LunarPods and provides methods for managing and interacting with them.
  * @category PodBay
@@ -41,7 +44,15 @@ declare class PodBay {
         id?: PodId;
         podName?: string;
         processType?: ProcessType;
-        options?: any;
+        options?: {
+            databaseName?: string;
+            databaseType?: string;
+            libp2pOptions?: Libp2pProcessOptions;
+            ipfsOptions?: IpfsOptions;
+            orbitDbOptions?: OrbitDbOptions;
+            openDbOptions?: OpenDbOptions;
+            pubsubTopic?: string;
+        };
     }): Promise<PodId | undefined>;
     /**
      * Adds a pod to the PodBay.
@@ -88,7 +99,7 @@ declare class PodBay {
     /**
      * Gets the open database with the specified name or ID.
      */
-    getOpenDb(dbName: PodProcessId | string): OpenDbProcess | undefined;
+    getOpenDb(dbName: PodProcessId | string): Promise<OpenDbProcess | undefined>;
     /**
      * Closes the open database with the specified name or ID.
      */

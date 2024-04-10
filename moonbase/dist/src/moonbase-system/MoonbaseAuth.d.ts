@@ -11,6 +11,7 @@ interface MoonbaseAuthOptions {
     authDbCid?: string;
     sessionDbCid?: string;
     eventLogCid?: string;
+    systemSwarmKey?: string;
 }
 /**
  * The Moonbase authentication class
@@ -21,8 +22,13 @@ declare class MoonbaseAuth {
     authDb: any;
     sessionDb: any;
     eventLog: any;
-    constructor({ podBay }: {
+    options: MoonbaseAuthOptions;
+    constructor({ podBay, swarmKey, authDbCid, sessionDbCid, eventLogCid }: {
         podBay: PodBay;
+        swarmKey?: string;
+        authDbCid?: string;
+        sessionDbCid?: string;
+        eventLogCid?: string;
     });
     init(): Promise<void>;
 }

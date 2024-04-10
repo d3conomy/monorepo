@@ -68,7 +68,7 @@ describe("PodBay", () => {
         const options = new Map();
         const result = await podBay.openDb({ dbName, dbType, options });
         if (result?.openDb.id) {
-            const openDb = podBay.getOpenDb(result?.openDb.id);
+            const openDb = await podBay.getOpenDb(result?.openDb.id);
             expect(openDb).to.exist;
         }
         await podBay.closeDb(dbName);

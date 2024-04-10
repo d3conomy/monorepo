@@ -1,6 +1,7 @@
 import { LunarPod } from "../lunar-pod/index.js";
 import { IdReferenceTypes, LogLevel, MetaData, PodId, PodProcessId, ProcessType, logger } from "d3-artifacts";
 import { isIpfsFileSystemType } from "../ipfs-process/IpfsFileSystem.js";
+import { loadConfig } from "../moonbase-system/MoonbaseConfig.js";
 /**
  * Represents a collection of LunarPods and provides methods for managing and interacting with them.
  * @category PodBay
@@ -168,7 +169,7 @@ class PodBay {
         });
         return dbNames;
     }
-    checkIfOpenDbExists(dbName) {
+    async checkIfOpenDbExists(dbName) {
         const dbExists = this.getAllOpenDbNames().includes(dbName);
         if (!dbExists) {
             return false;
@@ -177,7 +178,7 @@ class PodBay {
             level: LogLevel.WARN,
             message: `Database ${dbName} already opened`
         });
-        const openDb = this.getOpenDb(dbName);
+        const openDb = await this.getOpenDb(dbName);
         if (!openDb) {
             logger({
                 level: LogLevel.ERROR,
@@ -206,7 +207,25 @@ class PodBay {
         let orbitDbPod;
         let openDbOptions;
         let openDb;
-        if (this.checkIfOpenDbExists(dbName)) {
+        if (await this.checkIfOpenDbExists(dbName)) {
+            logger({
+                level: LogLevel.WARN,
+                message: `Database ${dbName} already opened`
+            });
+            const db = await this.getOpenDb(dbName);
+            if (!db) {
+                logger({
+                    level: LogLevel.ERROR,
+                    message: `Database ${dbName} not found`
+                });
+                return;
+            }
+            return {
+                openDb: db,
+                address: db.address(),
+                podId: db.id.podId,
+                multiaddrs: this.getPod(db.id.podId)?.libp2p?.getMultiaddrs()
+            };
         }
         // if (!orbitDbId && !podId) {
         //     orbitDbPod = this.pods.find(pod => pod.orbitDb && pod.db.size >= 0);
@@ -291,7 +310,7 @@ class PodBay {
     /**
      * Gets the open database with the specified name or ID.
      */
-    getOpenDb(dbName) {
+    async getOpenDb(dbName) {
         let podId;
         let processId;
         if (dbName instanceof PodProcessId) {
@@ -299,6 +318,21 @@ class PodBay {
             podId = processId.podId;
         }
         else {
+            if (dbName.startsWith('zdpu')) {
+                dbName = `/orbitdb/${dbName}`;
+            }
+            if (dbName === 'system-auth') {
+                const config = await loadConfig();
+                dbName = `/orbitdb/${config.auth.authDbCid}`;
+            }
+            if (dbName === 'system-sessions') {
+                const config = await loadConfig();
+                dbName = `/orbitdb/${config.auth.sessionDbCid}`;
+            }
+            if (dbName === 'system-auth-events') {
+                const config = await loadConfig();
+                dbName = `/orbitdb/${config.auth.eventLogCid}`;
+            }
             processId = this.idReferenceFactory.getIdReference(dbName);
             if (processId) {
                 podId = processId.podId;

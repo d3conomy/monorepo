@@ -28,7 +28,7 @@ class Config {
      * { "names": "uuid" | "name" | "string" }
      */
     public general: {
-        names: "string"
+        names: string
     }
 
     /**
@@ -41,6 +41,16 @@ class Config {
     public api: {
         port: number
         corsOrigin: string
+    }
+
+    /**
+     * Authentication configuration
+     */
+    public auth: {
+        authDbCid: string,
+        sessionDbCid: string,
+        eventLogCid: string,
+        systemSwarmKey: string
     }
 
     /**
@@ -81,6 +91,12 @@ class Config {
             port: process.env.PORT ? process.env.PORT : config?.server?.port  || 4343,
             corsOrigin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN : config?.api?.corsOrigin || '*'
         }
+        this.auth = {
+            authDbCid: process.env.AUTH_DB_CID ? process.env.AUTH_DB_CID : config?.auth?.authDbCid || undefined,
+            sessionDbCid: process.env.SESSION_DB_CID ? process.env.SESSION_DB_CID : config?.auth?.sessionDbCid || undefined,
+            eventLogCid: process.env.EVENT_LOG_CID ? process.env.EVENT_LOG_CID : config?.auth?.eventLogCid || undefined,
+            systemSwarmKey: process.env.SYSTEM_SWARM_KEY ? process.env.SYSTEM_SWARM_KEY : config?.auth?.systemSwarmKey || undefined
+        }
         this.pods = config?.pods;
     }
 }
@@ -118,7 +134,22 @@ const loadConfig = async (): Promise<Config> => {
     return config;
 }
 
+const writeConfig = async (update: Map<string, any>): Promise<void> => {
+    const __dirname = path.resolve();
+    const configPath = path.join(__dirname, './config.json');
+    const config = await fs.readFile(configPath, 'utf8');
+    const configJson = JSON.parse(config);
+    
+    for (const [key, value] of update) {
+        configJson[key] = value;
+    }
+
+    await fs.writeFile(configPath, JSON.stringify(configJson, null, 2));
+
+}
+
 export {
     Config,
-    loadConfig
+    loadConfig,
+    writeConfig
 }

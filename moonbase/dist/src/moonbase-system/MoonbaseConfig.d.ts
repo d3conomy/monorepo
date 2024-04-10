@@ -20,7 +20,7 @@ declare class Config {
      * { "names": "uuid" | "name" | "string" }
      */
     general: {
-        names: "string";
+        names: string;
     };
     /**
      * API configuration
@@ -32,6 +32,15 @@ declare class Config {
     api: {
         port: number;
         corsOrigin: string;
+    };
+    /**
+     * Authentication configuration
+     */
+    auth: {
+        authDbCid: string;
+        sessionDbCid: string;
+        eventLogCid: string;
+        systemSwarmKey: string;
     };
     /**
      * Lunar Pods to include in the system
@@ -67,5 +76,6 @@ declare class Config {
  * @category Moonbase
  */
 declare const loadConfig: () => Promise<Config>;
-export { Config, loadConfig };
+declare const writeConfig: (update: Map<string, any>) => Promise<void>;
+export { Config, loadConfig, writeConfig };
 //# sourceMappingURL=MoonbaseConfig.d.ts.map

@@ -42,6 +42,7 @@ declare class OpenDbProcess implements IProcess {
      * Check the Status of the databaseProcess
      */
     status(): ProcessStage;
+    removeLock(): Promise<void>;
     /**
      * Stops the database process.
      */

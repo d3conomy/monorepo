@@ -10,14 +10,17 @@ import { PodBay } from '../pod-bay/index.js';
 import { LogLevel, ProcessType, logger } from 'd3-artifacts';
 import { OrbitDbTypes } from '../open-db-process/OpenDbOptions.js';
 import { Libp2pProcessConfig } from '../libp2p-process/processConfig.js';
-import { createSwarmKey } from '../libp2p-process/connectionProtector.js';
 import crypto from 'crypto';
+import fs from 'fs/promises';
 import { Libp2pProcessOptions, createLibp2pProcessOptions } from '../libp2p-process/processOptions.js';
+import path from 'path';
+import { writeConfig } from './MoonbaseConfig.js';
 
 interface MoonbaseAuthOptions {
     authDbCid?: string;
     sessionDbCid?: string;
     eventLogCid?: string;
+    systemSwarmKey?: string;
 }
 
 /**
@@ -29,14 +32,29 @@ class MoonbaseAuth {
     authDb: any;
     sessionDb: any;
     eventLog: any;
+    options: MoonbaseAuthOptions;
 
     
     constructor({
-        podBay
+        podBay,
+        swarmKey,
+        authDbCid,
+        sessionDbCid,
+        eventLogCid
     } : {
-        podBay: PodBay
+        podBay: PodBay,
+        swarmKey?: string,
+        authDbCid?: string,
+        sessionDbCid?: string,
+        eventLogCid?: string
     }) {
         this.podBay = podBay;
+        this.options = {
+            authDbCid,
+            sessionDbCid,
+            eventLogCid,
+            systemSwarmKey: swarmKey
+        }
     }
 
     async init(): Promise<void> {
@@ -45,46 +63,77 @@ class MoonbaseAuth {
             message: `Initializing MoonbaseAuth`
         });
 
-        const swarmKeyRaw = crypto.randomBytes(32).toString('hex')
+        const swarmKeyRaw = this.options.systemSwarmKey ? this.options.systemSwarmKey : crypto.randomBytes(32).toString('hex')
 
         logger({
             level: LogLevel.INFO,
             message: `Swarm key: ${swarmKeyRaw}`
         })
 
-        const libp2pConfig: Libp2pProcessConfig = new Libp2pProcessConfig({
-            enablePrivateSwarm: true,
-            privateSwarmKey: swarmKeyRaw
-        })
+        try {
+            const libp2pConfig: Libp2pProcessConfig = new Libp2pProcessConfig({
+                enablePrivateSwarm: true,
+                privateSwarmKey: swarmKeyRaw
+            })
+    
+            const libp2pOptions: Libp2pProcessOptions = await createLibp2pProcessOptions({
+                processConfig: libp2pConfig
+            })
+    
+            // Create the database instance for authentication
+            const orbitDbPodId = await this.podBay.newPod({
+                podName: 'system',
+                processType: ProcessType.ORBITDB,
+                options: { libp2pOptions }
+            })
+    
+            this.authDb = await this.podBay.openDb({
+                podId: orbitDbPodId,
+                dbName: this.options.authDbCid ? `/orbitdb/${this.options.authDbCid}` : 'system-auth',
+                dbType: OrbitDbTypes.DOCUMENTS
+            });
+    
+            // Create the database instance for session token storage
+            this.sessionDb = await this.podBay.openDb({
+                podId: orbitDbPodId,
+                dbName: this.options.sessionDbCid ? `/orbitdb/${this.options.sessionDbCid}` : 'system-sessions',
+                dbType: OrbitDbTypes.KEYVALUE
+            });
+    
+            this.eventLog = await this.podBay.openDb({
+                podId: orbitDbPodId,
+                dbName: this.options.eventLogCid ? `/orbitdb/${this.options.eventLogCid}` : 'system-auth-events',
+                dbType: OrbitDbTypes.EVENTS
+            });
+    
+            if (!this.authDb || !this.sessionDb || !this.eventLog) {
+                logger({
+                    level: LogLevel.ERROR,
+                    message: `Error initializing MoonbaseAuth`
+                });
+                return;
+            }
 
-        const libp2pOptions: Libp2pProcessOptions = await createLibp2pProcessOptions({
-            processConfig: libp2pConfig
-        })
+            await writeConfig(new Map<string, any>([[ 'auth' , {
+                authDbCid: this.authDb.address.toString().split('/')[2],
+                sessionDbCid: this.sessionDb.address.toString().split('/')[2],
+                eventLogCid: this.eventLog.address.toString().split('/')[2],
+                systemSwarmKey: swarmKeyRaw
+            }]]));
+        }
+        catch (error) {
+            logger({
+                level: LogLevel.ERROR,
+                message: `Error initializing MoonbaseAuth: ${error}`
+            });
+            return;
+        }
 
-        // Create the database instance for authentication
-        const orbitDbPodId = await this.podBay.newPod({
-            podName: 'system',
-            processType: ProcessType.ORBITDB,
-            options: { libp2pOptions }
-        })
 
-        this.authDb = await this.podBay.openDb({
-            podId: orbitDbPodId,
-            dbName: 'system-auth',
-            dbType: OrbitDbTypes.DOCUMENTS
-        });
 
-        // Create the database instance for session token storage
-        this.sessionDb = await this.podBay.openDb({
-            podId: orbitDbPodId,
-            dbName: 'system-sessions',
-            dbType: OrbitDbTypes.KEYVALUE
-        });
-
-        this.eventLog = await this.podBay.openDb({
-            podId: orbitDbPodId,
-            dbName: 'system-auth-events',
-            dbType: OrbitDbTypes.EVENTS
+        logger({
+            level: LogLevel.INFO,
+            message: `MoonbaseAuth initialized`
         });
     }
 }

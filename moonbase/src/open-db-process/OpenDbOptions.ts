@@ -29,7 +29,6 @@ class OpenDbOptions {
     public databaseName: string;
     public databaseType: OrbitDbTypes;
     public dbOptions?: Map<string, string>;
-    public processOptions?: any;
 
     /**
      * Constructs a new instance of the _OpenDbOptions class.
@@ -39,22 +38,19 @@ class OpenDbOptions {
         orbitDb,
         databaseName,
         databaseType,
-        dbOptions,
-        options
+        options,
     }: {
         id: PodProcessId,
         orbitDb: OrbitDbProcess,
         databaseName: string,
         databaseType?: OrbitDbTypes | string,
-        dbOptions?: Map<string, string>
-        options?: any | undefined
+        options?: Map<string, string>
     }) {
         this.id = id;
         this.orbitDb = orbitDb;
         this.databaseName = databaseName;
         this.databaseType = databaseType ? isOrbitDbType(databaseType) : OrbitDbTypes.EVENTS;
-        this.dbOptions = dbOptions ? dbOptions : new Map<string, string>();
-        this.processOptions = options ? options : undefined;
+        this.dbOptions = options ? options : new Map<string, string>();
     }
 }
 

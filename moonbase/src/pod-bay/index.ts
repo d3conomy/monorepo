@@ -2,9 +2,13 @@
 import { Multiaddr } from "@multiformats/multiaddr";
 import { LunarPod } from "../lunar-pod/index.js";
 import { IdReferenceFactory, IdReferenceTypes, LogLevel, MetaData, PodBayId, PodId, PodProcessId, ProcessStage, ProcessType, isIdReferenceType, logger } from "d3-artifacts";
-import { OrbitDbTypes } from "../open-db-process/OpenDbOptions.js";
+import { OpenDbOptions, OrbitDbTypes } from "../open-db-process/OpenDbOptions.js";
 import { OpenDbProcess } from "../open-db-process/index.js";
 import { IpfsFileSystem, IpfsFileSystemType, isIpfsFileSystemType } from "../ipfs-process/IpfsFileSystem.js";
+import { Libp2pProcessOptions } from "../libp2p-process/processOptions.js";
+import { IpfsOptions } from "../ipfs-process/IpfsOptions.js";
+import { OrbitDbOptions } from "../orbitdb-process/OrbitDbOptions.js";
+import { loadConfig } from "../moonbase-system/MoonbaseConfig.js";
 
 
 /**
@@ -74,7 +78,15 @@ class PodBay {
         id?: PodId,
         podName?: string,
         processType?: ProcessType,
-        options?: any
+        options?: {
+            databaseName?: string,
+            databaseType?: string,
+            libp2pOptions?: Libp2pProcessOptions,
+            ipfsOptions?: IpfsOptions,
+            orbitDbOptions?: OrbitDbOptions,
+            openDbOptions?: OpenDbOptions,
+            pubsubTopic?: string
+        }
     } = {}): Promise<PodId | undefined> {
         if (!id) {
             id = this.idReferenceFactory.createIdReference({
@@ -211,30 +223,30 @@ class PodBay {
         return dbNames;
     }
 
-    private checkIfOpenDbExists(dbName: string): boolean | {
-        openDb: OpenDbProcess,
+    private async checkIfOpenDbExists(dbName: string): Promise<{
+        openDb?: OpenDbProcess,
         address?: string,
-        podId: PodId,
+        podId?: PodId,
         multiaddrs?: Multiaddr[]
-    } {
+    }?> {
         const dbExists: boolean = this.getAllOpenDbNames().includes(dbName);
 
         if (!dbExists) {
-            return false;
+            return null
         }
 
         logger({
             level: LogLevel.WARN,
             message: `Database ${dbName} already opened`
         });
-        const openDb = this.getOpenDb(dbName);
+        const openDb = await this.getOpenDb(dbName);
 
         if (!openDb) {
             logger({
                 level: LogLevel.ERROR,
                 message: `Database ${dbName} not found`
             });
-            return false;
+            return null
         }
 
         // get the pod that has the openDb
@@ -286,9 +298,16 @@ class PodBay {
         let openDb: OpenDbProcess | undefined;
 
 
-        if(this.checkIfOpenDbExists(dbName)) {
-            
-        }
+        const db = await this.checkIfOpenDbExists(dbName)
+
+        if ()
+            return {
+                openDb: db,
+                address: db.address(),
+                podId: db.id.podId,
+                multiaddrs: this.getPod(db.id.podId)?.libp2p?.getMultiaddrs()
+            }
+
 
         // if (!orbitDbId && !podId) {
         //     orbitDbPod = this.pods.find(pod => pod.orbitDb && pod.db.size >= 0);
@@ -386,7 +405,7 @@ class PodBay {
     /**
      * Gets the open database with the specified name or ID.
      */
-    public getOpenDb(dbName: PodProcessId | string): OpenDbProcess | undefined {
+    public async getOpenDb(dbName: PodProcessId | string): Promise<OpenDbProcess | undefined> {
         let podId: PodId | undefined;
         let processId: PodProcessId | undefined;
 
@@ -395,6 +414,26 @@ class PodBay {
             podId = processId.podId;
         }
         else {
+            if (dbName.startsWith('zdpu')) {
+                dbName = `/orbitdb/${dbName}`;
+
+            }
+
+            if (dbName === 'system-auth') {
+                const config = await loadConfig()
+                dbName = `/orbitdb/${config.auth.authDbCid}`;
+            }
+
+            if (dbName === 'system-sessions') {
+                const config = await loadConfig()
+                dbName = `/orbitdb/${config.auth.sessionDbCid}`;
+            }
+
+            if (dbName === 'system-auth-events') {
+                const config = await loadConfig()
+                dbName = `/orbitdb/${config.auth.eventLogCid}`;
+            }
+
             processId = this.idReferenceFactory.getIdReference(dbName) as PodProcessId;
             if (processId) {
                 podId = processId.podId;
