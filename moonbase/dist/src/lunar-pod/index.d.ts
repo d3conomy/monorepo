@@ -58,7 +58,7 @@ declare class LunarPod {
      */
     initLibp2p({ libp2pOptions }?: {
         libp2pOptions?: Libp2pProcessOptions;
-    }): Promise<void>;
+    }): Promise<PodProcessId>;
     /**
      * Start the IPFS process in the pod.
      */
@@ -84,7 +84,7 @@ declare class LunarPod {
         libp2pOptions?: Libp2pProcessOptions;
         ipfsOptions?: IpfsOptions;
         orbitDbOptions?: OrbitDbOptions;
-    }): Promise<OpenDbProcess | undefined>;
+    }): Promise<PodProcessId | void>;
     initPubSub(topic?: string): Promise<void>;
     initFileSystem({ type, processId, name }?: {
         type?: IpfsFileSystemType;
@@ -94,7 +94,7 @@ declare class LunarPod {
     /**
      * Get the OrbitDb process in the pod.
      */
-    getOpenDb(orbitDbName: string | PodProcessId): OpenDbProcess;
+    getOpenDb(orbitDbName: string | PodProcessId): OpenDbProcess | undefined;
     /**
      * Get all Open Databases in the pod.
      */

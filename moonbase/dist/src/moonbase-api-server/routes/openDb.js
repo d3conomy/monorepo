@@ -111,7 +111,7 @@ router.post('/open', async function (req, res) {
     }
     res.send({
         id: dbName,
-        type: db?.openDb.options?.databaseType,
+        type: db.type,
         address: db?.address,
         multiaddrs: db?.multiaddrs
     });

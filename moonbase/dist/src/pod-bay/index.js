@@ -38,7 +38,7 @@ class PodBay {
      */
     checkPodId(id) {
         if (!id) {
-            throw new Error('IdReference is undefined');
+            return false;
         }
         return this.podIds().includes(id);
     }
@@ -89,37 +89,37 @@ class PodBay {
      * Gets a pod from the PodBay.
      */
     getPod(id) {
-        if (!id) {
-            logger({
-                level: LogLevel.ERROR,
-                message: `IdReference is undefined`
-            });
+        // if (!id) {
+        //     logger({
+        //         level: LogLevel.ERROR,
+        //         message: `IdReference is undefined`
+        //     })
+        // }
+        // else {
+        let podId;
+        if (typeof id === "string") {
+            podId = this.idReferenceFactory.getIdReference(id);
+        }
+        else if (id instanceof PodId) {
+            podId = id;
         }
         else {
-            let podId;
-            if (typeof id === "string") {
-                podId = this.idReferenceFactory.getIdReference(id);
-            }
-            else if (id instanceof PodId) {
-                podId = id;
-            }
-            else {
-                logger({
-                    level: LogLevel.ERROR,
-                    message: `IdReference is not of type PodId`
-                });
-            }
-            const pod = this.pods.find(pod => pod.id.name === podId.name);
-            if (pod) {
-                return pod;
-            }
-            else {
-                logger({
-                    level: LogLevel.ERROR,
-                    message: `Pod with id ${id} not found`
-                });
-            }
+            logger({
+                level: LogLevel.ERROR,
+                message: `IdReference is not of type PodId`
+            });
         }
+        const pod = this.pods.find(pod => pod.id.name === podId.name);
+        if (pod) {
+            return pod;
+        }
+        else {
+            logger({
+                level: LogLevel.ERROR,
+                message: `Pod with id ${id} not found`
+            });
+        }
+        // }
     }
     /**
      * Removes a pod from the PodBay.
@@ -172,7 +172,7 @@ class PodBay {
     async checkIfOpenDbExists(dbName) {
         const dbExists = this.getAllOpenDbNames().includes(dbName);
         if (!dbExists) {
-            return false;
+            return;
         }
         logger({
             level: LogLevel.WARN,
@@ -184,17 +184,21 @@ class PodBay {
                 level: LogLevel.ERROR,
                 message: `Database ${dbName} not found`
             });
-            return false;
+            return;
         }
         // get the pod that has the openDb
         const orbitDbPod = this.pods.find(pod => {
-            if (openDb && pod.db.has(openDb.id)) {
+            if (!openDb) {
+                return;
+            }
+            if (pod.db.has(openDb.id)) {
                 return pod;
             }
         });
         return {
             openDb,
             address: openDb.address(),
+            type: openDb.id.metadata.get('databaseType'),
             podId: openDb.id.podId,
             multiaddrs: orbitDbPod?.libp2p?.getMultiaddrs()
         };
@@ -207,45 +211,16 @@ class PodBay {
         let orbitDbPod;
         let openDbOptions;
         let openDb;
-        if (await this.checkIfOpenDbExists(dbName)) {
-            logger({
-                level: LogLevel.WARN,
-                message: `Database ${dbName} already opened`
-            });
-            const db = await this.getOpenDb(dbName);
-            if (!db) {
-                logger({
-                    level: LogLevel.ERROR,
-                    message: `Database ${dbName} not found`
-                });
-                return;
-            }
+        const db = await this.checkIfOpenDbExists(dbName);
+        if (db && db.openDb) {
             return {
-                openDb: db,
-                address: db.address(),
-                podId: db.id.podId,
-                multiaddrs: this.getPod(db.id.podId)?.libp2p?.getMultiaddrs()
+                openDb: db.openDb.id,
+                address: db.address,
+                type: db.type,
+                podId: db.podId,
+                multiaddrs: db.multiaddrs
             };
         }
-        // if (!orbitDbId && !podId) {
-        //     orbitDbPod = this.pods.find(pod => pod.orbitDb && pod.db.size >= 0);
-        //     if (!orbitDbPod) {
-        //         const podId = await this.newPod({
-        //             id: this.idReferenceFactory.createIdReference({
-        //                 type: IdReferenceTypes.POD,
-        //                 metadata: new MetaData({
-        //                     mapped: new Map<string, any>([
-        //                         ["processType", ProcessType.ORBITDB],
-        //                         ["createdBy", this.id.name]
-        //                     ])
-        //                 }),
-        //                 dependsOn: this.id
-        //             }),
-        //             processType: ProcessType.ORBITDB
-        //         });
-        //         orbitDbPod = this.getPod(podId);
-        //     }
-        // }
         if (orbitDbId || podId) {
             orbitDbPod = this.getPod(podId);
             if (!orbitDbPod) {
@@ -254,12 +229,17 @@ class PodBay {
                 // }
             }
             if (!orbitDbPod) {
-                orbitDbPod = this.pods.find(pod => pod.orbitDb && pod.db.size >= 0);
+                orbitDbPod = this.pods.find(pod => pod.orbitDb && pod.id.name !== 'system');
             }
         }
+        openDbOptions = {
+            databaseName: dbName,
+            databaseType: dbType,
+            dbOptions: options ? options : new Map()
+        };
         if (!orbitDbPod ||
             !orbitDbPod.orbitDb) {
-            const podId = await this.newPod({
+            podId = await this.newPod({
                 id: this.idReferenceFactory.createIdReference({
                     type: IdReferenceTypes.POD,
                     metadata: new MetaData({
@@ -270,23 +250,24 @@ class PodBay {
                     }),
                     dependsOn: this.id
                 }),
-                processType: ProcessType.OPEN_DB
-            });
-            orbitDbPod = this.getPod(podId);
-            logger({
-                level: LogLevel.INFO,
-                message: `New pod ${podId?.name} created for orbitDb`
+                processType: ProcessType.OPEN_DB,
+                options: openDbOptions
             });
         }
-        if (orbitDbPod && orbitDbPod.orbitDb) {
-            openDbOptions = {
-                databaseName: dbName,
-                databaseType: dbType,
-                dbOptions: options ? options : new Map(),
-                options: options
-            };
+        if (podId) {
+            orbitDbPod = this.getPod(podId);
+        }
+        if (!orbitDbPod) {
+            logger({
+                level: LogLevel.ERROR,
+                message: `Error creating pod`
+            });
+            return;
+        }
+        openDb = orbitDbPod.getOpenDb(dbName);
+        if (!openDb) {
             try {
-                openDb = await orbitDbPod.initOpenDb(openDbOptions);
+                await orbitDbPod.initOpenDb(openDbOptions);
             }
             catch (error) {
                 logger({
@@ -294,18 +275,49 @@ class PodBay {
                     message: `Error opening database: ${error}`
                 });
                 // await this.closeDb(openDbOptions.databaseName);
-                await this.removePod(orbitDbPod.id);
+                // await this.removePod(orbitDbPod.id);
                 return;
             }
-            if (openDb) {
-                return {
-                    openDb,
-                    address: openDb.address(),
-                    podId: orbitDbPod.id,
-                    multiaddrs: orbitDbPod.libp2p?.getMultiaddrs()
-                };
-            }
+            openDb = orbitDbPod.getOpenDb(dbName);
         }
+        if (!openDb) {
+            logger({
+                level: LogLevel.ERROR,
+                message: `Database ${dbName} not found`
+            });
+            return;
+        }
+        return {
+            openDb: openDb.id,
+            address: openDb.address(),
+            type: dbType,
+            podId: orbitDbPod.id,
+            multiaddrs: orbitDbPod.libp2p?.getMultiaddrs()
+        };
+        // // if (orbitDbPod && orbitDbPod.orbitDb) {
+        //     try {
+        //         await orbitDbPod.initOpenDb(openDbOptions);
+        //     }
+        //     catch (error) {
+        //         logger({
+        //             level: LogLevel.ERROR,
+        //             message: `Error opening database: ${error}`
+        //         });
+        //         // await this.closeDb(openDbOptions.databaseName);
+        //         // await this.removePod(orbitDbPod.id);
+        //         return;
+        //     }
+        //     const openDbProcess = await this.getOpenDb(dbName);
+        //     if (openDbProcess) {
+        //         return { 
+        //             openDb: openDbProcess.id,
+        //             address: openDbProcess?.address(),
+        //             type: openDbProcess.id.metadata.get('databaseType'),
+        //             podId: orbitDbPod.id,
+        //             multiaddrs: orbitDbPod.libp2p?.getMultiaddrs()
+        //         }
+        //     }
+        // }
     }
     /**
      * Gets the open database with the specified name or ID.

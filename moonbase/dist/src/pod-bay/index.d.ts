@@ -91,8 +91,9 @@ declare class PodBay {
         dialAddress?: string;
         options?: Map<string, string>;
     }): Promise<{
-        openDb: OpenDbProcess;
+        openDb: PodProcessId;
         address?: string;
+        type: OrbitDbTypes | string;
         podId: PodId;
         multiaddrs?: Multiaddr[];
     } | undefined>;

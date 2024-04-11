@@ -11,9 +11,6 @@
     "corsOrigin": "*"
   },
   "auth": {
-    "authDbCid": "zdpuAwKvuPvsSgcD1vPN3MjhF8rEfnXzgGAXnTRn2DbQ9Shb8",
-    "sessionDbCid": "zdpuAtk34p4dSV2wCLEZPoiYCvdNii5XZ5i7h8USeocDGe229",
-    "eventLogCid": "zdpuB1gWhT3fdGv6CxJKh9y9gMTax9xajiC2ErumHgkH2Gi3E",
     "systemSwarmKey": "d6d0e22d5652aa5bbf744c4162607bafa919d5808b035122bce0f2d0120ae452"
   }
 }

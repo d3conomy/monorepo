@@ -70,12 +70,6 @@ class LunarPod {
      * Initialize all processes and databases in the pod.
      */
     async initAll(options) {
-        if ((this.orbitDb && !this.ipfs) || (this.orbitDb && !this.libp2p)) {
-            throw new Error('OrbitDb requires both IPFS and libp2p to be initialized');
-        }
-        if (this.ipfs && !this.libp2p) {
-            throw new Error('IPFS requires libp2p to be initialized');
-        }
         if (!this.libp2p) {
             await this.initLibp2p(options);
         }
@@ -85,9 +79,9 @@ class LunarPod {
         if (!this.orbitDb) {
             await this.initOrbitDb(options);
         }
-        if (options?.openDbOptions) {
-            await this.initOpenDb(options);
-        }
+        // if (options?.openDbOptions) {
+        //     await this.initOpenDb(options);
+        // }
     }
     /**
      * Initialize a specific process or all processes in the pod.
@@ -124,18 +118,22 @@ class LunarPod {
      * Start the Libp2p process in the pod.
      */
     async initLibp2p({ libp2pOptions } = {}) {
+        let processId = this.processIds.get(ProcessType.LIBP2P);
+        if (!processId) {
+            processId = this.idReferenceFactory.createIdReference({
+                name: `${this.id.name}-libp2p`,
+                type: IdReferenceTypes.PROCESS,
+                dependsOn: this.id
+            });
+        }
         if (!this.libp2p) {
             this.libp2p = new Libp2pProcess({
-                id: this.processIds.get(ProcessType.LIBP2P) ||
-                    this.idReferenceFactory.createIdReference({
-                        name: `${this.id.name}-libp2p`,
-                        type: IdReferenceTypes.PROCESS,
-                        dependsOn: this.id
-                    }),
+                id: processId,
                 options: libp2pOptions
             });
         }
         await this.libp2p.init();
+        return processId;
     }
     /**
      * Start the IPFS process in the pod.
@@ -213,6 +211,9 @@ class LunarPod {
         if (!databaseType) {
             databaseType = OrbitDbTypes.EVENTS;
         }
+        if (this.getDbNames().includes(databaseName)) {
+            return this.getOpenDb(databaseName)?.id;
+        }
         const databaseId = this.idReferenceFactory.createIdReference({
             name: databaseName,
             type: IdReferenceTypes.PROCESS,
@@ -233,18 +234,13 @@ class LunarPod {
                 databaseType,
                 options: dbOptions
             });
-            if (openDbOptions) {
-                // check if the orbitdb is already open
-                if (this.db.has(databaseId)) {
-                    return this.db.get(databaseId);
-                }
-            }
-            logger({
-                level: LogLevel.INFO,
-                podId: this.id,
-                stage: ProcessStage.INITIALIZING,
-                message: `Opening database ${openDbOptions?.databaseName} on OrbitDb ${this.orbitDb.id.name} in LunarPod ${this.id.name}`
-            });
+            // }
+            //     logger({
+            //         level: LogLevel.INFO,
+            //         podId: this.id,
+            //         stage: ProcessStage.INITIALIZING,
+            //         message: `Opening database ${openDbOptions?.databaseName} on OrbitDb ${this.orbitDb.id.name} in LunarPod ${this.id.name}`
+            //     })
             const db = new OpenDbProcess({
                 id: databaseId,
                 options: openDbOptions
@@ -258,7 +254,7 @@ class LunarPod {
                     stage: ProcessStage.INITIALIZED,
                     message: `Database ${openDbOptions?.databaseName} opened on OrbitDb ${this.orbitDb.id.name} in LunarPod ${this.id.name}`
                 });
-                return db;
+                return databaseId;
             }
             catch (error) {
                 logger({
@@ -269,6 +265,7 @@ class LunarPod {
                 throw error;
             }
         }
+        // throw new Error('OrbitDb process not initialized');
     }
     async initPubSub(topic) {
         if (this.libp2p && !this.pubsub) {
@@ -323,7 +320,7 @@ class LunarPod {
                 }
             }
         }
-        throw new Error(`Database ${orbitDbName} not found in LunarPod ${this.id.name}`);
+        // throw new Error(`Database ${orbitDbName} not found in LunarPod ${this.id.name}`);
     }
     /**
      * Get all Open Databases in the pod.

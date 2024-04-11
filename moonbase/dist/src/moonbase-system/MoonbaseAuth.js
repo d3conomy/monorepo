@@ -34,6 +34,7 @@ class MoonbaseAuth {
             message: `Swarm key: ${swarmKeyRaw}`
         });
         try {
+            let systemPodId = undefined;
             const libp2pConfig = new Libp2pProcessConfig({
                 enablePrivateSwarm: true,
                 privateSwarmKey: swarmKeyRaw
@@ -41,25 +42,34 @@ class MoonbaseAuth {
             const libp2pOptions = await createLibp2pProcessOptions({
                 processConfig: libp2pConfig
             });
+            // check if the system pod exists
+            let systemPod = this.podBay.getPod('system');
+            if (!systemPod) {
+                systemPodId = await this.podBay.newPod({
+                    podName: 'system',
+                    processType: ProcessType.ORBITDB,
+                    options: { libp2pOptions }
+                });
+            }
+            else {
+                systemPodId = systemPod.id;
+            }
+            systemPod = this.podBay.getPod(systemPodId);
+            const orbitDbProcessId = systemPod?.orbitDb?.id;
             // Create the database instance for authentication
-            const orbitDbPodId = await this.podBay.newPod({
-                podName: 'system',
-                processType: ProcessType.ORBITDB,
-                options: { libp2pOptions }
-            });
             this.authDb = await this.podBay.openDb({
-                podId: orbitDbPodId,
+                orbitDbId: orbitDbProcessId,
                 dbName: this.options.authDbCid ? `/orbitdb/${this.options.authDbCid}` : 'system-auth',
                 dbType: OrbitDbTypes.DOCUMENTS
             });
             // Create the database instance for session token storage
             this.sessionDb = await this.podBay.openDb({
-                podId: orbitDbPodId,
+                orbitDbId: orbitDbProcessId,
                 dbName: this.options.sessionDbCid ? `/orbitdb/${this.options.sessionDbCid}` : 'system-sessions',
                 dbType: OrbitDbTypes.KEYVALUE
             });
             this.eventLog = await this.podBay.openDb({
-                podId: orbitDbPodId,
+                orbitDbId: orbitDbProcessId,
                 dbName: this.options.eventLogCid ? `/orbitdb/${this.options.eventLogCid}` : 'system-auth-events',
                 dbType: OrbitDbTypes.EVENTS
             });
@@ -84,10 +94,6 @@ class MoonbaseAuth {
             });
             return;
         }
-        logger({
-            level: LogLevel.INFO,
-            message: `MoonbaseAuth initialized`
-        });
     }
 }
 export { MoonbaseAuth };
