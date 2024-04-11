@@ -1,5 +1,5 @@
 import { PodProcessId } from "../id-reference-factory/index.js"
-import { ProcessStage } from "./ProcessStages.js"
+import { ProcessStage } from "./processStages.js"
 
 /**
  * Interface for process containers
@@ -22,6 +22,6 @@ export {
     IProcess
 }
 
-export * from './ProcessResponses.js';
-export * from './ProcessStages.js';
-export * from './ProcessTypes.js';
+export * from './processResponses.js';
+export * from './processStages.js';
+export * from './processTypes.js';
