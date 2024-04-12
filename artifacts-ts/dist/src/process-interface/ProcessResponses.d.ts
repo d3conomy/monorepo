@@ -16,4 +16,4 @@ declare enum ResponseCode {
     UNKNOWN = 520
 }
 export { ResponseCode };
-//# sourceMappingURL=ProcessResponses.d.ts.map
+//# sourceMappingURL=processResponses.d.ts.map

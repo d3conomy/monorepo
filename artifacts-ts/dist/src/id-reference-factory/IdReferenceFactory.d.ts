@@ -15,7 +15,7 @@ declare class IdReferenceFactory {
         metadata?: MetaData | Map<string, any>;
         format?: IdReferenceFormats | string;
         type: IdReferenceTypes | string;
-        dependsOn?: PodBayId | PodId | SystemId | MoonbaseId | string;
+        dependsOn?: IdTypes | string;
     }): IdTypes | any;
     getIdReference(name: string): IdTypes | undefined;
     getAllIdReferences(): Array<IdReference>;

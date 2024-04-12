@@ -6,8 +6,10 @@ import { MetaData } from './IdReferenceMetadata.js';
  */
 class IdReference {
     name;
+    type;
     metadata;
     constructor({ name, metadata, format } = {}) {
+        this.type = IdReferenceTypes.SYSTEM;
         this.name = name ? name : createRandomId(format);
         this.metadata = metadata instanceof Map ? new MetaData({
             mapped: metadata,

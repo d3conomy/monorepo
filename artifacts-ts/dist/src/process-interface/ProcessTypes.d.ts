@@ -21,4 +21,4 @@ declare const createProcessIds: ({ podId, idReferenceFactory, processIds }: {
     processIds?: Map<ProcessType, PodProcessId> | undefined;
 }) => Map<ProcessType, PodProcessId>;
 export { createProcessIds, isProcessType, ProcessType, };
-//# sourceMappingURL=ProcessTypes.d.ts.map
+//# sourceMappingURL=processTypes.d.ts.map

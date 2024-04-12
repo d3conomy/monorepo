@@ -1,4 +1,4 @@
-import { IdReferenceFormats } from "./IdReferenceConstants.js";
+import { IdReferenceFormats, IdReferenceTypes } from "./IdReferenceConstants.js";
 interface IMetaData {
     [key: string]: any;
     set(key: string, value: any): {
@@ -29,26 +29,27 @@ interface IMetaData {
     fromMap(data: Map<string, any>): void;
     fromJSON(data: string): void;
 }
-interface IIdReference {
+interface IIdReference<T = IdReferenceTypes> {
     name: string;
+    type: T;
     metadata: IMetaData;
     toString(): string;
 }
-interface ISystemId extends IIdReference {
+interface ISystemId extends IIdReference<IdReferenceTypes.SYSTEM> {
 }
-interface IMoonbaseId extends IIdReference {
+interface IMoonbaseId extends IIdReference<IdReferenceTypes.MOONBASE> {
     systemId: ISystemId;
 }
-interface IPodBayId extends IIdReference {
+interface IPodBayId extends IIdReference<IdReferenceTypes.POD_BAY> {
     moonbaseId: IMoonbaseId;
 }
-interface IPodId extends IIdReference {
+interface IPodId extends IIdReference<IdReferenceTypes.POD> {
     podBayId: IPodBayId;
 }
-interface IPodProcessId extends IIdReference {
+interface IPodProcessId extends IIdReference<IdReferenceTypes.PROCESS> {
     podId: IPodId;
 }
-interface IJobId extends IIdReference {
+interface IJobId extends IIdReference<IdReferenceTypes.JOB> {
     componenetId: IPodProcessId | IPodId | IPodBayId | IMoonbaseId | ISystemId;
 }
 interface IIdReferenceFactory {

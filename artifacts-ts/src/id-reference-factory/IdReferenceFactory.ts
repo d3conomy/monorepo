@@ -36,7 +36,7 @@ class IdReferenceFactory {
         metadata?: MetaData | Map<string, any>,
         format?: IdReferenceFormats | string,
         type: IdReferenceTypes | string,
-        dependsOn?: PodBayId | PodId | SystemId | MoonbaseId | string
+        dependsOn?: IdTypes | string
     }): IdTypes | any {
         if (!type) {
             throw new Error("IdReferenceFactory: type is required");
@@ -52,7 +52,7 @@ class IdReferenceFactory {
             format = this.config.idReferenceFormat;
         }
 
-        let dependsOnId: PodBayId | PodId | SystemId | MoonbaseId | undefined;
+        let dependsOnId;
         if (dependsOn && typeof dependsOn === "string") {
             dependsOnId = this.getIdReference(dependsOn);
         }

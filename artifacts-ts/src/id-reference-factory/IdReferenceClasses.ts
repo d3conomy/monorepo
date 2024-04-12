@@ -24,10 +24,11 @@ import {
 /**
  * Id reference class
  */
-class IdReference 
-    implements IIdReference 
+class IdReference<T extends IdReferenceTypes = IdReferenceTypes>
+    implements IIdReference
 {
     public readonly name: string;
+    public readonly type: T;
     public metadata: MetaData;
 
     constructor({
@@ -39,6 +40,7 @@ class IdReference
         metadata?: MetaData | Map<string, any>
         format?: IdReferenceFormats | string
     } = {}) {
+        this.type = IdReferenceTypes.SYSTEM as T;
         this.name = name ? name : createRandomId(format);
         this.metadata = metadata instanceof Map ? new MetaData({
             mapped: metadata,
@@ -52,7 +54,7 @@ class IdReference
 }
 
 class SystemId
-    extends IdReference 
+    extends IdReference<IdReferenceTypes.SYSTEM>
     implements ISystemId
 {
     constructor({
@@ -69,7 +71,7 @@ class SystemId
 }
 
 class MoonbaseId
-    extends IdReference 
+    extends IdReference<IdReferenceTypes.MOONBASE>
     implements IMoonbaseId
 {
     public systemId: SystemId;
@@ -91,7 +93,7 @@ class MoonbaseId
 }
 
 class PodBayId 
-    extends IdReference 
+    extends IdReference<IdReferenceTypes.POD_BAY>
     implements IPodBayId
 {
     public moonbaseId: MoonbaseId;
@@ -113,7 +115,7 @@ class PodBayId
 }
 
 class PodId 
-    extends IdReference 
+    extends IdReference<IdReferenceTypes.POD>
     implements IPodId
 {
     public podBayId: PodBayId;
@@ -135,7 +137,7 @@ class PodId
 }
 
 class PodProcessId 
-    extends IdReference 
+    extends IdReference<IdReferenceTypes.PROCESS>
     implements IPodProcessId
 {
     public podId: PodId;
@@ -157,7 +159,7 @@ class PodProcessId
 }
 
 class JobId
-    extends IdReference 
+    extends IdReference<IdReferenceTypes.JOB>
     implements IJobId
 {
     public componenetId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId;

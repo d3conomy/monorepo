@@ -23,4 +23,4 @@ declare enum ProcessStage {
  */
 declare const isProcessStage: (stage: string) => ProcessStage;
 export { ProcessStage, isProcessStage };
-//# sourceMappingURL=ProcessStages.d.ts.map
+//# sourceMappingURL=processStages.d.ts.map

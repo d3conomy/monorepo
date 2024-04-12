@@ -1,4 +1,4 @@
-import { IdReference, IdReferenceFormats } from "../id-reference-factory/index.js";
+import { IdReference, IdReferenceFormats, IdReferenceTypes } from "../id-reference-factory/index.js";
 import { ProcessStage, ResponseCode } from "../process-interface/index.js";
 import { ILogBook, LogBook } from "./LogBook.js";
 import { ILogEntry, LogEntry } from "./LogEntry.js";
@@ -91,8 +91,8 @@ declare const logger: ({ name, level, code, stage, message, error, processId, po
     code?: ResponseCode | undefined;
     stage?: string | undefined;
     error?: Error | undefined;
-    processId?: IdReference | undefined;
-    podId?: IdReference | undefined;
+    processId?: IdReference<IdReferenceTypes> | undefined;
+    podId?: IdReference<IdReferenceTypes> | undefined;
 }) => void;
 /**
  * Get the log book by name

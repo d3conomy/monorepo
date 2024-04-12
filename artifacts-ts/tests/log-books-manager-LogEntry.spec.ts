@@ -3,6 +3,7 @@ import sinon from 'sinon';
 
 import * as LogBooksManagerSrc from '../src/log-books-manager/index.js';
 import { MetaData } from '../src/id-reference-factory/IdReferenceMetadata.js';
+import { IdReferenceTypes } from '../src/id-reference-factory/index.js';
 
 
 describe('src/log-books-manager/LogEntry.js', () => {
@@ -74,7 +75,7 @@ describe('src/log-books-manager/LogEntry.js', () => {
 
     it('should contain all the properties', () => {
         const logEntry = new LogBooksManagerSrc.LogEntry({
-            podId: { name: 'test', metadata: new MetaData() },
+            podId: { name: 'test', metadata: new MetaData(), type: IdReferenceTypes.POD },
             level: LogBooksManagerSrc.LogLevel.INFO,
             message: 'test message',
             printLevel: LogBooksManagerSrc.LogLevel.INFO

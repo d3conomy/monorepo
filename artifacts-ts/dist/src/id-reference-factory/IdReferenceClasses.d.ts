@@ -1,11 +1,12 @@
 import { IIdReference, ISystemId, IMoonbaseId, IPodBayId, IPodId, IPodProcessId, IJobId } from './IdReferenceInterfaces.js';
-import { IdReferenceFormats } from './IdReferenceConstants.js';
+import { IdReferenceFormats, IdReferenceTypes } from './IdReferenceConstants.js';
 import { MetaData } from './IdReferenceMetadata.js';
 /**
  * Id reference class
  */
-declare class IdReference implements IIdReference {
+declare class IdReference<T extends IdReferenceTypes = IdReferenceTypes> implements IIdReference {
     readonly name: string;
+    readonly type: T;
     metadata: MetaData;
     constructor({ name, metadata, format }?: {
         name?: string;
@@ -14,14 +15,14 @@ declare class IdReference implements IIdReference {
     });
     toString(): string;
 }
-declare class SystemId extends IdReference implements ISystemId {
+declare class SystemId extends IdReference<IdReferenceTypes.SYSTEM> implements ISystemId {
     constructor({ name, metadata, format }?: {
         name?: string;
         metadata?: MetaData;
         format?: IdReferenceFormats | string;
     });
 }
-declare class MoonbaseId extends IdReference implements IMoonbaseId {
+declare class MoonbaseId extends IdReference<IdReferenceTypes.MOONBASE> implements IMoonbaseId {
     systemId: SystemId;
     constructor({ systemId, name, metadata, format }: {
         systemId: SystemId;
@@ -30,7 +31,7 @@ declare class MoonbaseId extends IdReference implements IMoonbaseId {
         format?: IdReferenceFormats | string;
     });
 }
-declare class PodBayId extends IdReference implements IPodBayId {
+declare class PodBayId extends IdReference<IdReferenceTypes.POD_BAY> implements IPodBayId {
     moonbaseId: MoonbaseId;
     constructor({ moonbaseId, name, metadata, format }: {
         moonbaseId: MoonbaseId;
@@ -39,7 +40,7 @@ declare class PodBayId extends IdReference implements IPodBayId {
         format?: IdReferenceFormats | string;
     });
 }
-declare class PodId extends IdReference implements IPodId {
+declare class PodId extends IdReference<IdReferenceTypes.POD> implements IPodId {
     podBayId: PodBayId;
     constructor({ podBayId, name, metadata, format }: {
         podBayId: PodBayId;
@@ -48,7 +49,7 @@ declare class PodId extends IdReference implements IPodId {
         format?: IdReferenceFormats | string;
     });
 }
-declare class PodProcessId extends IdReference implements IPodProcessId {
+declare class PodProcessId extends IdReference<IdReferenceTypes.PROCESS> implements IPodProcessId {
     podId: PodId;
     constructor({ podId, name, metadata, format }: {
         podId: PodId;
@@ -57,7 +58,7 @@ declare class PodProcessId extends IdReference implements IPodProcessId {
         format?: IdReferenceFormats | string;
     });
 }
-declare class JobId extends IdReference implements IJobId {
+declare class JobId extends IdReference<IdReferenceTypes.JOB> implements IJobId {
     componenetId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId;
     constructor({ componenetId, name, metadata, format }: {
         componenetId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId;
