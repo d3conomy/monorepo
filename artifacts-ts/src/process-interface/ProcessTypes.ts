@@ -7,6 +7,7 @@ enum ProcessType {
     OPEN_DB = 'open-db',
     PUB_SUB = 'pub-sub',
     FILE_SYSTEM = 'file-system',
+    CUSTOM = 'custom'
 }
 
 const isProcessType = (value: any): ProcessType => {

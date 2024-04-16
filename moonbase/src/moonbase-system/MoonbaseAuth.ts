@@ -75,7 +75,18 @@ class MoonbaseAuth {
 
             const libp2pConfig: Libp2pProcessConfig = new Libp2pProcessConfig({
                 enablePrivateSwarm: true,
-                privateSwarmKey: swarmKeyRaw
+                privateSwarmKey: swarmKeyRaw,
+                enableWebRTCStar: true,
+                webRTCStarAddress: '/dns4/signal.trnk.xyz/tcp/443/wss/p2p-webrtc-star',
+                enableBootstrap: true,
+                bootstrapMultiaddrs: [
+                    "/dns4/libp2p.ipfs.trnkt.xyz/tcp/4007/p2p/QmZb3uE5oVjZxM5Hs8LutgAXubt8Pf4v1CT41Z63dm4zx7",
+                    "/dns4/libp2p-ws.ipfs.trnkt.xyz/tcp/4009/ws/p2p/QmZb3uE5oVjZxM5Hs8LutgAXubt8Pf4v1CT41Z63dm4zx7",
+                    "/dnsaddr/bootstrap-ws.ipfs.trnkt.xyz/tcp/4003/ws/p2p/12D3KooWHSiT24kaXquLa4HB2h9eGtnXRAryWMZjinbe7yt5ihUd",
+                    "/dnsaddr/bootstrap-ws.ipfs.trnkt.xyz/tcp/4003/ws/p2p/12D3KooWDRmmGtJksoRrbuETHUAWRTDvkZiykEQtUdBHj3Vg2Ha6",
+                    "/dnsaddr/bootstrap-ws.ipfs.trnkt.xyz/tcp/4003/ws/p2p/12D3KooWLMWGmGf6LEsVvtJTAoSogfbiHqQzsPfJvAC3kE7ikkP6",
+                    "/dnsaddr/bootstrap-ws.ipfs.trnkt.xyz/tcp/4003/ws/p2p/12D3KooWNFkQH6PeC2zsuSrDd3S9FDMNaqePumUEoSvxceJJYtjf"
+                ]
             })
     
             const libp2pOptions: Libp2pProcessOptions = await createLibp2pProcessOptions({
@@ -91,13 +102,11 @@ class MoonbaseAuth {
                     processType: ProcessType.ORBITDB,
                     options: { libp2pOptions }
                 })
+                systemPod = this.podBay.getPod(systemPodId);
             }
             else {
                 systemPodId = systemPod.id;
             }
-
-            systemPod = this.podBay.getPod(systemPodId);
-            
 
             
 
@@ -107,20 +116,23 @@ class MoonbaseAuth {
             
     
             this.authDb = await this.podBay.openDb({
-                orbitDbId: orbitDbProcessId,
+                podId: systemPodId,
+                // orbitDbId: orbitDbProcessId,
                 dbName: this.options.authDbCid ? `/orbitdb/${this.options.authDbCid}` : 'system-auth',
                 dbType: OrbitDbTypes.DOCUMENTS
             });
     
             // Create the database instance for session token storage
             this.sessionDb = await this.podBay.openDb({
-                orbitDbId: orbitDbProcessId,
+                podId: systemPodId,
+                // orbitDbId: orbitDbProcessId,
                 dbName: this.options.sessionDbCid ? `/orbitdb/${this.options.sessionDbCid}` : 'system-sessions',
                 dbType: OrbitDbTypes.KEYVALUE
             });
     
             this.eventLog = await this.podBay.openDb({
-                orbitDbId: orbitDbProcessId,
+                podId: systemPodId,
+                // orbitDbId: orbitDbProcessId,
                 dbName: this.options.eventLogCid ? `/orbitdb/${this.options.eventLogCid}` : 'system-auth-events',
                 dbType: OrbitDbTypes.EVENTS
             });

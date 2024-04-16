@@ -7,6 +7,7 @@ var ProcessType;
     ProcessType["OPEN_DB"] = "open-db";
     ProcessType["PUB_SUB"] = "pub-sub";
     ProcessType["FILE_SYSTEM"] = "file-system";
+    ProcessType["CUSTOM"] = "custom";
 })(ProcessType || (ProcessType = {}));
 const isProcessType = (value) => {
     if (Object.values(ProcessType).includes(value)) {

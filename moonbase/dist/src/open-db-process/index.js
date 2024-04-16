@@ -9,14 +9,23 @@ import fs from 'fs/promises';
 const openDb = async ({ orbitDb, databaseName, databaseType, options }) => {
     try {
         await orbitDb.start();
-        // if (databaseName.startsWith('/orbitdb')) {
-        return await orbitDb.process.open(databaseName, {
-            type: databaseType,
-            // sync: true,
-            AccessController: OrbitDBAccessController({
-                write: ['*']
-            })
-        });
+        if (databaseName.startsWith('/orbitdb')) {
+            return await orbitDb.process.open(databaseName, {
+                type: databaseType,
+                sync: true,
+                AccessController: OrbitDBAccessController({
+                    write: ['*']
+                })
+            });
+        }
+        else {
+            return await orbitDb.process.open(databaseName, {
+                type: databaseType,
+                AccessController: OrbitDBAccessController({
+                    write: ['*']
+                })
+            }, options?.entries());
+        }
         // }
         // else {
         //     return await orbitDb.process.open(

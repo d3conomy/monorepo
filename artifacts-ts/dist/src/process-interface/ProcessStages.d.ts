@@ -8,6 +8,8 @@ declare enum ProcessStage {
     INITIALIZED = "initialized",
     STARTED = "started",
     STARTING = "starting",
+    RUNNING = "running",
+    FINISHED = "finished",
     PENDING = "pending",
     COMPLETED = "completed",
     STOPPING = "stopping",
@@ -21,6 +23,6 @@ declare enum ProcessStage {
  * Check if a string is a valid process stage
  * @category Process
  */
-declare const isProcessStage: (stage: string) => ProcessStage;
+declare const isProcessStage: (stage?: string) => ProcessStage;
 export { ProcessStage, isProcessStage };
 //# sourceMappingURL=processStages.d.ts.map

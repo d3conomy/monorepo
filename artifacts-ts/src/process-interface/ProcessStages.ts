@@ -8,6 +8,8 @@ enum ProcessStage {
     INITIALIZED = 'initialized',
     STARTED = 'started',
     STARTING = 'starting',
+    RUNNING = 'running',
+    FINISHED = 'finished',
     PENDING = 'pending',
     COMPLETED = 'completed',
     STOPPING = 'stopping',
@@ -22,14 +24,11 @@ enum ProcessStage {
  * Check if a string is a valid process stage
  * @category Process
  */
-const isProcessStage = (stage: string): ProcessStage => {
+const isProcessStage = (stage?: string): ProcessStage => {
     if (Object.values(ProcessStage).includes(stage as ProcessStage)) {
         return stage as ProcessStage;
     }
-    else if (stage === undefined) {
-        return ProcessStage.UNKNOWN;
-    }
-    throw new Error('Invalid process stage');
+    return ProcessStage.UNKNOWN;
 }
 
 export {

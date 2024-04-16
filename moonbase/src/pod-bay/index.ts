@@ -345,14 +345,14 @@ class PodBay {
                     type: IdReferenceTypes.POD,
                     metadata: new MetaData({
                         mapped: new Map<string, any>([
-                            ["processType", ProcessType.OPEN_DB],
+                            ["processType", ProcessType.ORBITDB],
                             ["createdBy", this.id.name]
                         ])
                     }),
                     dependsOn: this.id
                 }),
-                processType: ProcessType.OPEN_DB,
-                options: openDbOptions
+                processType: ProcessType.ORBITDB,
+                // options: openDbOptions
             });
         }
 

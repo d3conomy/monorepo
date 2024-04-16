@@ -5,7 +5,8 @@ declare enum ProcessType {
     ORBITDB = "orbitdb",
     OPEN_DB = "open-db",
     PUB_SUB = "pub-sub",
-    FILE_SYSTEM = "file-system"
+    FILE_SYSTEM = "file-system",
+    CUSTOM = "custom"
 }
 declare const isProcessType: (value: any) => ProcessType;
 /**

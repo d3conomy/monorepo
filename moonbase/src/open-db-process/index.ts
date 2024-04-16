@@ -28,17 +28,30 @@ const openDb = async ({
 }): Promise<typeof Database> => {
     try {
         await orbitDb.start();
-        // if (databaseName.startsWith('/orbitdb')) {
+        if (databaseName.startsWith('/orbitdb')) {
             return await orbitDb.process.open(
                 databaseName,
                 {
                     type: databaseType,
-                    // sync: true,
+                    sync: true,
                     AccessController: OrbitDBAccessController({
                         write: ['*']
                     })
                 }
-            )
+            );
+        }
+        else {
+            return await orbitDb.process.open(
+                databaseName,
+                {
+                    type: databaseType,
+                    AccessController: OrbitDBAccessController({
+                        write: ['*']
+                    })
+                },
+                options?.entries()
+            );
+        }
         // }
         // else {
         //     return await orbitDb.process.open(

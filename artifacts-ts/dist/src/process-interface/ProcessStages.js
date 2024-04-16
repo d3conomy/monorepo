@@ -9,6 +9,8 @@ var ProcessStage;
     ProcessStage["INITIALIZED"] = "initialized";
     ProcessStage["STARTED"] = "started";
     ProcessStage["STARTING"] = "starting";
+    ProcessStage["RUNNING"] = "running";
+    ProcessStage["FINISHED"] = "finished";
     ProcessStage["PENDING"] = "pending";
     ProcessStage["COMPLETED"] = "completed";
     ProcessStage["STOPPING"] = "stopping";
@@ -26,9 +28,6 @@ const isProcessStage = (stage) => {
     if (Object.values(ProcessStage).includes(stage)) {
         return stage;
     }
-    else if (stage === undefined) {
-        return ProcessStage.UNKNOWN;
-    }
-    throw new Error('Invalid process stage');
+    return ProcessStage.UNKNOWN;
 };
 export { ProcessStage, isProcessStage };
