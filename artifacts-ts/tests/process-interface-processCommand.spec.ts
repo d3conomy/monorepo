@@ -1,6 +1,9 @@
 import { expect } from 'chai';
-import { IProcessCommand, IProcessCommandArg, IProcessCommandArgInput, IProcessCommandOutput, IProcessExecuteCommand, ProcessCommands } from '../src/process-interface/processCommand.js';
+import { createProcessCommandArgs, importProcessCommands, IProcessCommand, IProcessCommandArg, IProcessCommandArgInput, IProcessCommandOutput, IProcessExecuteCommand, ProcessCommands } from '../src/process-interface/processCommand.js';
 import { ProcessType } from '../src/process-interface/index.js';
+import { create } from 'domain';
+import { jobRunner, runCommand } from '../src/process-interface/processJob.js';
+import { JobId, SystemId } from '../src/id-reference-factory/index.js';
 
 describe('Process Command Tests', () => {
     const processCommandArg: IProcessCommandArg = {
@@ -14,11 +17,11 @@ describe('Process Command Tests', () => {
         value: 'test',
     };
 
-    const processCommand: IProcessCommand = {
+    const processCommand: IProcessCommand<ProcessType.CUSTOM> = {
         name: 'testCommand',
         type: ProcessType.CUSTOM,
         args: [processCommandArg],
-        action: (args: Array<IProcessCommandArgInput>) => {return args[0].value;},
+        action: (args?: Array<IProcessCommandArgInput>) => {return args ? args[0].value : undefined;},
         description: 'Test command',
     };
 
@@ -26,7 +29,7 @@ describe('Process Command Tests', () => {
 
     const processCommandOutput: IProcessCommandOutput = {
         output: 'output',
-        runtime: new Date("1s"),
+        runtime: 10,
     };
 
     const processExecuteCommand: IProcessExecuteCommand = {
@@ -88,5 +91,136 @@ describe('Process Command Tests', () => {
         expect(processCommands.isUnique('testCommand2')).to.be.true;
     });
 
+    it('should create a process command argument', () => {
+        const processCommandArg = {
+            name: 'arg1',
+            description: 'Argument 1',
+            required: true,
+        };
+        expect(processCommandArg).to.exist;
+        expect(processCommandArg).to.be.an('object');
+    });
+
+    it('should create a process command', () => {
+        const processCommand = {
+            name: 'testCommand',
+            action: (args?: Array<IProcessCommandArgInput>) => {return args ? args[0].value : undefined;},
+            args: [processCommandArg],
+            description: 'Test command',
+        };
+        expect(processCommand).to.exist;
+        expect(processCommand).to.be.an('object');
+    });
+
+    it('should import process command classes', async () => {
+        const processCommands = await importProcessCommands("tests/exampleCommands.json");
+        console.log(processCommands);
+        expect(processCommands).to.exist;
+        expect(processCommands).to.be.an('map');
+    });
+
+    it('should run an imported process command', async () => {
+        const processCommands = await importProcessCommands("tests/exampleCommands.json");
+        const processCommand = processCommands.get('custom-hello');
+        const processCommandArgInputCustom: IProcessCommandArgInput = {
+            name: 'name',
+            value: 'test',
+        };
+        const processExecuteCommand: IProcessExecuteCommand = {
+            command: processCommand? processCommand.name : 'custom-hello',
+            params: new Array<IProcessCommandArgInput>(processCommandArgInputCustom),
+            result: processCommandOutput,
+        };
+        expect(processCommand).to.exist;
+        expect(processCommand).to.be.an('object');
+
+        const jobId = new JobId({
+            name: 'testJob',
+            componentId: new SystemId({name: 'testSystem'}),
+        })
+        const job = await runCommand(jobId, processExecuteCommand, processCommands);
+        console.log(job);
+        expect(job).to.exist;
+        expect(job).to.be.an('object');
+        expect(job.result).to.exist;
+        expect(job.result).to.be.an('object');
+        expect(job.result?.output).to.equal('Hello test!');
+
+        // expect(processCommand?.action(processExecuteCommand.params)).to.equal('Hello test!');
+    });
+
+    it('should run a process command', async () => {
+        const jobId = new JobId({
+            name: 'testJob',
+            componentId: new SystemId({name: 'testSystem'}),
+        })
+        const job = await runCommand(jobId, processExecuteCommand, processCommands);
+        console.log(job);
+        expect(job).to.exist;
+        expect(job).to.be.an('object');
+        expect(job.result).to.exist;
+        expect(job.result).to.be.an('object');
+        expect(job.result?.output).to.equal('test');
+    });
+
+    it('should run the imported process command - goodbye', async () => {
+        const processCommands = await importProcessCommands("tests/exampleCommands.json");
+        const processCommand = processCommands.get('custom-goodbye');
+        const processCommandArgInputCustom: IProcessCommandArgInput = {
+            name: 'name',
+            value: 'test',
+        };
+        const processExecuteCommand: IProcessExecuteCommand = {
+            command: processCommand? processCommand.name : 'custom-goodbye',
+            params: new Array<IProcessCommandArgInput>(processCommandArgInputCustom),
+            result: processCommandOutput,
+        };
+        expect(processCommand).to.exist;
+        expect(processCommand).to.be.an('object');
+
+        const jobId = new JobId({
+            name: 'testJob',
+            componentId: new SystemId({name: 'testSystem'}),
+        })
+        const job = await runCommand(jobId, processExecuteCommand, processCommands);
+        console.log(job);
+        expect(job).to.exist;
+        expect(job).to.be.an('object');
+        expect(job.result).to.exist;
+        expect(job.result).to.be.an('object');
+        expect(job.result?.output).to.equal('Goodbye test!');
+    });
+
+    it('should run the imported process command - custom-add', async () => {
+        const processCommands = await importProcessCommands("tests/exampleCommands.json");
+        const processCommand = processCommands.get('custom-add');
+        const processCommandArgInputCustom: IProcessCommandArgInput = {
+            name: 'num1',
+            value: 1
+        };
+        const procesCommandArgInputCustom2: IProcessCommandArgInput = {
+            name: 'num2',
+            value: 2
+        };
+        const processExecuteCommand: IProcessExecuteCommand = {
+            command: processCommand? processCommand.name : 'custom-add',
+            params: new Array<IProcessCommandArgInput>(processCommandArgInputCustom, procesCommandArgInputCustom2),
+            result: processCommandOutput,
+        };
+        expect(processCommand).to.exist;
+        expect(processCommand).to.be.an('object');
+
+        const jobId = new JobId({
+            name: 'testJob',
+            componentId: new SystemId({name: 'testSystem'}),
+        })
+        const job = await runCommand(jobId, processExecuteCommand, processCommands);
+        console.log(job);
+        expect(job).to.exist;
+        expect(job).to.be.an('object');
+        expect(job.result).to.exist;
+        expect(job.result).to.be.an('object');
+        expect(job.result?.output).to.equal('The sum of 1 and 2 is 3');
+    })
 
 });

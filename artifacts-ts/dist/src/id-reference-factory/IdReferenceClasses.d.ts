@@ -59,9 +59,9 @@ declare class PodProcessId extends IdReference<IdReferenceTypes.PROCESS> impleme
     });
 }
 declare class JobId extends IdReference<IdReferenceTypes.JOB> implements IJobId {
-    componenetId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId;
-    constructor({ componenetId, name, metadata, format }: {
-        componenetId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId;
+    componentId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId;
+    constructor({ componentId, name, metadata, format }: {
+        componentId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId;
         name?: string;
         metadata?: MetaData;
         format?: IdReferenceFormats | string;

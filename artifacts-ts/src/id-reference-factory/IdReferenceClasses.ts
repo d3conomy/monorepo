@@ -162,21 +162,21 @@ class JobId
     extends IdReference<IdReferenceTypes.JOB>
     implements IJobId
 {
-    public componenetId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId;
+    public componentId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId;
 
     constructor({
-        componenetId,
+        componentId,
         name,
         metadata,
         format
     }: {
-        componenetId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId,
+        componentId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId,
         name?: string,
         metadata?: MetaData,
         format?: IdReferenceFormats | string
     }) {
         super({name, metadata, format});
-        this.componenetId = componenetId;
+        this.componentId = componentId;
     }
 }
 

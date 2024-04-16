@@ -11,26 +11,38 @@ interface IProcessCommandArgInput {
 }
 interface IProcessCommandOutput {
     output: any;
-    runtime: Date;
+    runtime: number;
 }
 interface IProcessCommand<T = ProcessType> {
     type: T;
     name: string;
-    action: (args: Array<IProcessCommandArgInput>) => any;
+    action: (args?: Array<IProcessCommandArgInput>) => any | Promise<any>;
     args?: Array<IProcessCommandArg>;
     description?: string;
 }
 interface IProcessExecuteCommand {
     command: IProcessCommand<ProcessType>['name'];
     params: Array<IProcessCommandArgInput>;
-    result: IProcessCommandOutput;
+    result?: IProcessCommandOutput;
 }
 interface IProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> {
-    isUnique: (name: IProcessCommand['name']) => boolean;
 }
 declare class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> implements IProcessCommands {
     constructor(...commands: Array<IProcessCommand>);
     isUnique(name: IProcessCommand['name']): boolean;
 }
-export { IProcessCommand, IProcessCommands, IProcessCommandArg, IProcessCommandArgInput, IProcessCommandOutput, IProcessExecuteCommand, ProcessCommands };
+declare const createProcessCommandArgs: ({ name, description, required }: {
+    name: string;
+    description: string;
+    required: boolean;
+}) => IProcessCommandArg;
+declare const createProcessCommand: ({ name, action, args, type, description }: {
+    name: string;
+    action: IProcessCommand['action'];
+    args?: IProcessCommandArg[] | undefined;
+    type?: ProcessType | undefined;
+    description?: string | undefined;
+}) => IProcessCommand;
+declare const importProcessCommands: (filepath: string) => Promise<IProcessCommands>;
+export { createProcessCommandArgs, createProcessCommand, importProcessCommands, IProcessCommand, IProcessCommands, IProcessCommandArg, IProcessCommandArgInput, IProcessCommandOutput, IProcessExecuteCommand, ProcessCommands };
 //# sourceMappingURL=processCommand.d.ts.map

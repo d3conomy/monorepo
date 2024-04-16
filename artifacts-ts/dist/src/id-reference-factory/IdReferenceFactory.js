@@ -67,7 +67,7 @@ class IdReferenceFactory {
                 idref = new PodProcessId({ name, metadata, format, podId: dependsOnId });
                 break;
             case IdReferenceTypes.JOB:
-                idref = new JobId({ name, metadata, format, componenetId: dependsOnId });
+                idref = new JobId({ name, metadata, format, componentId: dependsOnId });
             default:
                 idref = new IdReference({ name, metadata, format });
         }

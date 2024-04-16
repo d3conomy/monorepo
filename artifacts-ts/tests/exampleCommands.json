@@ -1,0 +1,48 @@
+{
+    "commands": [
+        {
+            "name": "custom-hello",
+            "type": "custom",
+            "description": "A Custom command that says hello",
+            "args": [
+                {
+                    "name": "name",
+                    "description": "The name to say hello to",
+                    "required": true
+                }
+            ],
+            "action": "(args) => { return `Hello ${args[0].value}!` }"
+        },
+        {
+            "name": "custom-goodbye",
+            "type": "custom",
+            "description": "A Custom command that says goodbye",
+            "args": [
+                {
+                    "name": "name",
+                    "description": "The name to say goodbye to",
+                    "required": true
+                }
+            ],
+            "action": "(args) => { return `Goodbye ${args[0].value}!` }"
+        },
+        {
+            "name": "custom-add",
+            "type": "custom",
+            "description": "A Custom command that adds two numbers",
+            "args": [
+                {
+                    "name": "num1",
+                    "description": "The first number to add",
+                    "required": true
+                },
+                {
+                    "name": "num2",
+                    "description": "The second number to add",
+                    "required": true
+                }
+            ],
+            "action": "(args) => { return `The sum of ${args[0].value} and ${args[1].value} is ${parseInt(args[0].value) + parseInt(args[1].value)}` }"
+        }
+    ]
+}

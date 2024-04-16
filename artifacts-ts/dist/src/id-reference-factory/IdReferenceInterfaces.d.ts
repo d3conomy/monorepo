@@ -50,7 +50,7 @@ interface IPodProcessId extends IIdReference<IdReferenceTypes.PROCESS> {
     podId: IPodId;
 }
 interface IJobId extends IIdReference<IdReferenceTypes.JOB> {
-    componenetId: IPodProcessId | IPodId | IPodBayId | IMoonbaseId | ISystemId;
+    componentId: IPodProcessId | IPodId | IPodBayId | IMoonbaseId | ISystemId;
 }
 interface IIdReferenceFactory {
     ids: Array<IIdReference>;

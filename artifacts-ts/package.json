@@ -31,9 +31,11 @@
     "@types/chai": "^4.3.14",
     "@types/chance": "^1.1.6",
     "@types/mocha": "^10.0.6",
+    "@types/node": "^20.12.7",
     "@types/sinon": "^17.0.3",
     "@types/uuid": "^9.0.8",
     "sinon": "^17.0.1",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
   }
 }
