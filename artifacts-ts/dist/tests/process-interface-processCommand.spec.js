@@ -1,6 +1,7 @@
 import { expect } from 'chai';
-import { importProcessCommands, ProcessCommands } from '../src/process-interface/processCommand.js';
+import { ProcessCommands } from '../src/process-interface/processCommand.js';
 import { ProcessType } from '../src/process-interface/index.js';
+import { importFromFile, importProcessCommandsFromJSON, importProcessContainerFromJSON } from '../src/process-interface/processImport.js';
 import { runCommand } from '../src/process-interface/processJob.js';
 import { JobId, SystemId } from '../src/id-reference-factory/index.js';
 describe('Process Command Tests', () => {
@@ -97,13 +98,17 @@ describe('Process Command Tests', () => {
         expect(processCommand).to.be.an('object');
     });
     it('should import process command classes', async () => {
-        const processCommands = await importProcessCommands("tests/exampleCommands.json");
+        const json = await importFromFile("tests/exampleCommands.json");
+        const processContainer = importProcessContainerFromJSON(json);
+        const processCommands = importProcessCommandsFromJSON(processContainer, json);
         console.log(processCommands);
         expect(processCommands).to.exist;
         expect(processCommands).to.be.an('map');
     });
     it('should run an imported process command', async () => {
-        const processCommands = await importProcessCommands("tests/exampleCommands.json");
+        const json = await importFromFile("tests/exampleCommands.json");
+        const processContainer = importProcessContainerFromJSON(json);
+        const processCommands = importProcessCommandsFromJSON(processContainer, json);
         const processCommand = processCommands.get('custom-hello');
         const processCommandArgInputCustom = {
             name: 'name',
@@ -143,7 +148,9 @@ describe('Process Command Tests', () => {
         expect(job.result?.output).to.equal('test');
     });
     it('should run the imported process command - goodbye', async () => {
-        const processCommands = await importProcessCommands("tests/exampleCommands.json");
+        const json = await importFromFile("tests/exampleCommands.json");
+        const processContainer = importProcessContainerFromJSON(json);
+        const processCommands = importProcessCommandsFromJSON(processContainer, json);
         const processCommand = processCommands.get('custom-goodbye');
         const processCommandArgInputCustom = {
             name: 'name',
@@ -169,7 +176,9 @@ describe('Process Command Tests', () => {
         expect(job.result?.output).to.equal('Goodbye test!');
     });
     it('should run the imported process command - custom-add', async () => {
-        const processCommands = await importProcessCommands("tests/exampleCommands.json");
+        const json = await importFromFile("tests/exampleCommands.json");
+        const processContainer = importProcessContainerFromJSON(json);
+        const processCommands = importProcessCommandsFromJSON(processContainer, json);
         const processCommand = processCommands.get('custom-add');
         const processCommandArgInputCustom = {
             name: 'num1',
@@ -199,7 +208,9 @@ describe('Process Command Tests', () => {
         expect(job.result?.output).to.equal('The sum of 1 and 2 is 3');
     });
     it('should run the imported process command - custom-run-process', async () => {
-        const processCommands = await importProcessCommands("tests/exampleCommands.json");
+        const json = await importFromFile("tests/exampleCommands.json");
+        const processContainer = importProcessContainerFromJSON(json);
+        const processCommands = importProcessCommandsFromJSON(processContainer, json);
         const processCommand = processCommands.get('custom-run-process');
         console.log(processCommand);
         const processCommandArgInputCustom = {

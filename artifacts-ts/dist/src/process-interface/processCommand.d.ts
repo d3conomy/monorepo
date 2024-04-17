@@ -1,5 +1,3 @@
-/// <reference types="node" />
-/// <reference types="node" />
 import { ProcessType } from "./processTypes.js";
 import { IProcessContainer } from './processContainer.js';
 interface IProcessCommandArg {
@@ -19,7 +17,7 @@ interface IProcessCommandOutput {
 interface IProcessCommand<T = ProcessType> {
     type: T;
     name: string;
-    action: (args?: Array<IProcessCommandArgInput>, process?: IProcessContainer['process']) => any | Promise<any>;
+    action: (args?: Array<IProcessCommandArgInput>, process?: IProcessContainer<T>['process']) => any | Promise<any>;
     args?: Array<IProcessCommandArg>;
     description?: string;
 }
@@ -33,7 +31,7 @@ interface IProcessCommands extends Map<IProcessCommand['name'], IProcessCommand>
     process?: IProcessContainer | undefined;
     isUnique(name: IProcessCommand['name']): boolean;
 }
-declare class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> implements IProcessCommands {
+declare class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> implements IProcessCommands, IProcessContainer<IProcessCommand['name']> {
     readonly type: ProcessType;
     readonly process?: IProcessContainer | undefined;
     constructor({ commands, proc }?: {
@@ -49,12 +47,10 @@ declare const createProcessCommandArgs: ({ name, description, required }: {
 }) => IProcessCommandArg;
 declare const createProcessCommand: ({ name, action, args, type, description }: {
     name: string;
-    process?: IProcessContainer<ProcessType> | undefined;
     action: IProcessCommand['action'];
     args?: IProcessCommandArg[] | undefined;
     type?: ProcessType | undefined;
     description?: string | undefined;
 }) => IProcessCommand;
-declare const importProcessCommands: (filepath: string) => Promise<IProcessCommands>;
-export { createProcessCommandArgs, createProcessCommand, importProcessCommands, IProcessCommand, IProcessCommands, IProcessCommandArg, IProcessCommandArgInput, IProcessCommandOutput, IProcessExecuteCommand, ProcessCommands };
+export { createProcessCommandArgs, createProcessCommand, IProcessCommand, IProcessCommands, IProcessCommandArg, IProcessCommandArgInput, IProcessCommandOutput, IProcessExecuteCommand, ProcessCommands };
 //# sourceMappingURL=processCommand.d.ts.map

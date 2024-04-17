@@ -1,11 +1,7 @@
-import { IProcess } from ".";
-import { JobId, PodProcessId } from "../id-reference-factory/index.js";
-import { IProcessCommand, IProcessCommandArgInput, IProcessCommandOutput, IProcessCommands, IProcessExecuteCommand } from "./processCommand.js";
+import { JobId } from "../id-reference-factory/index.js";
+import { IProcessCommand, IProcessCommands, IProcessExecuteCommand } from "./processCommand.js";
 import { IProcessContainer } from "./processContainer";
 import { ProcessStage } from "./processStages.js";
-import { ProcessType } from "./processTypes.js";
-
-
 
 
 interface IProcessJob extends IProcessExecuteCommand {

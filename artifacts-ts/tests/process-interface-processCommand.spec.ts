@@ -1,8 +1,8 @@
 import { expect } from 'chai';
-import { createProcessCommandArgs, importProcessCommands, IProcessCommand, IProcessCommandArg, IProcessCommandArgInput, IProcessCommandOutput, IProcessExecuteCommand, ProcessCommands } from '../src/process-interface/processCommand.js';
+import { IProcessCommand, IProcessCommandArg, IProcessCommandArgInput, IProcessCommandOutput, IProcessExecuteCommand, ProcessCommands } from '../src/process-interface/processCommand.js';
 import { ProcessType } from '../src/process-interface/index.js';
-import { create } from 'domain';
-import { jobRunner, runCommand } from '../src/process-interface/processJob.js';
+import { importFromFile, importProcessCommandsFromJSON, importProcessContainerFromJSON } from '../src/process-interface/processImport.js';
+import { runCommand } from '../src/process-interface/processJob.js';
 import { JobId, SystemId } from '../src/id-reference-factory/index.js';
 
 describe('Process Command Tests', () => {
@@ -116,14 +116,18 @@ describe('Process Command Tests', () => {
     });
 
     it('should import process command classes', async () => {
-        const processCommands = await importProcessCommands("tests/exampleCommands.json");
+        const json = await importFromFile("tests/exampleCommands.json");
+        const processContainer = importProcessContainerFromJSON(json);
+        const processCommands = importProcessCommandsFromJSON(processContainer, json);
         console.log(processCommands);
         expect(processCommands).to.exist;
         expect(processCommands).to.be.an('map');
     });
 
     it('should run an imported process command', async () => {
-        const processCommands = await importProcessCommands("tests/exampleCommands.json");
+        const json = await importFromFile("tests/exampleCommands.json");
+        const processContainer = importProcessContainerFromJSON(json);
+        const processCommands = importProcessCommandsFromJSON(processContainer, json);
         const processCommand = processCommands.get('custom-hello');
         const processCommandArgInputCustom: IProcessCommandArgInput = {
             name: 'name',
@@ -167,7 +171,9 @@ describe('Process Command Tests', () => {
     });
 
     it('should run the imported process command - goodbye', async () => {
-        const processCommands = await importProcessCommands("tests/exampleCommands.json");
+        const json = await importFromFile("tests/exampleCommands.json");
+        const processContainer = importProcessContainerFromJSON(json);
+        const processCommands = importProcessCommandsFromJSON(processContainer, json);
         const processCommand = processCommands.get('custom-goodbye');
         const processCommandArgInputCustom: IProcessCommandArgInput = {
             name: 'name',
@@ -195,7 +201,9 @@ describe('Process Command Tests', () => {
     });
 
     it('should run the imported process command - custom-add', async () => {
-        const processCommands = await importProcessCommands("tests/exampleCommands.json");
+        const json = await importFromFile("tests/exampleCommands.json");
+        const processContainer = importProcessContainerFromJSON(json);
+        const processCommands = importProcessCommandsFromJSON(processContainer, json);
         const processCommand = processCommands.get('custom-add');
         const processCommandArgInputCustom: IProcessCommandArgInput = {
             name: 'num1',
@@ -227,7 +235,9 @@ describe('Process Command Tests', () => {
     })
 
     it('should run the imported process command - custom-run-process', async () => {
-        const processCommands = await importProcessCommands("tests/exampleCommands.json");
+        const json = await importFromFile("tests/exampleCommands.json");
+        const processContainer = importProcessContainerFromJSON(json);
+        const processCommands = importProcessCommandsFromJSON(processContainer, json);
         const processCommand = processCommands.get('custom-run-process');
         console.log(processCommand);
         const processCommandArgInputCustom: IProcessCommandArgInput = {

@@ -1,5 +1,19 @@
 {
+    "id": "customProcess",
+    "type": "custom",
     "process": "(args) => { return `Process has been run ${args[0].value}` }",
+    "options": [
+        {
+            "name": "option1",
+            "description": "The first option",
+            "required": true
+        },
+        {
+            "name": "option2",
+            "description": "The second option",
+            "required": true
+        }
+    ],
     "commands": [
         {
             "name": "custom-hello",
