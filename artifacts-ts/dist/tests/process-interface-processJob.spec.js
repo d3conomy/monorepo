@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { jobRunner, commandSelector, runCommand } from '../src/process-interface/processJob.js';
+import { ProcessCommands } from '../src/process-interface/processCommand.js';
 import { ProcessStage } from '../src/process-interface/processStages.js';
 import { JobId, SystemId } from '../src/id-reference-factory/index.js';
 import { ProcessType } from '../src/index.js';
@@ -16,7 +17,10 @@ describe('Process Job', () => {
                 return args ? args[0].value.join(' ') : undefined;
             },
         };
-        processCommands = new Map();
+        processCommands = new ProcessCommands({
+            commands: [processCommand],
+            proc: () => console.log('test'),
+        });
         processCommands.set(processCommand.name, processCommand);
         jobId = new JobId({
             componentId: new SystemId({ name: 'system1' }),

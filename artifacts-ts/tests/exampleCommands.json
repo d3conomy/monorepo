@@ -1,4 +1,5 @@
 {
+    "process": "(args) => { return `Process has been run ${args[0].value}` }",
     "commands": [
         {
             "name": "custom-hello",
@@ -43,6 +44,13 @@
                 }
             ],
             "action": "(args) => { return `The sum of ${args[0].value} and ${args[1].value} is ${parseInt(args[0].value) + parseInt(args[1].value)}` }"
+        },
+        {
+            "name": "custom-run-process",
+            "type": "custom",
+            "description": "A Custom command that runs a process",
+            "args": [],
+            "action": "(args, process) => { return process(args) }"
         }
     ]
 }

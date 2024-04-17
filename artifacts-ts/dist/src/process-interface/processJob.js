@@ -1,10 +1,11 @@
 import { ProcessStage } from "./processStages.js";
-const jobRunner = async (job, processCommand) => {
+const jobRunner = async (job, processCommand, process) => {
     let output = undefined;
     const startTime = new Date();
     try {
         job.status = ProcessStage.RUNNING;
-        output = await processCommand.action(job.params);
+        console.log(`Job ${job.jobId} started, running command ${job.command}, with params: ${job.params}, on process ${process?.process}`);
+        output = await processCommand.action(job.params, process?.process);
         job.status = ProcessStage.FINISHED;
     }
     catch (error) {
@@ -40,6 +41,6 @@ const runCommand = async (jobId, command, processCommands) => {
         status: ProcessStage.NEW
     };
     const processCommand = commandSelector(job, processCommands);
-    return await jobRunner(job, processCommand);
+    return await jobRunner(job, processCommand, processCommands.process);
 };
 export { jobRunner, commandSelector, runCommand };

@@ -1,4 +1,7 @@
+/// <reference types="node" />
+/// <reference types="node" />
 import { ProcessType } from "./processTypes.js";
+import { IProcessContainer } from './processContainer.js';
 interface IProcessCommandArg {
     name: string;
     description: string;
@@ -16,7 +19,7 @@ interface IProcessCommandOutput {
 interface IProcessCommand<T = ProcessType> {
     type: T;
     name: string;
-    action: (args?: Array<IProcessCommandArgInput>) => any | Promise<any>;
+    action: (args?: Array<IProcessCommandArgInput>, process?: IProcessContainer['process']) => any | Promise<any>;
     args?: Array<IProcessCommandArg>;
     description?: string;
 }
@@ -25,10 +28,18 @@ interface IProcessExecuteCommand {
     params: Array<IProcessCommandArgInput>;
     result?: IProcessCommandOutput;
 }
-interface IProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> {
+interface IProcessCommands extends Map<IProcessCommand['name'], IProcessCommand>, IProcessContainer<IProcessCommand['name']> {
+    type: IProcessCommand['name'];
+    process?: IProcessContainer | undefined;
+    isUnique(name: IProcessCommand['name']): boolean;
 }
 declare class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> implements IProcessCommands {
-    constructor(...commands: Array<IProcessCommand>);
+    readonly type: ProcessType;
+    readonly process?: IProcessContainer | undefined;
+    constructor({ commands, proc }?: {
+        commands?: Array<IProcessCommand>;
+        proc?: any;
+    });
     isUnique(name: IProcessCommand['name']): boolean;
 }
 declare const createProcessCommandArgs: ({ name, description, required }: {
@@ -38,6 +49,7 @@ declare const createProcessCommandArgs: ({ name, description, required }: {
 }) => IProcessCommandArg;
 declare const createProcessCommand: ({ name, action, args, type, description }: {
     name: string;
+    process?: IProcessContainer<ProcessType> | undefined;
     action: IProcessCommand['action'];
     args?: IProcessCommandArg[] | undefined;
     type?: ProcessType | undefined;

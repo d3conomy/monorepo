@@ -10,7 +10,6 @@ interface IProcess {
     id: PodProcessId
     process?: any
     options?: any
-    commands?: IProcessCommands
 
     checkProcess(): boolean
     status(): ProcessStage

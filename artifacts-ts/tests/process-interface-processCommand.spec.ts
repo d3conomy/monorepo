@@ -25,7 +25,10 @@ describe('Process Command Tests', () => {
         description: 'Test command',
     };
 
-    const processCommands: ProcessCommands = new ProcessCommands(processCommand);
+    const processCommands: ProcessCommands = new ProcessCommands({
+        commands: [processCommand],
+        proc: () => console.log('test')
+    });
 
     const processCommandOutput: IProcessCommandOutput = {
         output: 'output',
@@ -222,5 +225,35 @@ describe('Process Command Tests', () => {
         expect(job.result).to.be.an('object');
         expect(job.result?.output).to.equal('The sum of 1 and 2 is 3');
     })
+
+    it('should run the imported process command - custom-run-process', async () => {
+        const processCommands = await importProcessCommands("tests/exampleCommands.json");
+        const processCommand = processCommands.get('custom-run-process');
+        console.log(processCommand);
+        const processCommandArgInputCustom: IProcessCommandArgInput = {
+            name: 'custom',
+            value: 'custom-hello'
+        };
+        const processExecuteCommand: IProcessExecuteCommand = {
+            command: processCommand? processCommand.name : 'custom-run-process',
+            params: new Array<IProcessCommandArgInput>(processCommandArgInputCustom),
+            result: processCommandOutput,
+        };
+        expect(processCommand).to.exist;
+        expect(processCommand).to.be.an('object');
+        // expect(processCommand?.process).to.exist;
+
+        const jobId = new JobId({
+            name: 'testJob',
+            componentId: new SystemId({name: 'testSystem'}),
+        })
+        const job = await runCommand(jobId, processExecuteCommand, processCommands);
+        console.log(job);
+        expect(job).to.exist;
+        expect(job).to.be.an('object');
+        expect(job.result).to.exist;
+        expect(job.result).to.be.an('object');
+        expect(job.result?.output).to.equal('Process has been run custom-hello');
+    });
 
 });

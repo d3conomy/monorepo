@@ -1,6 +1,7 @@
 import { IProcess } from ".";
 import { JobId, PodProcessId } from "../id-reference-factory/index.js";
 import { IProcessCommand, IProcessCommandArgInput, IProcessCommandOutput, IProcessCommands, IProcessExecuteCommand } from "./processCommand.js";
+import { IProcessContainer } from "./processContainer";
 import { ProcessStage } from "./processStages.js";
 import { ProcessType } from "./processTypes.js";
 
@@ -15,14 +16,16 @@ interface IProcessJob extends IProcessExecuteCommand {
 
 const jobRunner = async (
     job: IProcessJob,
-    processCommand: IProcessCommand
+    processCommand: IProcessCommand,
+    process?: IProcessContainer
 ): Promise<IProcessJob> => {
     let output: any = undefined;
 
     const startTime = new Date();
     try{
         job.status = ProcessStage.RUNNING;
-        output = await processCommand.action(job.params);
+        console.log(`Job ${job.jobId} started, running command ${job.command}, with params: ${job.params}, on process ${process?.process}`)
+        output = await processCommand.action(job.params, process?.process);
         job.status = ProcessStage.FINISHED;
     }
     catch (error: any) {
@@ -76,7 +79,7 @@ const runCommand = async (
     }
     const processCommand = commandSelector(job, processCommands);
 
-    return await jobRunner(job, processCommand);
+    return await jobRunner(job, processCommand, processCommands.process);
 }
 
 
