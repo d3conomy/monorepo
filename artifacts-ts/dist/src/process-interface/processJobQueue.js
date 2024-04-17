@@ -1,38 +1,27 @@
-import { JobId, PodProcessId } from '../id-reference-factory/IdReferenceClasses.js';
-import { IProcessCommands } from './processCommand.js';
-import { IProcessContainer } from './processContainer.js';
-import { IProcessJob, runCommand } from './processJob.js';
-
-
+import { runCommand } from './processJob.js';
 class JobQueue {
-    private queue: IProcessJob[] = [];
-    public running: JobId | undefined;
-    public completed: IProcessJob[] = [];
-    private stopFlag: boolean = true;
-    private processCommands: IProcessCommands = {} as IProcessCommands;
-
-    enqueue(job: IProcessJob): void {
+    queue = [];
+    running;
+    completed = [];
+    stopFlag = true;
+    processCommands = {};
+    enqueue(job) {
         this.queue.push(job);
     }
-
-    dequeue(): IProcessJob | undefined {
+    dequeue() {
         return this.queue.shift();
     }
-
-    isEmpty(): boolean {
+    isEmpty() {
         return this.queue.length === 0;
     }
-
-    size(): number {
+    size() {
         return this.queue.length;
     }
-
-    init(processCommands: IProcessCommands): void {
+    init(processCommands) {
         this.stopFlag = false;
         this.processCommands = processCommands;
     }
-
-    async run(): Promise<void> {
+    async run() {
         while (!this.stopFlag && !this.isEmpty()) {
             const job = this.dequeue();
             if (job) {
@@ -44,22 +33,15 @@ class JobQueue {
             }
         }
     }
-
-    async runParallel(): Promise<void> {
+    async runParallel() {
         const jobPromises = this.queue.map((job) => {
             return runCommand(job.jobId, job, this.processCommands);
         });
-
         this.completed = await Promise.all(jobPromises);
     }
-
-    stop(): void {
+    stop() {
         this.stopFlag = true;
         this.running = undefined;
     }
-
 }
-
-export {
-    JobQueue
-}
+export { JobQueue };

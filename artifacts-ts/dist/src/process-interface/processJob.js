@@ -4,7 +4,7 @@ const jobRunner = async (job, processCommand, process) => {
     const startTime = new Date();
     try {
         job.status = ProcessStage.RUNNING;
-        console.log(`Job ${job.jobId} started, running command ${job.command}, with params: ${job.params}, on process ${process?.process}`);
+        // console.log(`Job ${job.jobId} started, running command ${job.command}, with params: ${job.params}, on process ${process?.process}`)
         output = await processCommand.action(job.params, process?.process);
         job.status = ProcessStage.FINISHED;
     }
@@ -14,7 +14,7 @@ const jobRunner = async (job, processCommand, process) => {
     }
     const endTime = new Date();
     const runtime = endTime.getTime() - startTime.getTime();
-    console.log(`Job ${job.jobId} finished in ${runtime}ms`);
+    // console.log(`Job ${job.jobId} finished in ${runtime}ms`)
     job.result = {
         output,
         runtime

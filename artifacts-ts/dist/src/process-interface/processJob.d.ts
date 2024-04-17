@@ -2,6 +2,10 @@ import { JobId } from "../id-reference-factory/index.js";
 import { IProcessCommand, IProcessCommands, IProcessExecuteCommand } from "./processCommand.js";
 import { IProcessContainer } from "./processContainer";
 import { ProcessStage } from "./processStages.js";
+/**
+ * Interface for process jobs
+ * @category Process
+ */
 interface IProcessJob extends IProcessExecuteCommand {
     jobId: JobId;
     status: ProcessStage;
