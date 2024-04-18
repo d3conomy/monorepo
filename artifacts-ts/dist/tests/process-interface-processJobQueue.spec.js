@@ -73,7 +73,8 @@ describe('JobQueue', () => {
         // expect(jobQueue.processCommands).to.equal(processCommands);
         expect(jobQueue.running).to.be.undefined;
     });
-    it('should addrun 100 processes to the queue', async () => {
+    it('should addrun 100 processes to the queue', async function () {
+        this.timeout(0);
         let processCommandsList = [];
         processCommandsList.push(createProcessCommand({ name: 'test', action: () => { return "test"; } }));
         const processContainer = createProcessContainer('test', () => { return "test"; });
@@ -82,7 +83,7 @@ describe('JobQueue', () => {
             proc: processContainer
         });
         jobQueue.init(processCommands);
-        for (let i = 0; i < 10000; i++) {
+        for (let i = 0; i < 100000; i++) {
             const systemId = new SystemId();
             const jobId = new JobId({ componentId: systemId });
             const job = {
@@ -100,9 +101,10 @@ describe('JobQueue', () => {
         const endTime = new Date();
         console.log(`Sequential run time: ${endTime.getTime() - startTime.getTime()}ms`);
         jobQueue.stop();
-        expect(jobQueue.completed.length).to.equal(10000);
+        expect(jobQueue.completed.length).to.equal(100000);
     });
-    it('should run 100 processes in parallel', async () => {
+    it('should run 100 processes in parallel', async function () {
+        this.timeout(0);
         let processCommandsList = [];
         processCommandsList.push(createProcessCommand({ name: 'test', action: () => { return "test"; } }));
         const processContainer = createProcessContainer('test', () => { return "test"; });
@@ -111,7 +113,7 @@ describe('JobQueue', () => {
             proc: processContainer
         });
         jobQueue.init(processCommands);
-        for (let i = 0; i < 10000; i++) {
+        for (let i = 0; i < 100000; i++) {
             const systemId = new SystemId();
             const jobId = new JobId({ componentId: systemId });
             const job = {
@@ -129,6 +131,6 @@ describe('JobQueue', () => {
         const endTime = new Date();
         console.log(`Parallel run time: ${endTime.getTime() - startTime.getTime()}ms`);
         jobQueue.stop();
-        expect(jobQueue.completed.length).to.equal(10000);
+        expect(jobQueue.completed.length).to.equal(100000);
     });
 });
