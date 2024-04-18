@@ -1,8 +1,9 @@
-const createProcessContainer = (type, process, options) => {
+const createProcessContainer = (type, process, options, init) => {
     return {
         type,
         process,
-        options
+        options,
+        init
     };
 };
 export { createProcessContainer };

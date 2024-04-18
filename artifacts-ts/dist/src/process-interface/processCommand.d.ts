@@ -4,6 +4,7 @@ interface IProcessCommandArg {
     name: string;
     description: string;
     required: boolean;
+    default?: any;
     toString(): string;
 }
 interface IProcessCommandArgInput {
@@ -18,7 +19,7 @@ interface IProcessCommand<T = ProcessType> {
     type: T;
     name: string;
     action: (args?: Array<IProcessCommandArgInput>, process?: IProcessContainer<T>['process']) => any | Promise<any>;
-    args?: Array<IProcessCommandArg>;
+    args: Array<IProcessCommandArg>;
     description?: string;
 }
 interface IProcessExecuteCommand {
@@ -33,17 +34,18 @@ interface IProcessCommands extends Map<IProcessCommand['name'], IProcessCommand>
 }
 declare class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> implements IProcessCommands, IProcessContainer<IProcessCommand['name']> {
     readonly type: ProcessType;
-    readonly process?: IProcessContainer | undefined;
+    process?: IProcessContainer | undefined;
     constructor({ commands, proc }?: {
         commands?: Array<IProcessCommand>;
         proc?: any;
     });
     isUnique(name: IProcessCommand['name']): boolean;
 }
-declare const createProcessCommandArgs: ({ name, description, required }: {
+declare const createProcessCommandArgs: ({ name, description, required, defaultValue }: {
     name: string;
     description: string;
     required: boolean;
+    defaultValue?: any;
 }) => IProcessCommandArg;
 declare const createProcessCommand: ({ name, action, args, type, description }: {
     name: string;

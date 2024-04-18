@@ -18,11 +18,12 @@ class ProcessCommands extends Map {
         return !this.has(name);
     }
 }
-const createProcessCommandArgs = ({ name, description, required }) => {
+const createProcessCommandArgs = ({ name, description, required, defaultValue }) => {
     return {
         name,
         description,
         required,
+        default: defaultValue,
         toString() {
             return this.name;
         }
@@ -31,6 +32,9 @@ const createProcessCommandArgs = ({ name, description, required }) => {
 const createProcessCommand = ({ name, action, args, type, description }) => {
     if (!type) {
         type = ProcessType.CUSTOM;
+    }
+    if (!args) {
+        args = [];
     }
     return {
         name,

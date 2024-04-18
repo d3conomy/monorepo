@@ -14,8 +14,11 @@ import { IProcessCommands, ProcessCommands } from './processCommand.js';
 const sanitizeEval = (action: string) => {
     const harmfulKeywords = ['exec', 'child_process', 'spawn', 'eval', 'Function', 'constructor', 'require', 'import'];
     for (const keyword of harmfulKeywords) {
+        if (typeof action !== 'string') {
+            throw new Error(`Action is not a string`);
+        }
         if (action.includes(keyword)) {
-            throw new Error(`Potentially harmful keyword "${keyword}" found in action.`);
+            throw new Error(`Action contains harmful keyword: ${keyword}`);
         }
     }
     return eval(action);

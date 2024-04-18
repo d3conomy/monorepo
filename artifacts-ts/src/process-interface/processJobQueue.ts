@@ -53,7 +53,6 @@ class JobQueue {
             if (job) {
                 this.running = job.jobId;
                 const result = await this.execute(job);
-                // console.log(`Job ${job.jobId} finished in ${result.result?.runtime}ms`)
                 // this.completed.push(result);
                 this.running = undefined;
             }
@@ -66,7 +65,8 @@ class JobQueue {
      */
     async runParallel(): Promise<void> {
         const jobPromises = this.queue.map((job) => {
-            return runCommand(job.jobId, job, this.processCommands);
+            // return runCommand(job.jobId, job, this.processCommands);
+            return this.execute(job);
         });
 
         this.completed = await Promise.all(jobPromises);

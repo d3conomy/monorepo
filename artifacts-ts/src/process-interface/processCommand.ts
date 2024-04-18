@@ -5,7 +5,8 @@ import { IProcessContainer } from './processContainer.js';
 interface IProcessCommandArg {
     name: string;
     description: string;
-    required: boolean
+    required: boolean;
+    default?: any;
 
     toString(): string;
 }
@@ -24,7 +25,7 @@ interface IProcessCommand<T = ProcessType> {
     type: T;
     name: string;
     action: (args?: Array<IProcessCommandArgInput>, process?: IProcessContainer<T>['process']) => any | Promise<any>;
-    args?: Array<IProcessCommandArg>;
+    args: Array<IProcessCommandArg>;
     description?: string;
 }
 
@@ -44,7 +45,7 @@ interface IProcessCommands extends Map<IProcessCommand['name'], IProcessCommand>
 
 class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> implements IProcessCommands, IProcessContainer<IProcessCommand['name']>{
     public readonly type: ProcessType = ProcessType.CUSTOM;
-    public readonly process?: IProcessContainer | undefined;
+    public process?: IProcessContainer | undefined;
 
     constructor({
         commands,
@@ -75,16 +76,19 @@ class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> impl
 const createProcessCommandArgs = ({
     name,
     description,
-    required
+    required,
+    defaultValue
 }: {
     name: string,
     description: string,
-    required: boolean
+    required: boolean,
+    defaultValue?: any
 }): IProcessCommandArg => {
     return {
         name,
         description,
         required,
+        default: defaultValue,
 
         toString() {
             return this.name;
@@ -107,6 +111,10 @@ const createProcessCommand = ({
 }): IProcessCommand => {
     if (!type) {
         type = ProcessType.CUSTOM;
+    }
+
+    if (!args) {
+        args = [];
     }
 
     return {

@@ -21,9 +21,11 @@
   "author": "d3",
   "license": "ISC",
   "dependencies": {
+    "@libp2p/bootstrap": "^10.0.20",
     "axios": "^1.6.8",
     "chai": "^5.1.0",
     "chance": "^1.1.11",
+    "libp2p": "^1.4.2",
     "mocha": "^10.4.0",
     "uuid": "^9.0.1"
   },

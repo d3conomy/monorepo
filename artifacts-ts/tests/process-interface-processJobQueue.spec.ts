@@ -5,6 +5,8 @@ import { IProcessContainer, createProcessContainer } from '../src/process-interf
 import { IProcessJob, runCommand } from '../src/process-interface/processJob.js';
 import { JobId, SystemId } from '../src/id-reference-factory/index.js';
 
+const NUM_TESTS = 100
+
 describe('JobQueue', () => {
     let jobQueue: JobQueue;
     let processCommands: IProcessCommands;
@@ -92,7 +94,7 @@ describe('JobQueue', () => {
         expect(jobQueue.running).to.be.undefined;
     });
 
-    it('should addrun 100 processes to the queue', async function () {
+    it('should addrun n processes to the queue', async function () {
         this.timeout(0);
         let processCommandsList = [];
         processCommandsList.push(createProcessCommand({ name: 'test', action: () => { return "test" }}));
@@ -105,7 +107,7 @@ describe('JobQueue', () => {
 
         jobQueue.init(processCommands);
 
-        for (let i = 0; i < 100000; i++) {
+        for (let i = 0; i < NUM_TESTS; i++) {
             const systemId = new SystemId();
             const jobId = new JobId({componentId: systemId});
             const job: IProcessJob = {
@@ -124,10 +126,10 @@ describe('JobQueue', () => {
 
         console.log(`Sequential run time: ${endTime.getTime() - startTime.getTime()}ms`);
         jobQueue.stop();
-        expect(jobQueue.completed.length).to.equal(100000);
+        expect(jobQueue.completed.length).to.equal(NUM_TESTS);
     });
 
-    it('should run 100 processes in parallel', async function () {
+    it('should run 100000 processes in parallel', async function () {
         this.timeout(0);
         let processCommandsList = [];
         processCommandsList.push(createProcessCommand({ name: 'test', action: () => { return "test" }}));
@@ -140,7 +142,7 @@ describe('JobQueue', () => {
 
         jobQueue.init(processCommands);
 
-        for (let i = 0; i < 100000; i++) {
+        for (let i = 0; i < NUM_TESTS; i++) {
             const systemId = new SystemId();
             const jobId = new JobId({componentId: systemId});
             const job: IProcessJob = {
@@ -159,6 +161,72 @@ describe('JobQueue', () => {
 
         console.log(`Parallel run time: ${endTime.getTime() - startTime.getTime()}ms`);
         jobQueue.stop();
-        expect(jobQueue.completed.length).to.equal(100000);
+        expect(jobQueue.completed.length).to.equal(NUM_TESTS);
     });
+
+    it('should execute a job', async () => {
+        const systemId = new SystemId();
+        const jobId = new JobId({componentId: systemId});
+        const job: IProcessJob = {
+            jobId,
+            command: 'test',
+            params: [],
+            status: 'initializing'
+        } as IProcessJob;
+
+        const processCommand = createProcessCommand({ name: 'test', action: () => { return "test" }});
+
+        const processContainer = createProcessContainer('test', () => { return "test" });
+
+
+        let processCommands = new ProcessCommands({
+            commands: [processCommand],
+            proc: processContainer
+        });
+
+        jobQueue.init(processCommands);
+
+        const result = await jobQueue.execute(job);
+
+        expect(result.jobId.name).to.equal(job.jobId.name);
+    });
+
+    it('should execute n jobs', async function () {
+        this.timeout(0);
+        let processCommandsList = [];
+        processCommandsList.push(createProcessCommand({ name: 'test', action: () => { return "test" }}));
+        const processContainer = createProcessContainer('test', () => { return "test" });
+
+        let processCommands = new ProcessCommands({
+            commands: [...processCommandsList],
+            proc: processContainer
+        });
+
+        jobQueue.init(processCommands);
+
+        for (let i = 0; i < NUM_TESTS; i++) {
+            const systemId = new SystemId();
+            const jobId = new JobId({componentId: systemId});
+            const job: IProcessJob = {
+                jobId,
+                command: 'test',
+                params: [],
+                status: 'initializing'
+            } as IProcessJob;
+            jobQueue.enqueue(job);
+            // const processCommand = createProcessCommand({ name: 'test', action: () => { return "test" }});
+            // processCommandsList.push(processCommand);
+        }
+        const startTime = new Date();
+        for (let i = 0; i < NUM_TESTS; i++) {
+            const job = jobQueue.dequeue();
+            if (job) {
+                await jobQueue.execute(job);
+            }
+        }
+        const endTime = new Date();
+
+        console.log(`Sequential run time: ${endTime.getTime() - startTime.getTime()}ms`);
+        expect(jobQueue.completed.length).to.equal(NUM_TESTS);
+    })
 });

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { createProcessOption } from '../src/process-interface/processOptions.js';
+import { compileProcessOptions, createProcessOption } from '../src/process-interface/processOptions.js';
 describe('createProcessOption', () => {
     it('should create a process option with the provided values', () => {
         const option = createProcessOption({
@@ -43,6 +43,95 @@ describe('IProcessOptions', () => {
             description: 'Option 2',
             value: 'abc',
             required: false
+        });
+    });
+    describe('compileProcessOptions', () => {
+        it('should compile the values with the options', () => {
+            const values = [
+                {
+                    name: 'option1',
+                    value: 456
+                },
+                {
+                    name: 'option2',
+                    value: 'def'
+                }
+            ];
+            const options = [
+                {
+                    name: 'option1',
+                    description: 'Option 1',
+                    required: true,
+                    defaultValue: 123
+                },
+                {
+                    name: 'option2',
+                    description: 'Option 2',
+                    required: false,
+                    defaultValue: 'abc'
+                }
+            ];
+            const compiledOptions = compileProcessOptions({
+                values,
+                options
+            });
+            expect(compiledOptions).to.be.an('array');
+            expect(compiledOptions).to.have.lengthOf(2);
+            expect(compiledOptions[0]).to.deep.equal({
+                name: 'option1',
+                description: 'Option 1',
+                value: 456,
+                required: true,
+                defaultValue: 123
+            });
+            expect(compiledOptions[1]).to.deep.equal({
+                name: 'option2',
+                description: 'Option 2',
+                value: 'def',
+                required: false,
+                defaultValue: 'abc'
+            });
+        });
+        it('should use the default value if the value is not provided', () => {
+            const values = [
+                {
+                    name: 'option1',
+                    value: 456
+                }
+            ];
+            const options = [
+                {
+                    name: 'option1',
+                    description: 'Option 1',
+                    value: 123,
+                    required: true
+                },
+                {
+                    name: 'option2',
+                    description: 'Option 2',
+                    value: 'abc',
+                    required: false
+                }
+            ];
+            const compiledOptions = compileProcessOptions({
+                values,
+                options
+            });
+            console.log(compiledOptions);
+            expect(compiledOptions).to.be.an('array');
+            expect(compiledOptions).to.have.lengthOf(2);
+            expect(compiledOptions[0]).to.deep.equal({
+                name: 'option1',
+                description: 'Option 1',
+                value: 456,
+                required: true,
+            });
+            expect(compiledOptions[1]).to.deep.equal({
+                name: 'option2',
+                description: 'Option 2',
+                value: 'abc',
+                required: false,
+            });
         });
     });
 });

@@ -7,18 +7,23 @@ interface IProcessContainer<T = ProcessType> {
     type: T
     process?: any
     options?: IProcessOptions
+
+    init?: (options?: IProcessOptions) => Promise<void>
 }
 
 const createProcessContainer = <T = ProcessType>(
     type: T,
     process?: any,
-    options?: IProcessOptions
+    options?: IProcessOptions,
+    init?: (options?: IProcessOptions) => Promise<void>
 ): IProcessContainer<T> => {
     return {
         type,
         process,
-        options
+        options,
+        init
     }
+    
 }
 
 export {

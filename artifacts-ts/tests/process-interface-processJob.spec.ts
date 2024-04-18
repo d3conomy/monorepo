@@ -18,6 +18,13 @@ describe('Process Job', () => {
                 // Mock implementation of process command action
                 return args ? args[0].value.join(' ') : undefined;
             },
+            args: [
+                {
+                    name: 'values',
+                    description: 'Values to join',
+                    required: true,
+                },
+            ],
         };
 
         processCommands = new ProcessCommands({
@@ -66,9 +73,10 @@ describe('Process Job', () => {
             processCommand = {
                 type: ProcessType.CUSTOM,
                 name: 'command1',
-                action: async (params: any) => {
+                action: async (args: any) => {
                     throw new Error('Mock error');
                 },
+                args: [],
             };
 
             const result = await jobRunner(job, processCommand);
