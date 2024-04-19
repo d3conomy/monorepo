@@ -1,7 +1,9 @@
 import { Multiaddr } from "@multiformats/multiaddr";
+import { IProcessOptions } from "../process-interface/index.js";
 declare const setListenAddresses: (multiaddrs: Array<Multiaddr>) => {
     listen: Array<string>;
 };
+declare const listenAddressesOptions: IProcessOptions;
 declare const listenAddresses: ({ enableTcp, tcpPort, enableIp4, ip4Domain, enableUdp, udpPort, enableIp6, ip6Domain, enableQuicv1, enableWebTransport, enableWebSockets, enableWebRTC, enableWebRTCStar, webRTCStarAddress, enableCircuitRelayTransport, additionalMultiaddrs }?: {
     enableTcp?: boolean | undefined;
     tcpPort?: number | undefined;
@@ -22,5 +24,5 @@ declare const listenAddresses: ({ enableTcp, tcpPort, enableIp4, ip4Domain, enab
 }) => {
     listen: Array<string>;
 };
-export { setListenAddresses, listenAddresses as listenAddressesConfig };
+export { setListenAddresses, listenAddresses as listenAddressesConfig, listenAddressesOptions };
 //# sourceMappingURL=address.d.ts.map

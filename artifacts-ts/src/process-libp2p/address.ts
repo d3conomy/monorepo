@@ -1,6 +1,5 @@
 import { Multiaddr } from "@multiformats/multiaddr";
-import { create } from "domain";
-import { IProcessOptions, createProcessOption, formatProcessOptions } from "../process-interface";
+import { IProcessOptions, createProcessOption, formatProcessOptions } from "../process-interface/index.js";
  
 const setListenAddresses = (
     multiaddrs: Array<Multiaddr>
@@ -199,5 +198,6 @@ const listenAddresses = ({
 
 export {
     setListenAddresses,
-    listenAddresses as listenAddressesConfig
+    listenAddresses as listenAddressesConfig,
+    listenAddressesOptions
 }

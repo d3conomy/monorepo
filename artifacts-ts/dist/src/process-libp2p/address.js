@@ -1,4 +1,4 @@
-import { createProcessOption, formatProcessOptions } from "../process-interface";
+import { createProcessOption, formatProcessOptions } from "../process-interface/index.js";
 const setListenAddresses = (multiaddrs) => {
     return {
         listen: multiaddrs.map((addr) => addr.toString())
@@ -147,4 +147,4 @@ const listenAddresses = ({ enableTcp, tcpPort, enableIp4, ip4Domain, enableUdp, 
     }
     return { listen: listenAddresses };
 };
-export { setListenAddresses, listenAddresses as listenAddressesConfig };
+export { setListenAddresses, listenAddresses as listenAddressesConfig, listenAddressesOptions };

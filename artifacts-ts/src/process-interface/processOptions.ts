@@ -53,8 +53,11 @@ const compileProcessOptions = ({
     });
 }
 
-const formatProcessOptions = (options: IProcessOptions): Map<IProcessOption['name'], IProcessOption['value']> => {
-    return new Map(options.map(option => [option.name, option.value]));
+const formatProcessOptions = (options: IProcessOptions): any => {
+    return options.reduce((acc:any, option:any) => {
+        acc[option.name] = option.value;
+        return acc;
+    }, {});
 }
 
 export {

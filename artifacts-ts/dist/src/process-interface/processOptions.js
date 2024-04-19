@@ -23,6 +23,9 @@ const compileProcessOptions = ({ values, options }) => {
     });
 };
 const formatProcessOptions = (options) => {
-    return new Map(options.map(option => [option.name, option.value]));
+    return options.reduce((acc, option) => {
+        acc[option.name] = option.value;
+        return acc;
+    }, {});
 };
 export { compileProcessOptions, createProcessOption, formatProcessOptions };

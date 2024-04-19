@@ -1,67 +1,49 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
-import { createLibp2p } from 'libp2p';
-import { runCommand } from "../src/process-interface/index.js";
-import { libp2pCommands } from '../src/process-libp2p/commands.js';
-import { JobId, SystemId } from '../src/id-reference-factory/index.js';
-describe('ProcessCommands', () => {
-    let process;
-    let commands;
-    beforeEach(async () => {
-        process = await createLibp2p();
-        commands = libp2pCommands;
-        if (commands.process) {
-            commands.process.process = process;
-        }
-    });
-    afterEach(async () => {
-        await process.stop();
-    });
-    it('should start the process', async () => {
-        const jobId = new JobId({
-            name: 'start',
-            componentId: new SystemId()
+import { listenAddressesConfig as listenAddresses } from '../src/process-libp2p/address.js';
+describe('listenAddresses', () => {
+    it('should return an array of listen addresses', () => {
+        const result = listenAddresses({
+            enableTcp: true,
+            tcpPort: 8080,
+            enableIp4: true,
+            ip4Domain: '0.0.0.0',
+            enableUdp: true,
+            udpPort: 9090,
+            enableIp6: true,
+            ip6Domain: '::',
+            enableQuicv1: true,
+            enableWebTransport: true,
+            enableWebSockets: true,
+            enableWebRTC: true,
+            enableWebRTCStar: true,
+            webRTCStarAddress: 'webrtc-star-address',
+            enableCircuitRelayTransport: true,
+            additionalMultiaddrs: ['additional-multiaddr-1', 'additional-multiaddr-2']
         });
-        const executeParams = {
-            command: 'start',
-            params: [],
-        };
-        const job = await runCommand(jobId, executeParams, commands);
-        expect(process.status).to.equal('started');
+        expect(result).to.deep.equal({
+            listen: [
+                '/ip4/0.0.0.0/tcp/8080',
+                '/ip4/0.0.0.0/udp/9090',
+                '/ip4/0.0.0.0/udp/9090/quic-v1',
+                '/ip4/0.0.0.0/udp/9090/quic-v1/webtransport',
+                '/ip4/0.0.0.0/tcp/8080/ws/',
+                '/ip6/::/tcp/8080',
+                '/ip6/::/udp/9090',
+                '/ip6/::/udp/9090/quic-v1',
+                '/ip6/::/udp/9090/quic-v1/webtransport',
+                '/ip6/::/tcp/8080/ws/',
+                '/webrtc',
+                'webrtc-star-address',
+                'additional-multiaddr-1',
+                'additional-multiaddr-2'
+            ]
+        });
     });
-    it('should stop the process', async () => {
-        const jobId = new JobId({
-            name: 'start',
-            componentId: new SystemId()
-        });
-        const executeParams = {
-            command: 'start',
-            params: [],
-        };
-        const job = await runCommand(jobId, executeParams, commands);
-        expect(process.status).to.equal('started');
-        const jobId2 = new JobId({
-            name: 'stop',
-            componentId: new SystemId()
-        });
-        const executeParams2 = {
-            command: 'stop',
-            params: [],
-        };
-        const job2 = await runCommand(jobId2, executeParams2, commands);
-        expect(process.status).to.equal('stopped');
-    });
-    it('should return the process status', async () => {
-        const jobId = new JobId({
-            name: 'status',
-            componentId: new SystemId()
-        });
-        const executeParams = {
-            command: 'status',
-            params: [],
-        };
-        const job = await runCommand(jobId, executeParams, commands);
-        console.log(job);
-        expect(job.result?.output).to.equal('started');
+    it('should throw an error if webRTCStarAddress is not provided', () => {
+        expect(() => {
+            listenAddresses({
+                enableWebRTCStar: true
+            });
+        }).to.throw('webrtcStarAddress must be provided');
     });
 });

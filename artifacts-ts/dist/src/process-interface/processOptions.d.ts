@@ -18,6 +18,6 @@ declare const compileProcessOptions: ({ values, options }: {
     values: Array<IProcessOption>;
     options: IProcessOptions;
 }) => IProcessOptions;
-declare const formatProcessOptions: (options: IProcessOptions) => Map<IProcessOption['name'], IProcessOption['value']>;
+declare const formatProcessOptions: (options: IProcessOptions) => any;
 export { compileProcessOptions, createProcessOption, formatProcessOptions, IProcessOption, IProcessOptions };
 //# sourceMappingURL=processOptions.d.ts.map
