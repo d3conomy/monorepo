@@ -31,33 +31,64 @@ const createProcessOption = ({
     }
 }
 
+const findProcessOption = ({
+    options,
+    name
+}: {
+    options: IProcessOptions | Array<IProcessOption>,
+    name: string
+}): IProcessOption | undefined => {
+    if (options instanceof Array) {
+        return options.find((option: IProcessOption) => option.name === name);
+    }
+}
+
+
 const compileProcessOptions = ({
     values,
     options
 }: {
-    values: Array<IProcessOption>,
+    values?: Array<IProcessOption>,
     options: IProcessOptions
 }): IProcessOptions => {
-    return options.map(option => {
-        const value = values.find(value => value.name === option.name);
-        if (!value) {
+    if (!values) {
+        return options.map(option => {
             return {
                 ...option,
                 value: option.value ? option.value : option.defaultValue
             }
+        });
+    }
+
+    return options.map((option: IProcessOption) => {
+        let defaultValue = option.defaultValue ? option.defaultValue : undefined;
+        const optionsValue = option.value ? option.value : undefined;
+
+        if (!defaultValue && optionsValue) {
+            defaultValue = optionsValue;
+        }
+
+        const value: IProcessOption | undefined | any = findProcessOption({options: values, name: option.name});
+        
+        if (value !== undefined && value !== null) {
+            return {
+                ...option,
+                value: value.value ? value.value : defaultValue
+            }
         }
         return {
             ...option,
-            value: value?.value ?? option.defaultValue
+            value: defaultValue
         }
     });
 }
 
 const formatProcessOptions = (options: IProcessOptions): any => {
-    return options.reduce((acc:any, option:any) => {
-        acc[option.name] = option.value;
-        return acc;
-    }, {});
+    let formattedOptions: any = new Map();
+    for (const option of options) {
+        formattedOptions.set(option.name, option);
+    }
+    return formattedOptions;
 }
 
 export {

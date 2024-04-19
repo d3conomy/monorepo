@@ -15,7 +15,7 @@ declare const createProcessOption: ({ name, description, value, required, defaul
     defaultValue?: any;
 }) => IProcessOption;
 declare const compileProcessOptions: ({ values, options }: {
-    values: Array<IProcessOption>;
+    values?: IProcessOption[] | undefined;
     options: IProcessOptions;
 }) => IProcessOptions;
 declare const formatProcessOptions: (options: IProcessOptions) => any;

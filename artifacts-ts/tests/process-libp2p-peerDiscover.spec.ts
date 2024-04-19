@@ -37,7 +37,7 @@ describe('peerDiscovery', () => {
         expect(result.toString()).to.deep.include(libp2pBootstrap({
             defaultConfig: false,
             multiaddrs
-        }));
+        } as any));
     });
 
     it('should include mdns when enableMDNS is true', () => {

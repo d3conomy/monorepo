@@ -113,13 +113,13 @@ describe('IProcessOptions', () => {
                 {
                     name: 'option1',
                     description: 'Option 1',
-                    value: 123,
+                    defaultValue: 123,
                     required: true
                 },
                 {
                     name: 'option2',
                     description: 'Option 2',
-                    value: 'abc',
+                    defaultValue: 'abc',
                     required: false
                 }
             ];
@@ -138,12 +138,14 @@ describe('IProcessOptions', () => {
                 description: 'Option 1',
                 value: 456,
                 required: true,
+                defaultValue: 123
             });
             expect(compiledOptions[1]).to.deep.equal({
                 name: 'option2',
                 description: 'Option 2',
                 value: 'abc',
                 required: false,
+                defaultValue: 'abc'
             });
 
         });

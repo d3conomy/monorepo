@@ -28,11 +28,11 @@ const streamMuxers = ({
 } = {}) => {
     let streamMuxers: Array<any> = new Array<any>()
 
-    if (enableYamux) {
+    if (enableYamux === true) {
         streamMuxers.push(yamux())
     }
 
-    if (enableMplex) {
+    if (enableMplex === true) {
         streamMuxers.push(mplex())
     }
 

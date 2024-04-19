@@ -47,7 +47,7 @@ const peerDiscovery = ({
         peerDiscovery.push(libp2pBootstrap({
             defaultConfig: useDefaultBootstrap,
             multiaddrs: bootstrapMultiaddrs
-        }))
+        } as any))
     }
     if (enableMDNS) {
         peerDiscovery.push(mdns())

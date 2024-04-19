@@ -1,7 +1,7 @@
 
 import { PublishResult } from '@libp2p/interface'
 import { IProcess, LogLevel, PodProcessId, ProcessStage, logger } from 'd3-artifacts';
-import { Libp2pProcess } from './process';
+import { Libp2pProcess } from './process.js';
 import { GossipSub } from '@chainsafe/libp2p-gossipsub';
 
 class GossipSubProcess implements IProcess {

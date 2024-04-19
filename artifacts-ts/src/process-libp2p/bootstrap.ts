@@ -1,6 +1,6 @@
 import { Multiaddr, multiaddr } from '@multiformats/multiaddr';
 import { bootstrap } from '@libp2p/bootstrap';
-import { IProcessOptions, createProcessOption } from '../process-interface/index.js';
+import { IProcessOption, IProcessOptions, compileProcessOptions, createProcessOption } from '../process-interface/index.js';
 
 
 const bootstrapOptions: IProcessOptions = [
@@ -23,6 +23,9 @@ const bootstrapOptions: IProcessOptions = [
 
 
 
+
+
+
 /**
  * Default bootstrap configuration for libp2p
  * @category Libp2p
@@ -36,18 +39,18 @@ const defaultBootstrapConfig: Array<string> = [
 ]
 
 
-const libp2pBootstrap = ({
-    defaultConfig = true,
-    multiaddrs,
-    list = false
-}: {
-    defaultConfig?: boolean,
-    multiaddrs?: Array<string | Multiaddr>
-    list?: boolean
-} = {}): any => {
-    let addrs: Array<string> = new Array<string>()
+const libp2pBootstrap = (values?: Array<IProcessOption>): any => {
+    let addrs: Array<string> = new Array<string>();
 
-    if (defaultConfig) {
+    const { defaultConfig, multiaddrs, list } = compileProcessOptions({
+        values: values,
+        options: bootstrapOptions
+    }).reduce((acc: any, option: IProcessOption) => {
+        acc[option.name] = option.value;
+        return acc
+    }, {})
+
+    if (defaultConfig === true) {
         defaultBootstrapConfig.forEach((addr: string) => {
             addrs.push(addr)
         })

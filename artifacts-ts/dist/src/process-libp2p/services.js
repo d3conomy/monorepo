@@ -8,7 +8,7 @@ import { uPnPNAT } from '@libp2p/upnp-nat';
 import { ipnsValidator } from 'ipns/validator';
 import { ipnsSelector } from 'ipns/selector';
 import { ping } from '@libp2p/ping';
-import { createProcessOption } from '../process-interface';
+import { createProcessOption } from '../process-interface/index.js';
 const serviceOptions = [
     createProcessOption({
         name: 'enableGossipSub',

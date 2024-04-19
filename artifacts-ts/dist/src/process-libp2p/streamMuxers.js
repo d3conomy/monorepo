@@ -16,10 +16,10 @@ const streamMuxerOptions = [
 ];
 const streamMuxers = ({ enableYamux = true, enableMplex = false } = {}) => {
     let streamMuxers = new Array();
-    if (enableYamux) {
+    if (enableYamux === true) {
         streamMuxers.push(yamux());
     }
-    if (enableMplex) {
+    if (enableMplex === true) {
         streamMuxers.push(mplex());
     }
     return streamMuxers;
