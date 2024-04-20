@@ -15,24 +15,25 @@ interface IProcessCommandOutput {
     output: any;
     runtime: number;
 }
-interface IProcessCommand<T = ProcessType> {
-    type: T;
+interface IProcessCommand {
+    type: ProcessType;
     name: string;
-    action: (args?: Array<IProcessCommandArgInput>, process?: IProcessContainer<T>['process']) => any | Promise<any>;
+    action: (args?: Array<IProcessCommandArgInput>, process?: IProcessContainer<ProcessType>['process']) => Promise<any> | any;
     args: Array<IProcessCommandArg>;
     description?: string;
 }
 interface IProcessExecuteCommand {
-    command: IProcessCommand<ProcessType>['name'];
-    params: Array<IProcessCommandArgInput>;
+    command: IProcessCommand['name'];
+    params?: Array<IProcessCommandArgInput>;
     result?: IProcessCommandOutput;
 }
-interface IProcessCommands extends Map<IProcessCommand['name'], IProcessCommand>, IProcessContainer<IProcessCommand['name']> {
-    type: IProcessCommand['name'];
+interface IProcessCommands extends Map<IProcessCommand['name'], IProcessCommand>, IProcessContainer<ProcessType> {
+    type: IProcessCommand['type'];
     process?: IProcessContainer | undefined;
     isUnique(name: IProcessCommand['name']): boolean;
+    loadProcess(proc: IProcessContainer<IProcessCommand['type']>): void;
 }
-declare class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> implements IProcessCommands, IProcessContainer<IProcessCommand['name']> {
+declare class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> implements IProcessCommands, IProcessContainer<IProcessCommand['type']> {
     readonly type: ProcessType;
     process?: IProcessContainer | undefined;
     constructor({ commands, proc }?: {
@@ -40,6 +41,7 @@ declare class ProcessCommands extends Map<IProcessCommand['name'], IProcessComma
         proc?: any;
     });
     isUnique(name: IProcessCommand['name']): boolean;
+    loadProcess(proc: IProcessContainer<ProcessType>): void;
 }
 declare const createProcessCommandArgs: ({ name, description, required, defaultValue }: {
     name: string;
@@ -49,7 +51,7 @@ declare const createProcessCommandArgs: ({ name, description, required, defaultV
 }) => IProcessCommandArg;
 declare const createProcessCommand: ({ name, action, args, type, description }: {
     name: string;
-    action: IProcessCommand['action'];
+    action: () => Promise<any>;
     args?: IProcessCommandArg[] | undefined;
     type?: ProcessType | undefined;
     description?: string | undefined;

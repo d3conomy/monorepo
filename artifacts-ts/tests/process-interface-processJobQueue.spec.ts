@@ -56,7 +56,7 @@ describe('JobQueue', () => {
             status: 'initializing'
         } as IProcessJob;
 
-        const processCommand = createProcessCommand({ name: 'test', action: () => { return "test" }});
+        const processCommand = createProcessCommand({ name: 'test', action: async (): Promise<string> => { return "test" }});
 
         const processContainer = createProcessContainer('test', () => { return "test" });
 
@@ -97,7 +97,7 @@ describe('JobQueue', () => {
     it('should addrun n processes to the queue', async function () {
         this.timeout(0);
         let processCommandsList = [];
-        processCommandsList.push(createProcessCommand({ name: 'test', action: () => { return "test" }}));
+        processCommandsList.push(createProcessCommand({ name: 'test', action: async () => { return "test" }}));
         const processContainer = createProcessContainer('test', () => { return "test" });
 
         let processCommands = new ProcessCommands({
@@ -132,7 +132,7 @@ describe('JobQueue', () => {
     it('should run 100000 processes in parallel', async function () {
         this.timeout(0);
         let processCommandsList = [];
-        processCommandsList.push(createProcessCommand({ name: 'test', action: () => { return "test" }}));
+        processCommandsList.push(createProcessCommand({ name: 'test', action: async () => { return "test" }}));
         const processContainer = createProcessContainer('test', () => { return "test" });
 
         let processCommands = new ProcessCommands({
@@ -174,7 +174,7 @@ describe('JobQueue', () => {
             status: 'initializing'
         } as IProcessJob;
 
-        const processCommand = createProcessCommand({ name: 'test', action: () => { return "test" }});
+        const processCommand = createProcessCommand({ name: 'test', action: async () => { return "test" }});
 
         const processContainer = createProcessContainer('test', () => { return "test" });
 
@@ -194,7 +194,7 @@ describe('JobQueue', () => {
     it('should execute n jobs', async function () {
         this.timeout(0);
         let processCommandsList = [];
-        processCommandsList.push(createProcessCommand({ name: 'test', action: () => { return "test" }}));
+        processCommandsList.push(createProcessCommand({ name: 'test', action: async () => { return "test" }}));
         const processContainer = createProcessContainer('test', () => { return "test" });
 
         let processCommands = new ProcessCommands({

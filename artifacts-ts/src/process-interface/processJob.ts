@@ -10,7 +10,7 @@ import { ProcessStage } from "./processStages.js";
  */
 interface IProcessJob extends IProcessExecuteCommand {
     jobId: JobId;
-    status: ProcessStage;
+    status?: ProcessStage;
 }
 
 

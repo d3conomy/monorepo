@@ -8,14 +8,14 @@ interface IProcessContainer<T = ProcessType> {
     process?: any
     options?: IProcessOptions
 
-    init?: (options?: IProcessOptions) => Promise<void>
+    init?: (options?: IProcessOptions) => Promise<any>
 }
 
 const createProcessContainer = <T = ProcessType>(
     type: T,
     process?: any,
     options?: IProcessOptions,
-    init?: (options?: IProcessOptions) => Promise<void>
+    init?: (options?: IProcessOptions) => Promise<any>
 ): IProcessContainer<T> => {
     return {
         type,

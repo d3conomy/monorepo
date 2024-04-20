@@ -13,7 +13,7 @@ const libp2pOptions = (inputOptions) => {
     let loadedOptions = new Array();
     const autostartOption = createProcessOption({
         name: 'autoStart',
-        description: 'Auto start',
+        description: 'Auto start the node',
         required: false,
         defaultValue: true
     });

@@ -221,26 +221,26 @@ describe('Process', () => {
             ]
         });
         it('should initialize the process', async () => {
-            const process = new Process(processId, processContainer, processCommands);
+            const process = new Process(processId, processContainer, [...processCommands.values()]);
             await process.init();
             expect(process.check()).to.be.true;
             expect(process.status()).to.equal(ProcessStage.PENDING);
             // Add more assertions here to verify the initialization
         });
         it('should start the process', async () => {
-            const process = new Process(processId, processContainer, processCommands);
+            const process = new Process(processId, processContainer, [...processCommands.values()]);
             await process.start();
             expect(process.status()).to.equal(ProcessStage.PENDING);
             // Add more assertions here to verify the starting of the process
         });
         it('should stop the process', async () => {
-            const process = new Process(processId, processContainer, processCommands);
+            const process = new Process(processId, processContainer, [...processCommands.values()]);
             await process.stop();
             expect(process.status()).to.equal(ProcessStage.PENDING);
             // Add more assertions here to verify the stopping of the process
         });
         it('should restart the process', async () => {
-            const process = new Process(processId, processContainer, processCommands);
+            const process = new Process(processId, processContainer, [...processCommands.values()]);
             await process.init();
             for (let i = 0; i < NUM_TESTS; i++) {
                 const jobId = new JobId({

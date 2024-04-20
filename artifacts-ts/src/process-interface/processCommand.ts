@@ -21,29 +21,30 @@ interface IProcessCommandOutput {
     runtime: number;
 }
 
-interface IProcessCommand<T = ProcessType> {
-    type: T;
+interface IProcessCommand {
+    type: ProcessType;
     name: string;
-    action: (args?: Array<IProcessCommandArgInput>, process?: IProcessContainer<T>['process']) => any | Promise<any>;
+    action: (args?: Array<IProcessCommandArgInput>, process?: IProcessContainer<ProcessType>['process']) => Promise<any> | any ;
     args: Array<IProcessCommandArg>;
     description?: string;
 }
 
 interface IProcessExecuteCommand {
-    command: IProcessCommand<ProcessType>['name'];
-    params: Array<IProcessCommandArgInput>;
+    command: IProcessCommand['name'];
+    params?: Array<IProcessCommandArgInput>;
     result?: IProcessCommandOutput;
 }
 
-interface IProcessCommands extends Map<IProcessCommand['name'], IProcessCommand>, IProcessContainer<IProcessCommand['name']> {
-    type: IProcessCommand['name'];
+interface IProcessCommands extends Map<IProcessCommand['name'], IProcessCommand>, IProcessContainer<ProcessType> {
+    type: IProcessCommand['type'];
     process?: IProcessContainer | undefined;
 
     isUnique(name: IProcessCommand['name']): boolean;
+    loadProcess(proc: IProcessContainer<IProcessCommand['type']>): void
 }
 
 
-class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> implements IProcessCommands, IProcessContainer<IProcessCommand['name']>{
+class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> implements IProcessCommands, IProcessContainer<IProcessCommand['type']>{
     public readonly type: ProcessType = ProcessType.CUSTOM;
     public process?: IProcessContainer | undefined;
 
@@ -70,6 +71,10 @@ class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> impl
 
     isUnique(name: IProcessCommand['name']) {
         return !this.has(name);
+    }
+
+    loadProcess(proc: IProcessContainer<ProcessType>): void {
+        this.process = proc
     }
 }
 
@@ -104,8 +109,8 @@ const createProcessCommand = ({
     description
 }: {
     name: string,
-    action: IProcessCommand['action'],
-    args?: Array<IProcessCommandArg>,
+    action: () => Promise<any>,
+    args?: Array<IProcessCommandArg>, 
     type?: ProcessType
     description?: string
 }): IProcessCommand => {

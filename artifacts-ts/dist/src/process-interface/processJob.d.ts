@@ -8,7 +8,7 @@ import { ProcessStage } from "./processStages.js";
  */
 interface IProcessJob extends IProcessExecuteCommand {
     jobId: JobId;
-    status: ProcessStage;
+    status?: ProcessStage;
 }
 declare const jobRunner: (job: IProcessJob, processCommand: IProcessCommand, process?: IProcessContainer) => Promise<IProcessJob>;
 declare const commandSelector: (job: IProcessJob, processCommands: IProcessCommands) => IProcessCommand;

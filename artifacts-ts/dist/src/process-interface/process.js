@@ -1,3 +1,4 @@
+import { ProcessCommands } from "./processCommand.js";
 import { JobQueue } from "./processJobQueue.js";
 import { ProcessStage } from "./processStages.js";
 class Process {
@@ -8,7 +9,7 @@ class Process {
     constructor(id, process, commands) {
         this.id = id;
         this.process = process;
-        this.commands = commands;
+        this.commands = new ProcessCommands({ commands, proc: this.process.process });
         this.jobQueue = new JobQueue();
     }
     check() {
@@ -20,8 +21,12 @@ class Process {
     async init() {
         this.jobQueue.init(this.commands);
         if (this.process?.init) {
-            await this.process.init(this.process.options);
+            let processExec = await this.process.init();
+            if (!this.process?.process) {
+                this.process.process = processExec;
+            }
         }
+        this.commands.loadProcess(this.process?.process);
     }
     async start(parallel) {
         if (parallel) {
@@ -40,6 +45,9 @@ class Process {
     }
 }
 const createProcess = (id, process, commands) => {
-    return new Process(id, process, commands);
+    if (commands instanceof Array) {
+        return new Process(id, process, commands);
+    }
+    return new Process(id, process, [...commands.values()]);
 };
 export { createProcess, Process };

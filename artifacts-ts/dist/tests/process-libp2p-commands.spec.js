@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { createLibp2p } from 'libp2p';
-import { runCommand } from "../src/process-interface/index.js";
+import { ProcessCommands, runCommand } from "../src/process-interface/index.js";
 import { libp2pCommands } from '../src/process-libp2p/commands.js';
 import { JobId, SystemId } from '../src/id-reference-factory/index.js';
 describe('ProcessCommands', () => {
@@ -9,10 +9,7 @@ describe('ProcessCommands', () => {
     let commands;
     beforeEach(async () => {
         process = await createLibp2p();
-        commands = libp2pCommands;
-        if (commands.process) {
-            commands.process.process = process;
-        }
+        commands = new ProcessCommands({ commands: libp2pCommands, proc: process });
     });
     afterEach(async () => {
         await process.stop();

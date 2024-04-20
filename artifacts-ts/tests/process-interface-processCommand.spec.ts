@@ -17,7 +17,7 @@ describe('Process Command Tests', () => {
         value: 'test',
     };
 
-    const processCommand: IProcessCommand<ProcessType.CUSTOM> = {
+    const processCommand: IProcessCommand = {
         name: 'testCommand',
         type: ProcessType.CUSTOM,
         args: [processCommandArg],

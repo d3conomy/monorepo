@@ -1,120 +1,145 @@
-import { ProcessCommands, createProcessCommand, createProcessCommandArgs } from "../process-interface/index.js";
+import { ProcessType } from "../process-interface/index.js";
+import { peerIdFromString } from '@libp2p/peer-id';
 const commands = [
-    createProcessCommand({
+    {
         name: 'start',
-        action: async (args, process) => {
-            await process.start();
-        }
-    }),
-    createProcessCommand({
+        type: ProcessType.LIBP2P,
+        action: async (args = new Array, process) => {
+            await process?.start();
+        },
+        args: []
+    },
+    {
         name: 'stop',
+        type: ProcessType.LIBP2P,
         action: async (args, process) => {
-            await process.stop();
-        }
-    }),
-    createProcessCommand({
+            await process?.stop();
+        },
+        args: []
+    },
+    {
         name: 'status',
+        type: ProcessType.LIBP2P,
         action: async (args, process) => {
-            return process.status;
-        }
-    }),
-    createProcessCommand({
+            return process?.status;
+        },
+        args: []
+    },
+    {
         name: 'peerId',
+        type: ProcessType.LIBP2P,
         action: async (args, process) => {
-            return process.peerId;
-        }
-    }),
-    createProcessCommand({
+            return process?.peerId;
+        },
+        args: []
+    },
+    {
         name: 'multiaddrs',
+        type: ProcessType.LIBP2P,
         action: async (args, process) => {
-            return process.getMultiaddrs();
-        }
-    }),
-    createProcessCommand({
+            return process?.getMultiaddrs();
+        },
+        args: []
+    },
+    {
         name: 'peers',
+        type: ProcessType.LIBP2P,
         action: async (args, process) => {
-            return process.getPeers();
-        }
-    }),
-    createProcessCommand({
+            return process?.getPeers();
+        },
+        args: []
+    },
+    {
         name: 'connections',
+        type: ProcessType.LIBP2P,
         action: async (args, process) => {
-            return process.getConnections(args?.find(arg => arg.name === 'peerId')?.value);
+            if (args) {
+                const peerId = args.find(arg => arg.name === 'peerId');
+                if (peerId) {
+                    return process?.getConnections(peerIdFromString(peerId.value));
+                }
+            }
         },
         args: [
-            createProcessCommandArgs({
+            {
                 name: 'peerId',
                 description: 'Peer ID',
                 required: true
-            })
+            }
         ]
-    }),
-    createProcessCommand({
+    },
+    {
         name: 'protocols',
+        type: ProcessType.LIBP2P,
         action: async (args, process) => {
-            return process.getProtocols();
-        }
-    }),
-    createProcessCommand({
+            return process?.getProtocols();
+        },
+        args: []
+    },
+    {
         name: 'listeners',
+        type: ProcessType.LIBP2P,
         action: async (args, process) => {
-            return process.listenerCount(args?.find(arg => arg.name === 'eventName')?.value);
+            return process?.listenerCount(args?.find(arg => arg.name === 'eventName')?.value);
         },
         args: [
-            createProcessCommandArgs({
+            {
                 name: 'eventName',
                 description: 'Event Name',
                 required: true,
-                defaultValue: "peer:connect"
-            })
+                default: "peer:connect"
+            }
         ]
-    }),
-    createProcessCommand({
+    },
+    {
         name: 'dial',
+        type: ProcessType.LIBP2P,
         action: async (args, process) => {
-            return process.dial(args?.find(arg => arg.name === 'peerId')?.value);
+            return process?.dial(args?.find(arg => arg.name === 'peerId')?.value);
         },
         args: [
-            createProcessCommandArgs({
+            {
                 name: 'peerId',
                 description: 'Peer ID',
                 required: true
-            })
+            }
         ]
-    }),
-    createProcessCommand({
+    },
+    {
         name: 'hangup',
+        type: ProcessType.LIBP2P,
         action: async (args, process) => {
-            return process.hangUp(args?.find(arg => arg.name === 'peerId')?.value);
+            return process?.hangUp(args?.find(arg => arg.name === 'peerId')?.value);
         },
         args: [
-            createProcessCommandArgs({
+            {
                 name: 'peerId',
                 description: 'Peer ID',
                 required: true
-            })
+            }
         ]
-    }),
-    createProcessCommand({
+    },
+    {
         name: 'dialProtocol',
+        type: ProcessType.LIBP2P,
         action: async (args, process) => {
-            return process.dialProtocol(args?.find(arg => arg.name === 'peerId')?.value, args?.find(arg => arg.name === 'protocol')?.value);
+            return process?.dialProtocol(args?.find(arg => arg.name === 'peerId')?.value, args?.find(arg => arg.name === 'protocol')?.value);
         },
         args: [
-            createProcessCommandArgs({
+            {
                 name: 'peerId',
                 description: 'Peer ID',
                 required: true
-            }),
-            createProcessCommandArgs({
+            },
+            {
                 name: 'protocol',
                 description: 'Protocol',
                 required: true
-            })
+            }
         ]
-    })
+    }
 ];
-const libp2pCommands = new ProcessCommands({
-    commands
-});
-export { libp2pCommands };
+// const libp2pCommands = new ProcessCommands({
+//     commands
+// });
+export { commands as libp2pCommands };

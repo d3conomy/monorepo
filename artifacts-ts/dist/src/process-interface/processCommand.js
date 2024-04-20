@@ -17,6 +17,9 @@ class ProcessCommands extends Map {
     isUnique(name) {
         return !this.has(name);
     }
+    loadProcess(proc) {
+        this.process = proc;
+    }
 }
 const createProcessCommandArgs = ({ name, description, required, defaultValue }) => {
     return {

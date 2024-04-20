@@ -284,7 +284,7 @@ describe('Process', () => {
         });
 
         it('should initialize the process', async () => {
-            const process = new Process(processId, processContainer, processCommands);
+            const process = new Process(processId, processContainer, [...processCommands.values()]);
 
             await process.init();
 
@@ -294,7 +294,7 @@ describe('Process', () => {
         });
 
         it('should start the process', async () => {
-            const process = new Process(processId, processContainer, processCommands);
+            const process = new Process(processId, processContainer, [...processCommands.values()]);
 
             await process.start();
 
@@ -303,7 +303,7 @@ describe('Process', () => {
         });
 
         it('should stop the process', async () => {
-            const process = new Process(processId, processContainer, processCommands);
+            const process = new Process(processId, processContainer, [...processCommands.values()]);
 
             await process.stop();
 
@@ -312,7 +312,7 @@ describe('Process', () => {
         });
 
         it('should restart the process', async () => {
-            const process = new Process(processId, processContainer, processCommands);
+            const process = new Process(processId, processContainer, [...processCommands.values()]);
 
             await process.init();
 

@@ -1,5 +1,6 @@
 import { PodProcessId } from "../id-reference-factory/index.js"
-import { IProcessCommands } from "./processCommand.js"
+import { libp2pCommands } from "../process-libp2p/commands.js"
+import { IProcessCommand, IProcessCommands, ProcessCommands } from "./processCommand.js"
 import { IProcessContainer } from "./processContainer.js"
 import { JobQueue } from "./processJobQueue.js"
 import { IProcessOptions } from "./processOptions.js"
@@ -8,7 +9,7 @@ import { ProcessStage } from "./processStages.js"
 interface IProcess {
     id: PodProcessId
     process?: IProcessContainer
-    commands?: IProcessCommands
+    commands: IProcessCommands
     jobQueue: JobQueue
 
     check(): boolean
@@ -22,17 +23,17 @@ interface IProcess {
 class Process implements IProcess {
     id: PodProcessId;
     process?: IProcessContainer;
-    commands: IProcessCommands;
+    commands: ProcessCommands;
     jobQueue: JobQueue;
 
     constructor(
         id: PodProcessId,
         process: IProcessContainer,
-        commands: IProcessCommands
+        commands: Array<IProcessCommand>
     ) {
         this.id = id;
         this.process = process;
-        this.commands = commands;
+        this.commands = new ProcessCommands({commands, proc: this.process.process});
         this.jobQueue = new JobQueue();
     }
 
@@ -47,8 +48,14 @@ class Process implements IProcess {
     async init(): Promise<void> {
         this.jobQueue.init(this.commands);
         if (this.process?.init) {
-            await this.process.init(this.process.options);
+            let processExec = await this.process.init();
+
+            if (!this.process?.process) {
+                this.process.process = processExec;
+            }
         }
+
+        this.commands.loadProcess(this.process?.process)
     }
 
     async start(parallel?: boolean): Promise<void> {
@@ -73,9 +80,12 @@ class Process implements IProcess {
 const createProcess = (
     id: PodProcessId,
     process: IProcessContainer,
-    commands: IProcessCommands
+    commands: Array<IProcessCommand> | ProcessCommands
 ): IProcess => {
-    return new Process(id, process, commands);
+    if (commands instanceof Array) {
+        return new Process(id, process, commands);
+    }
+    return new Process(id, process, [...commands.values()])
 }
 
 

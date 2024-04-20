@@ -6,7 +6,7 @@ import { JobId, PodProcessId, SystemId } from '../src/id-reference-factory/index
 import { ProcessType } from '../src/index.js';
 
 describe('Process Job', () => {
-    let processCommand: IProcessCommand<ProcessType.CUSTOM>;
+    let processCommand: IProcessCommand;
     let processCommands: IProcessCommands;
     let jobId: JobId;
 
