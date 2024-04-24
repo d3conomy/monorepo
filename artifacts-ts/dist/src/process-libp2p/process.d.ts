@@ -5,9 +5,10 @@ declare class Libp2pProcess extends Process implements IProcess {
         id: PodProcessId;
         process?: IProcessContainer;
         options?: Array<IProcessOption>;
-        commands: Array<IProcessCommand>;
+        commands?: Array<IProcessCommand>;
     });
     stop(): Promise<void>;
 }
-export { Libp2pProcess };
+declare const createLibp2pProcess: (id: PodProcessId, options: Array<IProcessOption>) => Promise<Libp2pProcess>;
+export { Libp2pProcess, createLibp2pProcess };
 //# sourceMappingURL=process.d.ts.map

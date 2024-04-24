@@ -1,10 +1,10 @@
 import { createEd25519PeerId } from '@libp2p/peer-id-factory';
 import { peerIdFromString, peerIdFromPeerId } from '@libp2p/peer-id';
 import { PeerId } from '@libp2p/interface';
-import { IProcessOptions, createProcessOption } from '../process-interface/index.js';
+import { IProcessOptionsList, createProcessOption } from '../process-interface/index.js';
 
 
-const peerIdOptions: IProcessOptions = [
+const peerIdOptions: IProcessOptionsList = [
     createProcessOption({
         name: 'id',
         description: 'PeerId',

@@ -1,5 +1,5 @@
-import { IProcessOptions } from '../process-interface';
-declare const transportOptions: IProcessOptions;
+import { IProcessOptionsList } from '../process-interface/index.js';
+declare const transportOptions: IProcessOptionsList;
 declare const transports: ({ enableWebSockets, enableWebTransport, enableTcp, enableWebRTC, enableCircuitRelayTransport, enableCircuitRelayTransportDiscoverRelays, }?: {
     enableWebSockets?: boolean | undefined;
     enableWebTransport?: boolean | undefined;

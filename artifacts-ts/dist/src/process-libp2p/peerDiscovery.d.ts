@@ -1,6 +1,6 @@
 import { Multiaddr } from '@multiformats/multiaddr';
-import { IProcessOptions } from '../process-interface/processOptions.js';
-declare const peerDiscoveryOptions: IProcessOptions;
+import { IProcessOptionsList } from '../process-interface/processOptions.js';
+declare const peerDiscoveryOptions: IProcessOptionsList;
 /**
  * Default Peer Discover libp2p options
  * @category Libp2p

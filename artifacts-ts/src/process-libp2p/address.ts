@@ -1,5 +1,7 @@
 import { Multiaddr } from "@multiformats/multiaddr";
-import { IProcessOptions, createProcessOption, formatProcessOptions } from "../process-interface/index.js";
+import { IProcessOption, IProcessOptionsList, ProcessOption, ProcessOptions, compileProcessOptions, createProcessOption } from "../process-interface/index.js";
+import { converMaptoList } from "./options.js";
+// import { libp2pOptions } from "./options.js";
  
 const setListenAddresses = (
     multiaddrs: Array<Multiaddr>
@@ -9,7 +11,7 @@ const setListenAddresses = (
     }
 }
 
-const listenAddressesOptions: IProcessOptions = [
+const listenAddressesOptions: IProcessOptionsList = [
     createProcessOption({
         name: 'enableTcp',
         description: 'Enable TCP transport',
@@ -92,44 +94,79 @@ const listenAddressesOptions: IProcessOptions = [
     })
 ]
 
-const listenAddressesParams = formatProcessOptions(listenAddressesOptions)
+// const defaultListenAddressOptions = {
+//     ...mapProcessOptions(listenAddressesOptions).values()
+// }
 
-const listenAddresses = ({
-    enableTcp,
-    tcpPort,
-    enableIp4,
-    ip4Domain,
-    enableUdp,
-    udpPort,
-    enableIp6,
-    ip6Domain,
-    enableQuicv1,
-    enableWebTransport,
-    enableWebSockets,
-    enableWebRTC,
-    enableWebRTCStar,
-    webRTCStarAddress,
-    enableCircuitRelayTransport,
-    additionalMultiaddrs
-} : {
-    enableTcp?: boolean,
-    tcpPort?: number,
-    enableIp4?: boolean,
-    ip4Domain?: string,
-    enableUdp?: boolean,
-    udpPort?: number,
-    enableIp6?: boolean,
-    ip6Domain?: string,
-    enableQuicv1?: boolean,
-    enableWebTransport?: boolean,
-    enableWebSockets?: boolean,
-    enableWebRTC?: boolean,
-    enableWebRTCStar?: boolean,
-    webRTCStarAddress?: Multiaddr | string,
-    enableCircuitRelayTransport?: boolean,
-    additionalMultiaddrs?: Array<Multiaddr | string>
-} = {}): { listen: Array<string> } => {
-    let listenAddresses: Array<string> = new Array<string>()
+// const listenAddressesParams = mapProcessOptions(listenAddressesOptions)
+
+// const listenAddresses = ({
+//     enableTcp,
+//     tcpPort,
+//     enableIp4,
+//     ip4Domain,
+//     enableUdp,
+//     udpPort,
+//     enableIp6,
+//     ip6Domain,
+//     enableQuicv1,
+//     enableWebTransport,
+//     enableWebSockets,
+//     enableWebRTC,
+//     enableWebRTCStar,
+//     webRTCStarAddress,
+//     enableCircuitRelayTransport,
+//     additionalMultiaddrs
+// } : {
+//     enableTcp?: boolean,
+//     tcpPort?: number,
+//     enableIp4?: boolean,
+//     ip4Domain?: string,
+//     enableUdp?: boolean,
+//     udpPort?: number,
+//     enableIp6?: boolean,
+//     ip6Domain?: string,
+//     enableQuicv1?: boolean,
+//     enableWebTransport?: boolean,
+//     enableWebSockets?: boolean,
+//     enableWebRTC?: boolean,
+//     enableWebRTCStar?: boolean,
+//     webRTCStarAddress?: Multiaddr | string,
+//     enableCircuitRelayTransport?: boolean,
+//     additionalMultiaddrs?: Array<Multiaddr | string>
+// } = {}): { listen: Array<string> } => {
+
+const listenAddresses = ({...inputValues}): { listen: Array<string> } => {
+    console.log(`listenAddresses inputValues: ${JSON.stringify(inputValues)}`)
+    // const formattedInputValues = converMaptoList(inputValues)
+    // console.log(`formattedInputValues: ${JSON.stringify(formattedInputValues)}`)
+    const compiledListenAddressOptions = compileProcessOptions({values: inputValues, options: listenAddressesOptions})
+    // const compiledListenAddressOptions = injectDefaultValues({values: formattedInputValues, options: listenAddressesOptions})
+    // console.log(`compiledListenAddressOptions: ${JSON.stringify(compiledListenAddressOptions)}`)
+
+    // const listenAddressesParams = mapProcessOptions(listenAddressesOptions)
+
+    const {
+        enableTcp,
+        tcpPort,
+        enableIp4,
+        ip4Domain,
+        enableUdp,
+        udpPort,
+        enableIp6,
+        ip6Domain,
+        enableQuicv1,
+        enableWebTransport,
+        enableWebSockets,
+        enableWebRTC,
+        enableWebRTCStar,
+        webRTCStarAddress,
+        enableCircuitRelayTransport,
+        additionalMultiaddrs
+    } = compiledListenAddressOptions
+
+
+    const listenAddresses: Array<string> = []
 
     if (enableIp4) {
         if (enableTcp) {
@@ -192,6 +229,8 @@ const listenAddresses = ({
             }
         })
     }
+
+    console.log(`listenAddresses completed: ${JSON.stringify(listenAddresses)}`)
     return { listen: listenAddresses }
 }
 

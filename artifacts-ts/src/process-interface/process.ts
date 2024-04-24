@@ -1,9 +1,10 @@
+import { Libp2p } from "libp2p"
 import { PodProcessId } from "../id-reference-factory/index.js"
 import { libp2pCommands } from "../process-libp2p/commands.js"
 import { IProcessCommand, IProcessCommands, ProcessCommands } from "./processCommand.js"
 import { IProcessContainer } from "./processContainer.js"
 import { JobQueue } from "./processJobQueue.js"
-import { IProcessOptions } from "./processOptions.js"
+import { IProcessOptionsList } from "./processOptions.js"
 import { ProcessStage } from "./processStages.js"
 
 interface IProcess {
@@ -35,6 +36,7 @@ class Process implements IProcess {
         this.process = process;
         this.commands = new ProcessCommands({commands, proc: this.process.process});
         this.jobQueue = new JobQueue();
+
     }
 
     check(): boolean {
@@ -48,10 +50,14 @@ class Process implements IProcess {
     async init(): Promise<void> {
         this.jobQueue.init(this.commands);
         if (this.process?.init) {
-            let processExec = await this.process.init();
+            const processExec: Libp2p = await this.process.init(this.process?.options);
 
-            if (!this.process?.process) {
-                this.process.process = processExec;
+            // console.log(`processExec: ${processExec}`)
+
+            if (processExec && this.process.process === undefined) {
+                if (this.process?.loadProcess) {
+                    this.process?.loadProcess(processExec);
+                }   
             }
         }
 

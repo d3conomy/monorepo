@@ -1,22 +1,22 @@
 import { } from '@libp2p/interfaces'
 import { yamux } from '@chainsafe/libp2p-yamux'
 import { mplex } from '@libp2p/mplex'
-import { IProcessOptions } from '../process-interface'
+import { IProcessOptionsList, createProcessOption } from '../process-interface/index.js'
 
 
-const streamMuxerOptions: IProcessOptions = [
-    {
+const streamMuxerOptions: IProcessOptionsList = [
+    createProcessOption({
         name: 'enableYamux',
         description: 'Enable Yamux',
         required: false,
         defaultValue: true
-    },
-    {
+    }),
+    createProcessOption({
         name: 'enableMplex',
         description: 'Enable Mplex',
         required: false,
         defaultValue: false
-    }
+    })
 ] 
 
 const streamMuxers = ({

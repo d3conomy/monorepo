@@ -1,11 +1,12 @@
 import { ProcessStage } from "./processStages.js";
 const jobRunner = async (job, processCommand, process) => {
-    let output = undefined;
+    let output;
     const startTime = new Date();
     try {
         job.status = ProcessStage.RUNNING;
         // console.log(`Job ${job.jobId} started, running command ${job.command}, with params: ${job.params}, on process ${process?.process}`)
         output = await processCommand.action(job.params, process?.process);
+        console.log(`Job ${job.jobId} finished, with output: ${output}`);
         job.status = ProcessStage.FINISHED;
     }
     catch (error) {
@@ -30,7 +31,6 @@ const commandSelector = (job, processCommands) => {
     if (!command) {
         throw new Error(`Incorrect number of arguments for command ${job.command}`);
     }
-    job.status = ProcessStage.INITIALIZED;
     return command;
 };
 const runCommand = async (jobId, command, processCommands) => {

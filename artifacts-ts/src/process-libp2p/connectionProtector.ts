@@ -1,11 +1,11 @@
 import { ProtectorComponents, preSharedKey } from '@libp2p/pnet'
 import { ConnectionProtector } from '@libp2p/interface'
 import crypto from 'crypto';
-import { IProcessOptions, createProcessOption } from '../process-interface/index.js';
+import { IProcessOptionsList, createProcessOption } from '../process-interface/index.js';
 
 
 
-const connectionProtectorOptions: IProcessOptions = [
+const connectionProtectorOptions: IProcessOptionsList = [
     createProcessOption({
         name: 'swarmKeyAsHex',
         description: 'Swarm key as hexadecimal',

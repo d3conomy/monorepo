@@ -1,7 +1,7 @@
 import { ProtectorComponents } from '@libp2p/pnet';
 import { ConnectionProtector } from '@libp2p/interface';
-import { IProcessOptions } from '../process-interface/index.js';
-declare const connectionProtectorOptions: IProcessOptions;
+import { IProcessOptionsList } from '../process-interface/index.js';
+declare const connectionProtectorOptions: IProcessOptionsList;
 /**
  * Create a new pre-shared key for the swarm
  * @category Libp2p

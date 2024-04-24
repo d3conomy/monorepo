@@ -1,18 +1,32 @@
 import { createLibp2p } from "libp2p";
-import { Process, ProcessType, compileProcessOptions, createProcessContainer } from "../process-interface/index.js";
-import { buildSubProcesses, libp2pOptions } from "./options.js";
+import { Process, ProcessType, createProcessContainer } from "../process-interface/index.js";
+import { buildSubProcesses } from "./options.js";
+import { libp2pCommands } from "./commands.js";
 class Libp2pProcess extends Process {
     constructor({ id, process, options, commands }) {
         if (!process) {
-            options = compileProcessOptions({ values: options, options: libp2pOptions() });
-            const init = async () => { return await createLibp2p(await buildSubProcesses(options)); };
-            process = createProcessContainer(ProcessType.LIBP2P, undefined, compileProcessOptions({ values: options, options: libp2pOptions() }), init);
+            const init = async (processOptions) => { return await createLibp2p(await buildSubProcesses(processOptions)); };
+            process = process ? process : createProcessContainer({
+                type: ProcessType.LIBP2P,
+                process,
+                options,
+                init
+            });
         }
-        super(id, process, commands);
+        super(id, process, commands ? commands : libp2pCommands);
     }
     async stop() {
         this.jobQueue.stop();
-        this.process?.process.stop();
+        this.process?.process?.stop();
     }
 }
-export { Libp2pProcess };
+const createLibp2pProcess = async (id, options) => {
+    const process = new Libp2pProcess({
+        id,
+        options,
+        commands: libp2pCommands
+    });
+    await process.init();
+    return process;
+};
+export { Libp2pProcess, createLibp2pProcess };

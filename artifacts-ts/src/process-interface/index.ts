@@ -1,7 +1,7 @@
 // import { PodProcessId } from "../id-reference-factory/index.js"
 // import { IProcessCommands } from "./processCommand.js"
 // import { IProcessContainer } from "./processContainer.js"
-// import { IProcessOptions } from "./processOptions.js"
+// import { IProcessOptionsList } from "./processOptions.js"
 // import { ProcessStage } from "./processStages.js"
 
 // /**
@@ -11,7 +11,7 @@
 // interface IProcess {
 //     id: PodProcessId
 //     process?: IProcessContainer | any
-//     options?: IProcessOptions | any
+//     options?: IProcessOptionsList | any
 //     commands?: IProcessCommands
 
 //     checkProcess(): boolean

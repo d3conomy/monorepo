@@ -55,7 +55,7 @@ describe('importProcessContainerFromJSON', () => {
 
 describe('importProcessCommandsFromJSON', () => {
     it('should create process commands from JSON', () => {
-        const process = createProcessContainer<ProcessType.CUSTOM>(ProcessType.CUSTOM, () => { return 'hello' });
+        const process = createProcessContainer<ProcessType.CUSTOM>({type: ProcessType.CUSTOM, process: () => { return 'hello' }});
         const json = {
             commands: [
                 { name: 'command1', action: '() => { return "action1"}' },

@@ -2,9 +2,9 @@ import { mdns } from '@libp2p/mdns'
 import { Multiaddr } from '@multiformats/multiaddr'
 
 import { libp2pBootstrap } from './bootstrap.js'
-import { IProcessOptions, createProcessOption } from '../process-interface/processOptions.js'
+import { IProcessOptionsList, createProcessOption } from '../process-interface/processOptions.js'
 
-const peerDiscoveryOptions: IProcessOptions = [
+const peerDiscoveryOptions: IProcessOptionsList = [
     createProcessOption({
         name: 'enableMDNS',
         description: 'Enable mDNS peer discovery',

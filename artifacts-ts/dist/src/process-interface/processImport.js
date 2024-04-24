@@ -32,7 +32,11 @@ const importFromFile = async (filepath) => {
     }
 };
 const importProcessContainerFromJSON = (json) => {
-    const processContainer = createProcessContainer(isProcessType(json.type), sanitizeEval(json.process), json.options);
+    const processContainer = createProcessContainer({
+        type: isProcessType(json.type),
+        process: sanitizeEval(json.process),
+        options: json.options
+    });
     return processContainer;
 };
 const importProcessCommandsFromJSON = (process, json) => {

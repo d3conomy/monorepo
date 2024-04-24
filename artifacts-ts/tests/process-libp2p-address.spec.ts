@@ -1,10 +1,11 @@
 import { expect } from 'chai';
 
 import { listenAddressesConfig as listenAddresses } from '../src/process-libp2p/address.js';
+import { IProcessOptionsList, createProcessOption } from './index.js';
 
 describe('listenAddresses', () => {
     it('should return an array of listen addresses', () => {
-        const result = listenAddresses({
+        const result: { [key: string]: any } = listenAddresses({
             enableTcp: true,
             tcpPort: 8080,
             enableIp4: true,
@@ -47,7 +48,7 @@ describe('listenAddresses', () => {
         expect(() => {
             listenAddresses({
                 enableWebRTCStar: true
-            });
+             });
         }).to.throw('webrtcStarAddress must be provided');
     });
 });

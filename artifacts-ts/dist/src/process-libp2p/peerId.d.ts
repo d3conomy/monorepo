@@ -1,6 +1,6 @@
 import { PeerId } from '@libp2p/interface';
-import { IProcessOptions } from '../process-interface/index.js';
-declare const peerIdOptions: IProcessOptions;
+import { IProcessOptionsList } from '../process-interface/index.js';
+declare const peerIdOptions: IProcessOptionsList;
 /**
  * Create a PeerId
  * @category Libp2p

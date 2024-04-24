@@ -38,7 +38,8 @@ class JobQueue {
      * @returns The job with the result
      */
     async execute(job: IProcessJob): Promise<IProcessJob> {
-        const result =  await runCommand(job.jobId, job, this.processCommands);
+        const result = await runCommand(job.jobId, job, this.processCommands);
+        console.log(`Job ${job.jobId} finished in ${result.result?.runtime}ms, with output: ${result.result?.output}`)
         this.completed.push(result);
         return result;
     }
@@ -52,7 +53,7 @@ class JobQueue {
             const job = this.dequeue();
             if (job) {
                 this.running = job.jobId;
-                const result = await this.execute(job);
+                await this.execute(job);
                 // this.completed.push(result);
                 this.running = undefined;
             }

@@ -1,9 +1,9 @@
 
 import { noise } from '@chainsafe/libp2p-noise'
 import { tls } from '@libp2p/tls'
-import { IProcessOptions, createProcessOption } from '../process-interface/index.js'
+import { IProcessOptionsList, createProcessOption } from '../process-interface/index.js'
 
-const connectionEncryptionOptions: IProcessOptions = [
+const connectionEncryptionOptions: IProcessOptionsList = [
     createProcessOption({
         name: 'enableNoise',
         description: 'Enable Noise encryption',

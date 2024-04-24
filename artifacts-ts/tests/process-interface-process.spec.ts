@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { createProcess, IProcess, Process } from '../src/process-interface/process.js';
 import { createProcessCommand, createProcessContainer, createProcessOption, IProcessCommands, IProcessContainer, IProcessJob, ProcessCommands, ProcessStage, ProcessType } from '../src/process-interface/index.js';
 import { JobId, MoonbaseId, PodBayId, PodId, PodProcessId, SystemId } from '../src/id-reference-factory/index.js';
-import exp from 'constants';
+
 
 const NUM_TESTS = 100;
 
@@ -25,12 +25,12 @@ describe('Process', () => {
             podId
         }); 
 
-        const processContainer = createProcessContainer<ProcessType.CUSTOM>(
-            ProcessType.CUSTOM,
-            {
+        const processContainer = createProcessContainer<ProcessType.CUSTOM>({
+            type: ProcessType.CUSTOM,
+            process: {
                 process: '() => console.log("Hello, World")'
             }
-        );
+    });
 
         const processCommands = new ProcessCommands({
             commands: [
@@ -94,12 +94,12 @@ describe('Process', () => {
 
     it('should create a process container', () => {
         // Test the createProcessContainer() method
-        const container = createProcessContainer<ProcessType.CUSTOM>(
-            ProcessType.CUSTOM,
-            {
+        const container = createProcessContainer<ProcessType.CUSTOM>({
+            type: ProcessType.CUSTOM,
+            process: {
                 process: '() => console.log("Hello, World")'
             }
-        );
+    });
         // Add assertions here to verify the container
         expect(container).to.have.property('process');
     });
@@ -116,12 +116,12 @@ describe('Process', () => {
                     })
                 })
             }),
-            createProcessContainer<ProcessType.CUSTOM>(
-                ProcessType.CUSTOM,
-                {
+            createProcessContainer<ProcessType.CUSTOM>({
+                type: ProcessType.CUSTOM,
+                process: {
                     process: '() => console.log("Hello, World")'
                 }
-            ),
+    }),
             new ProcessCommands({
                 commands: [
                     createProcessCommand({
@@ -151,16 +151,16 @@ describe('Process', () => {
                     })
                 })
             }),
-            createProcessContainer<ProcessType.CUSTOM>(
-                ProcessType.CUSTOM,
-                () => console.log('Hello, World'),
-                [ 
+            createProcessContainer<ProcessType.CUSTOM>({
+                type: ProcessType.CUSTOM,
+                process: () => console.log('Hello, World'),
+                options: [ 
                     createProcessOption({
                     name: 'test',
                     value: 'Hello, World'
                 })],
-                async (options) => console.log(options)
-            ),
+                init: async (options) => console.log(options)
+            }),
             new ProcessCommands({
                 commands: [
                     createProcessCommand({
@@ -209,10 +209,10 @@ describe('Process', () => {
                     })
                 })
             }),
-            createProcessContainer<ProcessType.CUSTOM>(
-                ProcessType.CUSTOM,
-                () => console.log("Hello, World")
-            ),
+            createProcessContainer<ProcessType.CUSTOM>({
+                type: ProcessType.CUSTOM,
+                process: () => console.log("Hello, World")
+            }),
             new ProcessCommands({
                 commands: [
                     createProcessCommand({
@@ -263,16 +263,16 @@ describe('Process', () => {
                 })
             })
         })
-        const processContainer: IProcessContainer = createProcessContainer<ProcessType.CUSTOM>(
-            ProcessType.CUSTOM,
-            () => console.log('Hello, World'),
-            [ 
+        const processContainer: IProcessContainer = createProcessContainer<ProcessType.CUSTOM>({
+            type: ProcessType.CUSTOM,
+            process: () => console.log('Hello, World'),
+            options: [ 
                 createProcessOption({
                 name: 'test',
                 value: 'Hello, World'
             })],
-            async (options) => console.log(options)
-        )
+            init: async (options) => console.log(options)
+        })
         const processCommands: IProcessCommands = new ProcessCommands({
             commands: [
                 createProcessCommand({

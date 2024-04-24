@@ -1,5 +1,5 @@
-import { IProcessOptions } from '../process-interface/index.js';
-declare const connectionEncryptionOptions: IProcessOptions;
+import { IProcessOptionsList } from '../process-interface/index.js';
+declare const connectionEncryptionOptions: IProcessOptionsList;
 declare const connectionEncryption: ({ enableNoise, enableTls }?: {
     enableNoise?: boolean | undefined;
     enableTls?: boolean | undefined;

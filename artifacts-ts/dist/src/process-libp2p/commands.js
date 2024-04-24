@@ -95,7 +95,7 @@ const commands = [
         name: 'dial',
         type: ProcessType.LIBP2P,
         action: async (args, process) => {
-            return process?.dial(args?.find(arg => arg.name === 'peerId')?.value);
+            return await process?.dial(args?.find(arg => arg.name === 'peerId')?.value);
         },
         args: [
             {
@@ -109,7 +109,7 @@ const commands = [
         name: 'hangup',
         type: ProcessType.LIBP2P,
         action: async (args, process) => {
-            return process?.hangUp(args?.find(arg => arg.name === 'peerId')?.value);
+            return await process?.hangUp(args?.find(arg => arg.name === 'peerId')?.value);
         },
         args: [
             {
@@ -123,7 +123,7 @@ const commands = [
         name: 'dialProtocol',
         type: ProcessType.LIBP2P,
         action: async (args, process) => {
-            return process?.dialProtocol(args?.find(arg => arg.name === 'peerId')?.value, args?.find(arg => arg.name === 'protocol')?.value);
+            return await process?.dialProtocol(args?.find(arg => arg.name === 'peerId')?.value, args?.find(arg => arg.name === 'protocol')?.value);
         },
         args: [
             {

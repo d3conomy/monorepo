@@ -4,8 +4,11 @@ interface IProcessOption {
     value?: any;
     required?: boolean;
     defaultValue?: any;
+    toParam(): {
+        [key: string]: any;
+    };
 }
-interface IProcessOptions extends Array<IProcessOption> {
+interface IProcessOptionsList extends Array<IProcessOption> {
 }
 declare const createProcessOption: ({ name, description, value, required, defaultValue }: {
     name: string;
@@ -13,11 +16,43 @@ declare const createProcessOption: ({ name, description, value, required, defaul
     value?: any;
     required?: boolean | undefined;
     defaultValue?: any;
-}) => IProcessOption;
+}) => ProcessOption;
+declare const findProcessOption: ({ options, name }: {
+    options: IProcessOptionsList | IProcessOption[] | {
+        [key: string]: any;
+    } | Map<string, any>;
+    name: string;
+}) => IProcessOption | undefined;
 declare const compileProcessOptions: ({ values, options }: {
-    values?: IProcessOption[] | undefined;
-    options: IProcessOptions;
-}) => IProcessOptions;
-declare const formatProcessOptions: (options: IProcessOptions) => any;
-export { compileProcessOptions, createProcessOption, formatProcessOptions, IProcessOption, IProcessOptions };
+    values?: {
+        [key: string]: any;
+    } | undefined;
+    options: IProcessOption[];
+}) => {
+    [key: string]: any;
+};
+declare class ProcessOption implements IProcessOption {
+    name: string;
+    description?: string;
+    value?: any;
+    required?: boolean;
+    defaultValue?: any;
+    constructor({ name, description, value, required, defaultValue }: {
+        name: string;
+        description?: string;
+        value?: any;
+        required?: boolean;
+        defaultValue?: any;
+    });
+    toParam(): {
+        [key: string]: any;
+    };
+}
+declare class ProcessOptions extends Map<ProcessOption['name'], IProcessOption> {
+    constructor(options: Array<IProcessOption> | IProcessOptionsList | Map<string, any> | Partial<ProcessOptions>);
+    toParams(): {
+        [key: string]: any;
+    };
+}
+export { compileProcessOptions, createProcessOption, findProcessOption, IProcessOption, IProcessOptionsList, ProcessOption, ProcessOptions };
 //# sourceMappingURL=processOptions.d.ts.map

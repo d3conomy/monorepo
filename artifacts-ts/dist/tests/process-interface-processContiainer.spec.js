@@ -9,14 +9,14 @@ describe('createProcessContainer', () => {
         const options = [
             createProcessOption({ name: 'someOption', value: 'someValue' })
         ];
-        const result = createProcessContainer(type, process, options);
+        const result = createProcessContainer({ type, process, options });
         expect(result.type).to.equal(type);
         expect(result.process).to.equal(process);
         expect(result.options).to.equal(options);
     });
     it('should create a process container with the given type and default process and options', () => {
         const type = ProcessType.CUSTOM;
-        const result = createProcessContainer(type);
+        const result = createProcessContainer({ type });
         expect(result.type).to.equal(type);
         expect(result.process).to.be.undefined;
         expect(result.options).to.be.undefined;

@@ -1,5 +1,5 @@
-import { IProcessOptions } from '../process-interface/index.js';
-declare const serviceOptions: IProcessOptions;
+import { IProcessOptionsList } from '../process-interface/index.js';
+declare const serviceOptions: IProcessOptionsList;
 /**
  * Default libp2p options
  * @category Libp2p

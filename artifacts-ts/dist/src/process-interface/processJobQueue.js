@@ -28,6 +28,7 @@ class JobQueue {
      */
     async execute(job) {
         const result = await runCommand(job.jobId, job, this.processCommands);
+        console.log(`Job ${job.jobId} finished in ${result.result?.runtime}ms, with output: ${result.result?.output}`);
         this.completed.push(result);
         return result;
     }
@@ -40,7 +41,7 @@ class JobQueue {
             const job = this.dequeue();
             if (job) {
                 this.running = job.jobId;
-                const result = await this.execute(job);
+                await this.execute(job);
                 // this.completed.push(result);
                 this.running = undefined;
             }

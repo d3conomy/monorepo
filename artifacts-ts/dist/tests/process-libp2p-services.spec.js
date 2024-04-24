@@ -3,7 +3,7 @@ import { removePublicAddressesMapper } from '@libp2p/kad-dht';
 import { ipnsValidator } from 'ipns/validator';
 import { ipnsSelector } from 'ipns/selector';
 import { libp2pServices, serviceOptions } from '../src/process-libp2p/services.js';
-import { compileProcessOptions, formatProcessOptions } from '../src/process-interface/processOptions.js';
+import { compileProcessOptions } from '../src/process-interface/processOptions.js';
 describe('libp2p services', () => {
     it('should return the correct service options', () => {
         const expectedServiceOptions = {
@@ -37,7 +37,7 @@ describe('libp2p services', () => {
             dcutr: {},
             ping: {}
         };
-        let actualServiceOptions = formatProcessOptions(compileProcessOptions({ options: serviceOptions }));
+        let actualServiceOptions = compileProcessOptions({ options: serviceOptions });
         actualServiceOptions = libp2pServices(actualServiceOptions);
         console.log(actualServiceOptions);
         const count = Object.keys(expectedServiceOptions).length;

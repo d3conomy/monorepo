@@ -47,7 +47,7 @@ describe('JobQueue', () => {
             status: 'initializing'
         };
         const processCommand = createProcessCommand({ name: 'test', action: async () => { return "test"; } });
-        const processContainer = createProcessContainer('test', () => { return "test"; });
+        const processContainer = createProcessContainer({ type: 'custom', process: () => { return "test"; } });
         let processCommands = new ProcessCommands({
             commands: [processCommand],
             proc: processContainer
@@ -78,7 +78,7 @@ describe('JobQueue', () => {
         this.timeout(0);
         let processCommandsList = [];
         processCommandsList.push(createProcessCommand({ name: 'test', action: async () => { return "test"; } }));
-        const processContainer = createProcessContainer('test', () => { return "test"; });
+        const processContainer = createProcessContainer({ type: 'custom', process: () => { return "test"; } });
         let processCommands = new ProcessCommands({
             commands: [...processCommandsList],
             proc: processContainer
@@ -108,7 +108,7 @@ describe('JobQueue', () => {
         this.timeout(0);
         let processCommandsList = [];
         processCommandsList.push(createProcessCommand({ name: 'test', action: async () => { return "test"; } }));
-        const processContainer = createProcessContainer('test', () => { return "test"; });
+        const processContainer = createProcessContainer({ type: 'custom', process: () => { return "test"; } });
         let processCommands = new ProcessCommands({
             commands: [...processCommandsList],
             proc: processContainer
@@ -144,7 +144,7 @@ describe('JobQueue', () => {
             status: 'initializing'
         };
         const processCommand = createProcessCommand({ name: 'test', action: async () => { return "test"; } });
-        const processContainer = createProcessContainer('test', () => { return "test"; });
+        const processContainer = createProcessContainer({ type: 'custom', process: () => { return "test"; } });
         let processCommands = new ProcessCommands({
             commands: [processCommand],
             proc: processContainer
@@ -157,7 +157,7 @@ describe('JobQueue', () => {
         this.timeout(0);
         let processCommandsList = [];
         processCommandsList.push(createProcessCommand({ name: 'test', action: async () => { return "test"; } }));
-        const processContainer = createProcessContainer('test', () => { return "test"; });
+        const processContainer = createProcessContainer({ type: 'custom', process: () => { return "test"; } });
         let processCommands = new ProcessCommands({
             commands: [...processCommandsList],
             proc: processContainer

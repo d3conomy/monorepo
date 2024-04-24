@@ -1,5 +1,5 @@
-import { IProcessOptions } from "../process-interface/index.js";
-declare const connectionGaterOptions: IProcessOptions;
+import { IProcessOptionsList } from "../process-interface/index.js";
+declare const connectionGaterOptions: IProcessOptionsList;
 /**
  * Default Connection Gater libp2p options
  * @category Libp2p

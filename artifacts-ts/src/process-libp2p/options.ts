@@ -1,6 +1,6 @@
 import {Libp2pOptions } from "libp2p";
 
-import { IProcessOption, IProcessOptions, createProcessOption, formatProcessOptions } from "../process-interface/index.js";
+import { IProcessOption, IProcessOptionsList, Process, ProcessCommands, ProcessOption, ProcessOptions, createProcessOption } from "../process-interface/index.js";
 import { listenAddressesConfig, listenAddressesOptions } from "./address.js";
 import { bootstrapOptions } from "./bootstrap.js";
 import { connectionEncryption, connectionEncryptionOptions } from "./connectionEncryption.js";
@@ -12,74 +12,100 @@ import { libp2pServices, serviceOptions } from "./services.js";
 import { streamMuxerOptions, streamMuxers } from "./streamMuxers.js";
 import { transportOptions, transports } from "./transports.js";
 
-const libp2pOptions = (inputOptions?: IProcessOptions): IProcessOptions => {
-    let loadedOptions = new Array();
 
-    const autostartOption: IProcessOption = createProcessOption({
-        name: 'autoStart',
-        description: 'Auto start the node',
-        required: false,
-        defaultValue: true
-    });
-
-    let options = [
-        autostartOption,
-        ...listenAddressesOptions,
-        ...bootstrapOptions,
-        ...connectionEncryptionOptions,
-        ...connectionGaterOptions,
-        ...connectionProtectorOptions,
-        ...peerDiscoveryOptions,
-        ...peerIdOptions,
-        ...serviceOptions,
-        ...streamMuxerOptions,
-        ...transportOptions
-    ]
-
-    for (const option of options) {
-        if (option.name in loadedOptions) {
-            continue;
-        }
-        if (inputOptions && option.name in inputOptions) {
-            const inputOptionValue = inputOptions.find((inputOption: IProcessOption) => inputOption.name === option.name)?.value
-            option.value = inputOptionValue ? inputOptionValue : option.defaultValue;
-        }
-        loadedOptions.push(option.name);
+const converMaptoList = (map: Map<string, any> | { [key: string]: any }): Array<IProcessOption> => {
+    if (map instanceof Map) {
+        return Array.from(map).map(([key, value]) => {
+            return createProcessOption({
+                name: key,
+                value
+            })
+        });
     }
-    return loadedOptions;
+    else {
+        return Object.keys(map).map((key) => {
+            return createProcessOption({
+                name: key,
+                value: map[key]
+            })
+        });
+    }
 }
 
-const buildSubProcesses = async (options: any) => {
-    const subprocessOptions: any = formatProcessOptions(options)
-    const libp2pOptions: Libp2pOptions = {
-        start: subprocessOptions.get((option: IProcessOption) => option.name === 'autoStart')?.value,
-        addresses: listenAddressesConfig(subprocessOptions),
-        transports: transports({...subprocessOptions.entries}),
-        connectionEncryption: connectionEncryption({...subprocessOptions.entries}),
-        connectionGater: connectionGater({...subprocessOptions.entries}),
-        peerDiscovery: peerDiscovery({...subprocessOptions.entries}),
-        services: libp2pServices({...subprocessOptions.entries}),
-        streamMuxers: streamMuxers({...subprocessOptions.entries})
+const convertListToMap = (list: Array<IProcessOption>): Map<IProcessOption['name'], IProcessOption> => {
+    return new Map(list.map((option) => [option.name, option]));
+}
+
+const defaultProcessOptions = (): Map<string, IProcessOption> => convertListToMap([
+    ...listenAddressesOptions,
+    ...bootstrapOptions,
+    ...connectionEncryptionOptions,
+    ...connectionGaterOptions,
+    ...connectionProtectorOptions,
+    ...peerDiscoveryOptions,
+    ...peerIdOptions,
+    ...serviceOptions,
+    ...streamMuxerOptions,
+    ...transportOptions
+]);
+
+const libp2pOptionsParams = (options: Array<IProcessOption> = new Array<IProcessOption>): ProcessOptions => {
+    const loadedOptions = convertListToMap(options);
+
+    for (const [key, value] of defaultProcessOptions()) {
+        if (loadedOptions.has(key)) {
+            const optionInput = loadedOptions.get(key);
+            if(optionInput) {
+                loadedOptions.set(key, optionInput.value ? optionInput.value : value.defaultValue)
+            }
+        }
+        else {
+            loadedOptions.set(key, value.value ? value.value : value.defaultValue)
+        }
     }
 
-    const peerIdOption = subprocessOptions.get((option: IProcessOption) => option.name === 'peerId')?.value;
+    return new ProcessOptions(loadedOptions);
+}
+
+const buildSubProcesses = async (options?: Array<ProcessOption>) => {
+    const subprocessOptions = libp2pOptionsParams(options);
+    // const mappedSubprocessOptions = mapProcessOptions(subprocessOptions)
+    // const libp2pOptionsParams: ProcessOptions = libp2pOptions(options);
+
+    const libp2pOptions: Libp2pOptions = {
+        addresses: listenAddressesConfig(subprocessOptions),
+        // connectionEncryption: connectionEncryption(subprocessOptions),
+        // connectionGater: connectionGater(subprocessOptions),
+        // connectionProtector: connectionProtector(subprocessOptions),
+        // peerDiscovery: peerDiscovery(subprocessOptions),
+        // peerId: await libp2pPeerId(subprocessOptions),
+        // services: libp2pServices(subprocessOptions),
+        // streamMuxer: streamMuxers(subprocessOptions),
+        // transport: transports(subprocessOptions)
+    }
+
+    const peerIdOption = subprocessOptions.get('peerId')?.value;
     if(peerIdOption) {
         libp2pOptions.peerId = await libp2pPeerId(peerIdOption.value);
     }
 
-    const enablePrivateSwarm = subprocessOptions.get((option: IProcessOption) => option.name === 'enablePrivateSwarm')?.value;
+    const enablePrivateSwarm = subprocessOptions.get('enablePrivateSwarm')?.value;
     if(enablePrivateSwarm) {
         libp2pOptions.connectionProtector = connectionProtector({
-            swarmKeyAsHex: subprocessOptions.get((option: IProcessOption) => option.name === 'privateSwarmKey')?.value,
+            swarmKeyAsHex: subprocessOptions.get('privateSwarmKey')?.value,
         });
     }
+
+    console.log(`libp2pOptions: ${JSON.stringify(libp2pOptions)}`)
 
     return libp2pOptions;
 }
 
 export {
-    buildSubProcesses,
-    libp2pOptions
+    converMaptoList,
+    convertListToMap,
+    libp2pOptionsParams,
+    buildSubProcesses
 }
 
 

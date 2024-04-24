@@ -20,8 +20,11 @@ describe('Process', () => {
         const processId = new PodProcessId({
             podId
         });
-        const processContainer = createProcessContainer(ProcessType.CUSTOM, {
-            process: '() => console.log("Hello, World")'
+        const processContainer = createProcessContainer({
+            type: ProcessType.CUSTOM,
+            process: {
+                process: '() => console.log("Hello, World")'
+            }
         });
         const processCommands = new ProcessCommands({
             commands: [
@@ -77,8 +80,11 @@ describe('Process', () => {
     });
     it('should create a process container', () => {
         // Test the createProcessContainer() method
-        const container = createProcessContainer(ProcessType.CUSTOM, {
-            process: '() => console.log("Hello, World")'
+        const container = createProcessContainer({
+            type: ProcessType.CUSTOM,
+            process: {
+                process: '() => console.log("Hello, World")'
+            }
         });
         // Add assertions here to verify the container
         expect(container).to.have.property('process');
@@ -93,8 +99,11 @@ describe('Process', () => {
                     })
                 })
             })
-        }), createProcessContainer(ProcessType.CUSTOM, {
-            process: '() => console.log("Hello, World")'
+        }), createProcessContainer({
+            type: ProcessType.CUSTOM,
+            process: {
+                process: '() => console.log("Hello, World")'
+            }
         }), new ProcessCommands({
             commands: [
                 createProcessCommand({
@@ -120,12 +129,17 @@ describe('Process', () => {
                     })
                 })
             })
-        }), createProcessContainer(ProcessType.CUSTOM, () => console.log('Hello, World'), [
-            createProcessOption({
-                name: 'test',
-                value: 'Hello, World'
-            })
-        ], async (options) => console.log(options)), new ProcessCommands({
+        }), createProcessContainer({
+            type: ProcessType.CUSTOM,
+            process: () => console.log('Hello, World'),
+            options: [
+                createProcessOption({
+                    name: 'test',
+                    value: 'Hello, World'
+                })
+            ],
+            init: async (options) => console.log(options)
+        }), new ProcessCommands({
             commands: [
                 createProcessCommand({
                     type: ProcessType.CUSTOM,
@@ -163,7 +177,10 @@ describe('Process', () => {
                     })
                 })
             })
-        }), createProcessContainer(ProcessType.CUSTOM, () => console.log("Hello, World")), new ProcessCommands({
+        }), createProcessContainer({
+            type: ProcessType.CUSTOM,
+            process: () => console.log("Hello, World")
+        }), new ProcessCommands({
             commands: [
                 createProcessCommand({
                     type: ProcessType.CUSTOM,
@@ -205,12 +222,17 @@ describe('Process', () => {
                 })
             })
         });
-        const processContainer = createProcessContainer(ProcessType.CUSTOM, () => console.log('Hello, World'), [
-            createProcessOption({
-                name: 'test',
-                value: 'Hello, World'
-            })
-        ], async (options) => console.log(options));
+        const processContainer = createProcessContainer({
+            type: ProcessType.CUSTOM,
+            process: () => console.log('Hello, World'),
+            options: [
+                createProcessOption({
+                    name: 'test',
+                    value: 'Hello, World'
+                })
+            ],
+            init: async (options) => console.log(options)
+        });
         const processCommands = new ProcessCommands({
             commands: [
                 createProcessCommand({

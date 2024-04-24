@@ -1,8 +1,8 @@
 
-import { IProcessOptions, createProcessOption } from "../process-interface/index.js";
+import { IProcessOptionsList, createProcessOption } from "../process-interface/index.js";
 
 
-const connectionGaterOptions: IProcessOptions = [
+const connectionGaterOptions: IProcessOptionsList = [
     createProcessOption({
         name: 'enableDenyDialMultiaddr',
         description: 'Enable deny dial multiaddr',

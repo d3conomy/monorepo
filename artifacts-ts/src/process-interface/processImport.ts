@@ -3,7 +3,7 @@ import { ProcessType, isProcessType } from "./processTypes.js";
 import path from 'path';
 import { IProcess } from './index.js';
 import { IProcessContainer, createProcessContainer } from './processContainer.js';
-import { IProcessOptions } from './processOptions.js';
+import { IProcessOptionsList } from './processOptions.js';
 import { IProcessCommands, ProcessCommands } from './processCommand.js';
 
 /**
@@ -38,11 +38,11 @@ const importFromFile = async (filepath: string): Promise<any> => {
 }
 
 const importProcessContainerFromJSON = (json: any): IProcessContainer => {
-    const processContainer: IProcessContainer = createProcessContainer(
-        isProcessType(json.type),
-        sanitizeEval(json.process),
-        json.options
-    );
+    const processContainer: IProcessContainer = createProcessContainer({
+        type: isProcessType(json.type),
+        process: sanitizeEval(json.process),
+        options: json.options
+});
 
     return processContainer;
 }

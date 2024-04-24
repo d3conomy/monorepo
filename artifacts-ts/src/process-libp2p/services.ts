@@ -9,10 +9,10 @@ import { ipnsValidator } from 'ipns/validator'
 import { ipnsSelector } from 'ipns/selector'
 import { ping } from '@libp2p/ping'
 import { ServiceFactoryMap } from 'libp2p'
-import { IProcessOptions, createProcessOption } from '../process-interface/index.js'
+import { IProcessOptionsList, createProcessOption } from '../process-interface/index.js'
 
 
-const serviceOptions: IProcessOptions = [
+const serviceOptions: IProcessOptionsList = [
     createProcessOption({
         name: 'enableGossipSub',
         description: 'Enable GossipSub',

@@ -21,9 +21,12 @@ class Process {
     async init() {
         this.jobQueue.init(this.commands);
         if (this.process?.init) {
-            let processExec = await this.process.init();
-            if (!this.process?.process) {
-                this.process.process = processExec;
+            const processExec = await this.process.init(this.process?.options);
+            // console.log(`processExec: ${processExec}`)
+            if (processExec && this.process.process === undefined) {
+                if (this.process?.loadProcess) {
+                    this.process?.loadProcess(processExec);
+                }
             }
         }
         this.commands.loadProcess(this.process?.process);
