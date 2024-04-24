@@ -3,7 +3,9 @@
 git add .
 git commit -m "${1}"
 
-BRANCH=${2:-setup}
+PROJECTS_BRANCH=${2:-setup}
+
+MONOREPO_BRANCH=${3:-main}
 
 # Git commands for monorepo
 
@@ -14,6 +16,6 @@ git subtree split --prefix=airlock --branch airlock
 git subtree split --prefix=moonbase --branch moonbase
 
 # Push all changes to remote
-git push https://github.com/d3conomy/airlock "airlock:${BRANCH}"
-git push https://github.com/d3conomy/moonbase "moonbase:${BRANCH}"
-git push origin main
+git push https://github.com/d3conomy/airlock "airlock:${PROJECTS_BRANCH}"
+git push https://github.com/d3conomy/moonbase "moonbase:${PROJECTS_BRANCH}"
+git push origin "${MONOREPO_BRANCH}"
