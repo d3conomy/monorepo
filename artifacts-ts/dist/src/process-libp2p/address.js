@@ -1,4 +1,4 @@
-import { compileProcessOptions, createProcessOption } from "../process-interface/index.js";
+import { compileProcessOptions, createProcessOption, injectDefaultValues } from "../process-interface/index.js";
 // import { libp2pOptions } from "./options.js";
 const setListenAddresses = (multiaddrs) => {
     return {
@@ -128,9 +128,16 @@ const listenAddressesOptions = [
 // } = {}): { listen: Array<string> } => {
 const listenAddresses = ({ ...inputValues }) => {
     console.log(`listenAddresses inputValues: ${JSON.stringify(inputValues)}`);
+    for (const key in inputValues) {
+        if (inputValues[key] === undefined) {
+            delete inputValues[key];
+        }
+    }
     // const formattedInputValues = converMaptoList(inputValues)
     // console.log(`formattedInputValues: ${JSON.stringify(formattedInputValues)}`)
-    const compiledListenAddressOptions = compileProcessOptions({ values: inputValues, options: listenAddressesOptions });
+    const injectedDefaults = injectDefaultValues({ values: inputValues, options: listenAddressesOptions });
+    console.log(`injectedDefaults: ${JSON.stringify(injectedDefaults)}`);
+    const compiledListenAddressOptions = compileProcessOptions(injectedDefaults);
     // const compiledListenAddressOptions = injectDefaultValues({values: formattedInputValues, options: listenAddressesOptions})
     // console.log(`compiledListenAddressOptions: ${JSON.stringify(compiledListenAddressOptions)}`)
     // const listenAddressesParams = mapProcessOptions(listenAddressesOptions)

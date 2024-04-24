@@ -40,7 +40,7 @@ describe('libp2p services', () => {
             ping: {}
         };
 
-        let actualServiceOptions: any = compileProcessOptions({options: serviceOptions})
+        let actualServiceOptions: any = compileProcessOptions(serviceOptions)
 
         actualServiceOptions = libp2pServices(actualServiceOptions);
         console.log(actualServiceOptions)

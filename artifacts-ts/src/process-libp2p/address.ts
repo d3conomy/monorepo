@@ -1,5 +1,5 @@
 import { Multiaddr } from "@multiformats/multiaddr";
-import { IProcessOption, IProcessOptionsList, ProcessOption, ProcessOptions, compileProcessOptions, createProcessOption } from "../process-interface/index.js";
+import { IProcessOption, IProcessOptionsList, ProcessOption, ProcessOptions, compileProcessOptions, createProcessOption, injectDefaultValues } from "../process-interface/index.js";
 import { converMaptoList } from "./options.js";
 // import { libp2pOptions } from "./options.js";
  
@@ -138,9 +138,17 @@ const listenAddressesOptions: IProcessOptionsList = [
 
 const listenAddresses = ({...inputValues}): { listen: Array<string> } => {
     console.log(`listenAddresses inputValues: ${JSON.stringify(inputValues)}`)
+
+    for (const key in inputValues) {
+        if (inputValues[key] === undefined) {
+            delete inputValues[key]
+        }
+    }
     // const formattedInputValues = converMaptoList(inputValues)
     // console.log(`formattedInputValues: ${JSON.stringify(formattedInputValues)}`)
-    const compiledListenAddressOptions = compileProcessOptions({values: inputValues, options: listenAddressesOptions})
+    const injectedDefaults = injectDefaultValues({values: inputValues, options: listenAddressesOptions})
+    console.log(`injectedDefaults: ${JSON.stringify(injectedDefaults)}`)
+    const compiledListenAddressOptions = compileProcessOptions(injectedDefaults)
     // const compiledListenAddressOptions = injectDefaultValues({values: formattedInputValues, options: listenAddressesOptions})
     // console.log(`compiledListenAddressOptions: ${JSON.stringify(compiledListenAddressOptions)}`)
 

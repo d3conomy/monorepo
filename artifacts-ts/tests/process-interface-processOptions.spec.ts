@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { compileProcessOptions, createProcessOption, findProcessOption, IProcessOption, IProcessOptionsList } from '../src/process-interface/processOptions.js';
+import { compileProcessOptions, createProcessOption, findProcessOption, injectDefaultValues, IProcessOption, IProcessOptionsList } from '../src/process-interface/processOptions.js';
 
 describe('createProcessOption', () => {
     it('should create a process option with the provided values', () => {
@@ -195,14 +195,18 @@ describe('compileProcessOptions', () => {
         // };
 
         const values = {
-            'option1': { value: 456},
-            'option2': {value: 'def'}
+            'option1': { name:'option1', value: 456},
+            'option2': { name:'option2', value: 'def'}
         }
 
-        const compiledOptions: { [key: string]: any } = compileProcessOptions({
-            values,
-            options
-        });
+        const defaults: IProcessOptionsList = injectDefaultValues({
+            options,
+            values
+        })
+        console.log(`defaults: ${JSON.stringify(defaults)}`);
+
+        const compiledOptions = compileProcessOptions(defaults);
+        console.log(`compiledOptions: ${JSON.stringify(compiledOptions)}`)
 
         expect(compiledOptions).to.deep.equal({
             'option1': 456,
@@ -228,19 +232,21 @@ describe('compileProcessOptions', () => {
         ];
 
         const values: { [key: string]: any } = {
-            'option1': 456
+            'option1': { name: "option1", value: 456}
         };
 
-        const compiledOptions: { [key: string]: any } = compileProcessOptions({
-            values,
-            options
-        });
+        const defaults = injectDefaultValues({
+            options,
+            values
+        })
+
+        const compiledOptions = compileProcessOptions(defaults);
 
         console.log(compiledOptions);
 
         expect(compiledOptions).to.deep.equal({
             'option1': 456,
-            'option2': 'xyz'
+            'option2': 'abc'
         });
     });
 });

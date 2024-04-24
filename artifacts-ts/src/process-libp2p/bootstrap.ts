@@ -42,10 +42,7 @@ const defaultBootstrapConfig: Array<string> = [
 const libp2pBootstrap = (values?: Array<IProcessOption>): any => {
     let addrs: Array<string> = new Array<string>();
 
-    const { defaultConfig, multiaddrs, list } = compileProcessOptions({
-        values: values,
-        options: bootstrapOptions
-    })
+    const { defaultConfig, multiaddrs, list } = compileProcessOptions(values ? values : bootstrapOptions)
 
     if (defaultConfig === true) {
         defaultBootstrapConfig.forEach((addr: string) => {

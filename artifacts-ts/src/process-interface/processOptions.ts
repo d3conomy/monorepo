@@ -1,5 +1,3 @@
-import { Process } from "./process";
-
 interface IProcessOption {
     name: string;
     description?: string;
@@ -53,45 +51,45 @@ const findProcessOption = ({
     }
 }
 
-
-const compileProcessOptions = ({
-    values,
-    options
+const injectDefaultValues = ({
+    options,
+    values
 }: {
-    values?: { [key: string]: any },
-    options: IProcessOption[]
-}): { [key: string]: any } => {
-    if (!values) {
-        return { ...mapProcessOptionsParams(options) } ;
-    }
-    let formattedOptions = new Map<string, any>();
-
-    
-
-    for (const option of options) {
-        const inputValue = findProcessOption({ options: values ? values : options, name: option.name });
-        const value = inputValue ? inputValue.value : option.value ? option.value : option.defaultValue;
-        option.value = value;
-
-        formattedOptions.set(option.name, option);
-    }
-    return { ...mapProcessOptionsParams(formattedOptions) };
+    options: IProcessOptionsList,
+    values: { [key: string]: any }
+}): IProcessOptionsList => {
+    return options.map((option: IProcessOption) => {
+        const value = values[option.name];
+        option.value = value ? value : option.defaultValue;
+        return option;
+    });
 }
 
-// const mapProcessOptions = (options: IProcessOptionsList): Map<string, any> => {
-//     let formattedOptions = new Map<string, any>();
-//     for (const option of options) {
-//         formattedOptions.set(option.name, option);
-//     }
-//     return formattedOptions;
-// }
+const compileProcessOptions = (options: IProcessOptionsList | IProcessOption[]): { [key: string]: any } => {
+    console.log(`options: ${JSON.stringify(options)}`)
+    const formattedOptions = mapProcessOptions(options);
+    console.log(`formattedOptions: ${JSON.stringify(formattedOptions)}`)
+    return formattedOptions;
+}
 
-const mapProcessOptionsParams = (options: any): { [key: string]: any} => {
-    let formattedOptions = new Map<string, any>();
+
+const mapProcessOptions = (options: IProcessOptionsList): any => {
+    // console.log(`optionsMapProcessOptions: ${JSON.stringify(options)}`)
+    let map: Map<string, any> = new Map();
     for (const option of options) {
-        formattedOptions.set(option.name, option.value ? option.value : option.defaultValue);
+        console.log(`optionMapProcessOptions: ${JSON.stringify(option)}`)
+        map.set(option.name, option.value);
+        console.log(`mapMapProcessOptions: ${JSON.stringify(map.get(option.name))}`)
     }
-    return { ...formattedOptions.entries() };
+    return Object.fromEntries(map.entries());
+}
+
+const mapProcessOptionsParams = (options: Map<string, IProcessOption>): { [key: string]: any} => {
+    let formattedOptions = new Map<string, any>();
+    for (const [optionName, optionValue ] of options) {
+        formattedOptions.set(optionName, optionValue.value ? optionValue.value : optionValue.defaultValue);
+    }
+    return Object.fromEntries(formattedOptions);
 }
 
 
@@ -158,7 +156,7 @@ export {
     findProcessOption,
     // mapProcessOptions,
     // mapProcessOptionsParams,
-    // injectDefaultValues,
+    injectDefaultValues,
     IProcessOption,
     IProcessOptionsList,
     ProcessOption,

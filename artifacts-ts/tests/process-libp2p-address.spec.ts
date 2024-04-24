@@ -24,8 +24,7 @@ describe('listenAddresses', () => {
             additionalMultiaddrs: ['additional-multiaddr-1', 'additional-multiaddr-2']
         });
 
-        expect(result).to.deep.equal({
-            listen: [
+        expect(result.listen).to.deep.equal([
                 '/ip4/0.0.0.0/tcp/8080',
                 '/ip4/0.0.0.0/udp/9090',
                 '/ip4/0.0.0.0/udp/9090/quic-v1',
@@ -41,7 +40,7 @@ describe('listenAddresses', () => {
                 'additional-multiaddr-1',
                 'additional-multiaddr-2'
             ]
-        });
+        );
     });
 
     it('should throw an error if webRTCStarAddress is not provided', () => {

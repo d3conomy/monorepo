@@ -31,10 +31,7 @@ const defaultBootstrapConfig = [
 ];
 const libp2pBootstrap = (values) => {
     let addrs = new Array();
-    const { defaultConfig, multiaddrs, list } = compileProcessOptions({
-        values: values,
-        options: bootstrapOptions
-    });
+    const { defaultConfig, multiaddrs, list } = compileProcessOptions(values ? values : bootstrapOptions);
     if (defaultConfig === true) {
         defaultBootstrapConfig.forEach((addr) => {
             addrs.push(addr);

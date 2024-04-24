@@ -18,32 +18,56 @@ const findProcessOption = ({ options, name }) => {
         return options[name];
     }
 };
-const compileProcessOptions = ({ values, options }) => {
-    if (!values) {
-        return { ...mapProcessOptionsParams(options) };
-    }
-    let formattedOptions = new Map();
-    for (const option of options) {
-        const inputValue = findProcessOption({ options: values ? values : options, name: option.name });
-        const value = inputValue ? inputValue.value : option.value ? option.value : option.defaultValue;
-        option.value = value;
-        formattedOptions.set(option.name, option);
-    }
-    return { ...mapProcessOptionsParams(formattedOptions) };
+const injectDefaultValues = ({ options, values }) => {
+    return options.map((option) => {
+        const value = values[option.name];
+        option.value = value ? value : option.defaultValue;
+        return option;
+    });
 };
-// const mapProcessOptions = (options: IProcessOptionsList): Map<string, any> => {
+const compileProcessOptions = (options) => {
+    console.log(`options: ${JSON.stringify(options)}`);
+    const formattedOptions = mapProcessOptions(options);
+    console.log(`formattedOptions: ${JSON.stringify(formattedOptions)}`);
+    return formattedOptions;
+};
+// const compileProcessOptions = ({
+//     values,
+//     options
+// }: {
+//     values?: { [key: string]: any },
+//     options: IProcessOption[]
+// }): { [key: string]: any } => {
+//     if (!values) {
+//         // return mapProcessOptionsParams(options) ;
+//     }
 //     let formattedOptions = new Map<string, any>();
 //     for (const option of options) {
+//         const inputValue = findProcessOption({ options: values ? values : options, name: option.name });
+//         console.log(`inputValue: ${JSON.stringify(inputValue)}`)
+//         const value = inputValue ? inputValue.value : option.value ? option.value : option.defaultValue;
+//         option.value = value;
 //         formattedOptions.set(option.name, option);
 //     }
-//     return formattedOptions;
+//     console.log(formattedOptions);
+//     return mapProcessOptionsParams(formattedOptions);
 // }
+const mapProcessOptions = (options) => {
+    // console.log(`optionsMapProcessOptions: ${JSON.stringify(options)}`)
+    let map = new Map();
+    for (const option of options) {
+        console.log(`optionMapProcessOptions: ${JSON.stringify(option)}`);
+        map.set(option.name, option.value);
+        console.log(`mapMapProcessOptions: ${JSON.stringify(map.get(option.name))}`);
+    }
+    return Object.fromEntries(map.entries());
+};
 const mapProcessOptionsParams = (options) => {
     let formattedOptions = new Map();
-    for (const option of options) {
-        formattedOptions.set(option.name, option.value ? option.value : option.defaultValue);
+    for (const [optionName, optionValue] of options) {
+        formattedOptions.set(optionName, optionValue.value ? optionValue.value : optionValue.defaultValue);
     }
-    return { ...formattedOptions.entries() };
+    return Object.fromEntries(formattedOptions);
 };
 class ProcessOption {
     name;
@@ -81,4 +105,7 @@ class ProcessOptions extends Map {
         return params;
     }
 }
-export { compileProcessOptions, createProcessOption, findProcessOption, ProcessOption, ProcessOptions };
+export { compileProcessOptions, createProcessOption, findProcessOption, 
+// mapProcessOptions,
+// mapProcessOptionsParams,
+injectDefaultValues, ProcessOption, ProcessOptions };
