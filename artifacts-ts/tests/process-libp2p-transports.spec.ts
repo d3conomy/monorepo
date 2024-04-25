@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { transports, transportOptions } from '../src/process-libp2p/transports.js';
+import { transports, transportOptionsParams } from '../src/process-libp2p/transports.js';
 import { circuitRelayTransport } from '@libp2p/circuit-relay-v2';
 import { webSockets } from '@libp2p/websockets';
 import { webTransport } from '@libp2p/webtransport';
@@ -43,9 +43,9 @@ describe('transports', () => {
     });
 });
 
-describe('transportOptions', () => {
+describe('transportOptionsParams', () => {
     it('should return an array of transport options', () => {
-        expect(transportOptions).to.be.an('array');
-        expect(transportOptions).to.have.lengthOf(6); // Modify the expected length based on the number of transport options
+        expect(transportOptionsParams).to.be.an('array');
+        expect(transportOptionsParams).to.have.lengthOf(6); // Modify the expected length based on the number of transport options
     });
 });

@@ -8,8 +8,8 @@ import { uPnPNAT } from '@libp2p/upnp-nat';
 import { ipnsValidator } from 'ipns/validator';
 import { ipnsSelector } from 'ipns/selector';
 import { ping } from '@libp2p/ping';
-import { createProcessOption } from '../process-interface/index.js';
-const serviceOptions = [
+import { createProcessOption, injectDefaultValues, mapProcessOptions } from '../process-interface/index.js';
+const serviceOptionsParams = [
     createProcessOption({
         name: 'enableGossipSub',
         description: 'Enable GossipSub',
@@ -111,8 +111,10 @@ const serviceOptions = [
  * Default libp2p options
  * @category Libp2p
  */
-const services = ({ enableGossipSub, enablePublishToZeroTopicPeers, enableAutoNAT, enableIdentify, enableUPnPNAT, enableDHT, enableDHTClient, enableIpnsValidator, enableIpnsSelector, enableLanDHT, lanDhtProtocol, lanDhtPeerInfoMapperRemovePublicAddresses, lanDhtClientMode, enableRelay, enableDCUTR, enablePing, } = {}) => {
+const services = ({ ...values } = {}) => {
     let serviceOptions = {};
+    const injectedDefaultValues = injectDefaultValues({ options: serviceOptionsParams, values });
+    const { enableGossipSub, enablePublishToZeroTopicPeers, enableAutoNAT, enableIdentify, enableUPnPNAT, enableDHT, enableDHTClient, enableIpnsValidator, enableIpnsSelector, enableLanDHT, lanDhtProtocol, lanDhtPeerInfoMapperRemovePublicAddresses, lanDhtClientMode, enableRelay, enableDCUTR, enablePing, } = mapProcessOptions(injectedDefaultValues);
     if (enableGossipSub) {
         serviceOptions.pubsub = gossipsub({
             allowPublishToZeroTopicPeers: enablePublishToZeroTopicPeers,
@@ -180,4 +182,4 @@ const services = ({ enableGossipSub, enablePublishToZeroTopicPeers, enableAutoNA
     }
     return serviceOptions;
 };
-export { services as libp2pServices, serviceOptions };
+export { services as libp2pServices, serviceOptionsParams as serviceOptions };

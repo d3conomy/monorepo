@@ -1,7 +1,7 @@
 import { createEd25519PeerId } from '@libp2p/peer-id-factory';
 import { peerIdFromString, peerIdFromPeerId } from '@libp2p/peer-id';
 import { PeerId } from '@libp2p/interface';
-import { IProcessOptionsList, createProcessOption } from '../process-interface/index.js';
+import { IProcessOptionsList, createProcessOption, injectDefaultValues, mapProcessOptions } from '../process-interface/index.js';
 
 
 const peerIdOptions: IProcessOptionsList = [
@@ -16,11 +16,11 @@ const peerIdOptions: IProcessOptionsList = [
  * Create a PeerId
  * @category Libp2p
  */
-const libp2pPeerId = async ({
-    id
-}: {
-    id?: string | PeerId
-} = {}): Promise<PeerId | undefined> => {
+const libp2pPeerId = async ({ ...values }: {} = {}): Promise<PeerId | undefined> => {
+    const injectedDefaultValues = injectDefaultValues({options: peerIdOptions, values})
+
+    const { id } = mapProcessOptions(injectedDefaultValues)
+
     let peerId: PeerId;
 
     if (typeof id === 'string') {

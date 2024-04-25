@@ -1,6 +1,6 @@
 import { preSharedKey } from '@libp2p/pnet';
 import crypto from 'crypto';
-import { createProcessOption } from '../process-interface/index.js';
+import { createProcessOption, injectDefaultValues, mapProcessOptions } from '../process-interface/index.js';
 const connectionProtectorOptions = [
     createProcessOption({
         name: 'swarmKeyAsHex',
@@ -27,7 +27,9 @@ const createSwarmKey = (swarmKeyAsHex) => {
  * Create a connection protector using a pre-shared key
  * @category Libp2p
  */
-function connectionProtector({ swarmKeyAsHex } = {}) {
+function connectionProtector({ ...values } = {}) {
+    const injectedDefaultValues = injectDefaultValues({ options: connectionProtectorOptions, values });
+    const { swarmKeyAsHex } = mapProcessOptions(injectedDefaultValues);
     const swarmKey = createSwarmKey(swarmKeyAsHex);
     const protector = preSharedKey({
         psk: swarmKey

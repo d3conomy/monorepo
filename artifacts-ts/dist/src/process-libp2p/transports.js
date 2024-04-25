@@ -3,8 +3,8 @@ import { webSockets } from '@libp2p/websockets';
 import { webTransport } from '@libp2p/webtransport';
 import { tcp } from '@libp2p/tcp';
 import { webRTC } from '@libp2p/webrtc';
-import { createProcessOption } from '../process-interface/index.js';
-const transportOptions = [
+import { createProcessOption, injectDefaultValues, mapProcessOptions } from '../process-interface/index.js';
+const transportOptionsParams = [
     createProcessOption({
         name: 'enableWebSockets',
         description: 'Enable WebSockets',
@@ -42,7 +42,9 @@ const transportOptions = [
         defaultValue: 2
     })
 ];
-const transports = ({ enableWebSockets = true, enableWebTransport = true, enableTcp = true, enableWebRTC = false, enableCircuitRelayTransport = true, enableCircuitRelayTransportDiscoverRelays = 2, } = {}) => {
+const transports = ({ ...values } = {}) => {
+    const injectedDefaultValues = injectDefaultValues({ options: transportOptionsParams, values });
+    const { enableWebSockets, enableWebTransport, enableTcp, enableWebRTC, enableCircuitRelayTransport, enableCircuitRelayTransportDiscoverRelays } = mapProcessOptions(injectedDefaultValues);
     let transportOptions = new Array();
     if (enableWebSockets) {
         transportOptions.push(webSockets());
@@ -70,4 +72,4 @@ const transports = ({ enableWebSockets = true, enableWebTransport = true, enable
     }
     return transportOptions;
 };
-export { transports, transportOptions };
+export { transports, transportOptionsParams };

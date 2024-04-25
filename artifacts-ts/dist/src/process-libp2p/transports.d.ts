@@ -1,12 +1,5 @@
 import { IProcessOptionsList } from '../process-interface/index.js';
-declare const transportOptions: IProcessOptionsList;
-declare const transports: ({ enableWebSockets, enableWebTransport, enableTcp, enableWebRTC, enableCircuitRelayTransport, enableCircuitRelayTransportDiscoverRelays, }?: {
-    enableWebSockets?: boolean | undefined;
-    enableWebTransport?: boolean | undefined;
-    enableTcp?: boolean | undefined;
-    enableWebRTC?: boolean | undefined;
-    enableCircuitRelayTransport?: boolean | undefined;
-    enableCircuitRelayTransportDiscoverRelays?: number | undefined;
-}) => Array<any>;
-export { transports, transportOptions };
+declare const transportOptionsParams: IProcessOptionsList;
+declare const transports: ({ ...values }?: {}) => Array<any>;
+export { transports, transportOptionsParams };
 //# sourceMappingURL=transports.d.ts.map

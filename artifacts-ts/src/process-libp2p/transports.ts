@@ -3,9 +3,9 @@ import { webSockets } from '@libp2p/websockets'
 import { webTransport } from '@libp2p/webtransport'
 import { tcp } from '@libp2p/tcp'
 import { webRTC } from '@libp2p/webrtc'
-import { IProcessOptionsList, createProcessOption } from '../process-interface/index.js'
+import { IProcessOptionsList, createProcessOption, injectDefaultValues, mapProcessOptions } from '../process-interface/index.js'
 
-const transportOptions: IProcessOptionsList = [
+const transportOptionsParams: IProcessOptionsList = [
     createProcessOption({
         name: 'enableWebSockets',
         description: 'Enable WebSockets',
@@ -44,21 +44,18 @@ const transportOptions: IProcessOptionsList = [
     })
 ]
 
-const transports = ({
-    enableWebSockets = true,
-    enableWebTransport = true,
-    enableTcp = true,
-    enableWebRTC = false,
-    enableCircuitRelayTransport = true,
-    enableCircuitRelayTransportDiscoverRelays = 2,
-} : {
-    enableWebSockets?: boolean,
-    enableWebTransport?: boolean,
-    enableTcp?: boolean,
-    enableWebRTC?: boolean,
-    enableCircuitRelayTransport?: boolean,
-    enableCircuitRelayTransportDiscoverRelays?: number
-} = {}): Array<any> => {
+const transports = ({ ...values } : {} = {}): Array<any> => {
+    const injectedDefaultValues = injectDefaultValues({options: transportOptionsParams, values})
+    const {
+        enableWebSockets,
+        enableWebTransport,
+        enableTcp,
+        enableWebRTC,
+        enableCircuitRelayTransport,
+        enableCircuitRelayTransportDiscoverRelays
+    } = mapProcessOptions(injectedDefaultValues)
+
+
     let transportOptions: Array<any> = new Array<any>()
 
     if (enableWebSockets) {
@@ -96,6 +93,6 @@ const transports = ({
 
 export {
     transports,
-    transportOptions
+    transportOptionsParams
 }
 

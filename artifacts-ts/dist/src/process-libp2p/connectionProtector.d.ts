@@ -11,8 +11,6 @@ declare const createSwarmKey: (swarmKeyAsHex?: string) => Uint8Array;
  * Create a connection protector using a pre-shared key
  * @category Libp2p
  */
-declare function connectionProtector({ swarmKeyAsHex }?: {
-    swarmKeyAsHex?: string;
-}): (components: ProtectorComponents) => ConnectionProtector;
+declare function connectionProtector({ ...values }?: {}): (components: ProtectorComponents) => ConnectionProtector;
 export { createSwarmKey, connectionProtector, connectionProtectorOptions };
 //# sourceMappingURL=connectionProtector.d.ts.map

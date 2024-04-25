@@ -10,7 +10,6 @@ import { peerDiscovery, peerDiscoveryOptions } from '../src/process-libp2p/peerD
 import { libp2pPeerId, peerIdOptions } from '../src/process-libp2p/peerId.js';
 import { libp2pServices, serviceOptions } from '../src/process-libp2p/services.js';
 import { streamMuxerOptions, streamMuxers } from '../src/process-libp2p/streamMuxers.js';
-import { transportOptions, transports } from '../src/process-libp2p/transports.js';
 
 import { convertListToMap, converMaptoList, libp2pOptionsParams  } from '../src/process-libp2p/options.js';
 

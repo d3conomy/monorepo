@@ -10,7 +10,7 @@ import { peerDiscovery, peerDiscoveryOptions } from "./peerDiscovery.js";
 import { libp2pPeerId, peerIdOptions } from "./peerId.js";
 import { libp2pServices, serviceOptions } from "./services.js";
 import { streamMuxerOptions, streamMuxers } from "./streamMuxers.js";
-import { transportOptions, transports } from "./transports.js";
+import { transportOptionsParams, transports } from "./transports.js";
 
 
 const converMaptoList = (map: Map<string, any> | { [key: string]: any }): Array<IProcessOption> => {
@@ -46,7 +46,7 @@ const defaultProcessOptions = (): Map<string, IProcessOption> => convertListToMa
     ...peerIdOptions,
     ...serviceOptions,
     ...streamMuxerOptions,
-    ...transportOptions
+    ...transportOptionsParams
 ]);
 
 const libp2pOptionsParams = (options: Array<IProcessOption> = new Array<IProcessOption>): ProcessOptions => {
