@@ -53,14 +53,20 @@ const libp2pOptionsParams = (options: Array<IProcessOption> = new Array<IProcess
     const loadedOptions = convertListToMap(options);
 
     for (const [key, value] of defaultProcessOptions()) {
-        if (loadedOptions.has(key)) {
-            const optionInput = loadedOptions.get(key);
+        const optionInput = loadedOptions.get(key);
+        if (optionInput !== undefined) {
+            
             if(optionInput) {
                 loadedOptions.set(key, optionInput.value ? optionInput.value : value.defaultValue)
             }
         }
         else {
-            loadedOptions.set(key, value.value ? value.value : value.defaultValue)
+            if (optionInput !== undefined) {
+                loadedOptions.set(key, value.value)
+            }
+            else {
+                loadedOptions.set(key, value.defaultValue)
+            }
         }
     }
 
@@ -96,7 +102,6 @@ const buildSubProcesses = async (options?: Array<ProcessOption>) => {
         });
     }
 
-    console.log(`libp2pOptions: ${JSON.stringify(libp2pOptions)}`)
 
     return libp2pOptions;
 }

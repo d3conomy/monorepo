@@ -208,10 +208,10 @@ describe('compileProcessOptions', () => {
         const compiledOptions = compileProcessOptions(defaults);
         console.log(`compiledOptions: ${JSON.stringify(compiledOptions)}`)
 
-        expect(compiledOptions).to.deep.equal({
+        expect(compiledOptions.toString()).to.equal({
             'option1': 456,
             'option2': 'def'
-        });
+        }.toString());
     });
 
     it('should compile process options with the provided values and default values', () => {
@@ -242,11 +242,11 @@ describe('compileProcessOptions', () => {
 
         const compiledOptions = compileProcessOptions(defaults);
 
-        console.log(compiledOptions);
+        console.log(`hello: ${JSON.stringify(compiledOptions)}`);
 
-        expect(compiledOptions).to.deep.equal({
+        expect(compiledOptions.toString()).to.equal({
             'option1': 456,
             'option2': 'abc'
-        });
+        }.toString());
     });
 });

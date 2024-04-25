@@ -1,5 +1,5 @@
 import { Multiaddr } from "@multiformats/multiaddr";
-import { IProcessOption, IProcessOptionsList, ProcessOption, ProcessOptions, compileProcessOptions, createProcessOption, injectDefaultValues } from "../process-interface/index.js";
+import { IProcessOption, IProcessOptionsList, ProcessOption, ProcessOptions, compileProcessOptions, createProcessOption, injectDefaultValues, mapProcessOptionsParams } from "../process-interface/index.js";
 import { converMaptoList } from "./options.js";
 // import { libp2pOptions } from "./options.js";
  
@@ -137,17 +137,20 @@ const listenAddressesOptions: IProcessOptionsList = [
 // } = {}): { listen: Array<string> } => {
 
 const listenAddresses = ({...inputValues}): { listen: Array<string> } => {
-    console.log(`listenAddresses inputValues: ${JSON.stringify(inputValues)}`)
 
     for (const key in inputValues) {
         if (inputValues[key] === undefined) {
             delete inputValues[key]
         }
     }
+
+    // const mappedProcessOptionsParams = Object.entries(inputValues).map(([key, value]) => [key, {name: key, value}])
+    // console.log(`mappedProcessOptionsParams: ${JSON.stringify(mappedProcessOptionsParams)}`)
+
     // const formattedInputValues = converMaptoList(inputValues)
     // console.log(`formattedInputValues: ${JSON.stringify(formattedInputValues)}`)
     const injectedDefaults = injectDefaultValues({values: inputValues, options: listenAddressesOptions})
-    console.log(`injectedDefaults: ${JSON.stringify(injectedDefaults)}`)
+    // console.log(`injectedDefaults: ${JSON.stringify(injectedDefaults)}`)
     const compiledListenAddressOptions = compileProcessOptions(injectedDefaults)
     // const compiledListenAddressOptions = injectDefaultValues({values: formattedInputValues, options: listenAddressesOptions})
     // console.log(`compiledListenAddressOptions: ${JSON.stringify(compiledListenAddressOptions)}`)
@@ -220,8 +223,8 @@ const listenAddresses = ({...inputValues}): { listen: Array<string> } => {
     //     listenAddresses.push('/p2p-circuit')
     // }
 
-    if (enableWebRTCStar) {
-        if (!webRTCStarAddress) {
+    if (enableWebRTCStar === true) {
+        if (webRTCStarAddress === undefined || webRTCStarAddress === null) {
             throw new Error('webrtcStarAddress must be provided')
         }
         listenAddresses.push(webRTCStarAddress.toString())
@@ -238,7 +241,6 @@ const listenAddresses = ({...inputValues}): { listen: Array<string> } => {
         })
     }
 
-    console.log(`listenAddresses completed: ${JSON.stringify(listenAddresses)}`)
     return { listen: listenAddresses }
 }
 

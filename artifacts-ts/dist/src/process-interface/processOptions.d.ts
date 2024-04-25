@@ -18,9 +18,9 @@ declare const createProcessOption: ({ name, description, value, required, defaul
     defaultValue?: any;
 }) => ProcessOption;
 declare const findProcessOption: ({ options, name }: {
-    options: IProcessOptionsList | IProcessOption[] | {
+    options: Map<string, any> | IProcessOptionsList | IProcessOption[] | {
         [key: string]: any;
-    } | Map<string, any>;
+    };
     name: string;
 }) => IProcessOption | undefined;
 declare const injectDefaultValues: ({ options, values }: {
@@ -30,6 +30,10 @@ declare const injectDefaultValues: ({ options, values }: {
     };
 }) => IProcessOptionsList;
 declare const compileProcessOptions: (options: IProcessOptionsList | IProcessOption[]) => {
+    [key: string]: any;
+};
+declare const mapProcessOptions: (options: IProcessOptionsList) => any;
+declare const mapProcessOptionsParams: (options: Map<string, any>) => {
     [key: string]: any;
 };
 declare class ProcessOption implements IProcessOption {
@@ -55,5 +59,5 @@ declare class ProcessOptions extends Map<ProcessOption['name'], IProcessOption> 
         [key: string]: any;
     };
 }
-export { compileProcessOptions, createProcessOption, findProcessOption, injectDefaultValues, IProcessOption, IProcessOptionsList, ProcessOption, ProcessOptions };
+export { compileProcessOptions, createProcessOption, findProcessOption, mapProcessOptions, mapProcessOptionsParams, injectDefaultValues, IProcessOption, IProcessOptionsList, ProcessOption, ProcessOptions };
 //# sourceMappingURL=processOptions.d.ts.map

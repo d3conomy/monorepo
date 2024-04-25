@@ -45,14 +45,19 @@ const defaultProcessOptions = () => convertListToMap([
 const libp2pOptionsParams = (options = new Array) => {
     const loadedOptions = convertListToMap(options);
     for (const [key, value] of defaultProcessOptions()) {
-        if (loadedOptions.has(key)) {
-            const optionInput = loadedOptions.get(key);
+        const optionInput = loadedOptions.get(key);
+        if (optionInput !== undefined) {
             if (optionInput) {
                 loadedOptions.set(key, optionInput.value ? optionInput.value : value.defaultValue);
             }
         }
         else {
-            loadedOptions.set(key, value.value ? value.value : value.defaultValue);
+            if (optionInput !== undefined) {
+                loadedOptions.set(key, value.value);
+            }
+            else {
+                loadedOptions.set(key, value.defaultValue);
+            }
         }
     }
     return new ProcessOptions(loadedOptions);
@@ -82,7 +87,6 @@ const buildSubProcesses = async (options) => {
             swarmKeyAsHex: subprocessOptions.get('privateSwarmKey')?.value,
         });
     }
-    console.log(`libp2pOptions: ${JSON.stringify(libp2pOptions)}`);
     return libp2pOptions;
 };
 export { converMaptoList, convertListToMap, libp2pOptionsParams, buildSubProcesses };

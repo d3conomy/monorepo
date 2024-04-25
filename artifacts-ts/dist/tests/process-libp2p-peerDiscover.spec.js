@@ -21,7 +21,7 @@ describe('peerDiscovery', () => {
             bootstrapMultiaddrs: []
         });
         console.log(result.toString());
-        expect(result.toString()).to.deep.include('Bootstrap');
+        expect(result.toString()).to.deep.include(libp2pBootstrap());
     });
     it('should include libp2pBootstrap when enableBootstrap is true and bootstrapMultiaddrs is not empty', () => {
         const multiaddrs = [multiaddr('/ip4/127.0.0.1/tcp/4001')];

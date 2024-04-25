@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { connectionEncryption } from '../src/process-libp2p/connectionEncryption.js';
 describe('connectionEncryption', () => {
     it('should return an empty array when no encryption options are enabled', () => {
-        const result = connectionEncryption();
+        const result = connectionEncryption({ enableNoise: false, enableTls: false });
         expect(result).to.be.an('array').that.is.empty;
     });
     it('should include noise encryption when enableNoise is true', () => {

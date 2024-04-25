@@ -5,7 +5,7 @@ import { connectionEncryption, connectionEncryptionOptions } from '../src/proces
 
 describe('connectionEncryption', () => {
     it('should return an empty array when no encryption options are enabled', () => {
-        const result = connectionEncryption();
+        const result = connectionEncryption({ enableNoise: false, enableTls: false });
         expect(result).to.be.an('array').that.is.empty;
     });
 

@@ -127,16 +127,17 @@ const listenAddressesOptions = [
 //     additionalMultiaddrs?: Array<Multiaddr | string>
 // } = {}): { listen: Array<string> } => {
 const listenAddresses = ({ ...inputValues }) => {
-    console.log(`listenAddresses inputValues: ${JSON.stringify(inputValues)}`);
     for (const key in inputValues) {
         if (inputValues[key] === undefined) {
             delete inputValues[key];
         }
     }
+    // const mappedProcessOptionsParams = Object.entries(inputValues).map(([key, value]) => [key, {name: key, value}])
+    // console.log(`mappedProcessOptionsParams: ${JSON.stringify(mappedProcessOptionsParams)}`)
     // const formattedInputValues = converMaptoList(inputValues)
     // console.log(`formattedInputValues: ${JSON.stringify(formattedInputValues)}`)
     const injectedDefaults = injectDefaultValues({ values: inputValues, options: listenAddressesOptions });
-    console.log(`injectedDefaults: ${JSON.stringify(injectedDefaults)}`);
+    // console.log(`injectedDefaults: ${JSON.stringify(injectedDefaults)}`)
     const compiledListenAddressOptions = compileProcessOptions(injectedDefaults);
     // const compiledListenAddressOptions = injectDefaultValues({values: formattedInputValues, options: listenAddressesOptions})
     // console.log(`compiledListenAddressOptions: ${JSON.stringify(compiledListenAddressOptions)}`)
@@ -183,8 +184,8 @@ const listenAddresses = ({ ...inputValues }) => {
     // if (enableCircuitRelayTransport) {
     //     listenAddresses.push('/p2p-circuit')
     // }
-    if (enableWebRTCStar) {
-        if (!webRTCStarAddress) {
+    if (enableWebRTCStar === true) {
+        if (webRTCStarAddress === undefined || webRTCStarAddress === null) {
             throw new Error('webrtcStarAddress must be provided');
         }
         listenAddresses.push(webRTCStarAddress.toString());
@@ -199,7 +200,6 @@ const listenAddresses = ({ ...inputValues }) => {
             }
         });
     }
-    console.log(`listenAddresses completed: ${JSON.stringify(listenAddresses)}`);
     return { listen: listenAddresses };
 };
 export { setListenAddresses, listenAddresses as listenAddressesConfig, listenAddressesOptions };

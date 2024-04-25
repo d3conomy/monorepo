@@ -1,6 +1,13 @@
 import { expect } from 'chai';
 import { listenAddressesConfig as listenAddresses } from '../src/process-libp2p/address.js';
 describe('listenAddresses', () => {
+    it('should throw an error if webRTCStarAddress is not provided', () => {
+        expect(() => {
+            let result = listenAddresses({
+                enableWebRTCStar: true
+            });
+        }).to.throw('webrtcStarAddress must be provided');
+    });
     it('should return an array of listen addresses', () => {
         const result = listenAddresses({
             enableTcp: true,
@@ -16,9 +23,9 @@ describe('listenAddresses', () => {
             enableWebSockets: true,
             enableWebRTC: true,
             enableWebRTCStar: true,
-            webRTCStarAddress: 'webrtc-star-address',
+            webRTCStarAddress: '/dns4/signal.ipfs.trnkt.xyz/tcp/443/wss/p2p-webrtc-star/',
             enableCircuitRelayTransport: true,
-            additionalMultiaddrs: ['additional-multiaddr-1', 'additional-multiaddr-2']
+            additionalMultiaddrs: ['/dns4/bootstrap.ipfs.trnkt.xyz/tcp/4001/p2p/additional-multiaddr-1']
         });
         expect(result.listen).to.deep.equal([
             '/ip4/0.0.0.0/tcp/8080',
@@ -32,16 +39,8 @@ describe('listenAddresses', () => {
             '/ip6/::/udp/9090/quic-v1/webtransport',
             '/ip6/::/tcp/8080/ws/',
             '/webrtc',
-            'webrtc-star-address',
-            'additional-multiaddr-1',
-            'additional-multiaddr-2'
+            '/dns4/signal.ipfs.trnkt.xyz/tcp/443/wss/p2p-webrtc-star/',
+            '/dns4/bootstrap.ipfs.trnkt.xyz/tcp/4001/p2p/additional-multiaddr-1'
         ]);
-    });
-    it('should throw an error if webRTCStarAddress is not provided', () => {
-        expect(() => {
-            listenAddresses({
-                enableWebRTCStar: true
-            });
-        }).to.throw('webrtcStarAddress must be provided');
     });
 });

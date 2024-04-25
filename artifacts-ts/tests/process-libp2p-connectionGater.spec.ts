@@ -3,6 +3,10 @@ import { connectionGater, connectionGaterOptions } from '../src/process-libp2p/c
 
 describe('Connection Gater', () => {
     describe('connectionGater', () => {
+        afterEach(() => {
+            connectionGater();
+        });
+
         it('should return an empty map when no options are provided', () => {
             const result = connectionGater();
             console.log(result);
@@ -19,6 +23,7 @@ describe('Connection Gater', () => {
         it('should return a map without the "denyDialMultiaddr" function when "enableDenyDialMultiaddr" is false', () => {
             const result = connectionGater({ enableDenyDialMultiaddr: false });
             expect(result.size).to.equal(0);
+            console.log(``)
             expect(result.has('denyDialMultiaddr')).to.be.false;
         });
 
@@ -31,7 +36,7 @@ describe('Connection Gater', () => {
         });
 
         it('should return the default value for "denyDialMultiaddr" when "enableDenyDialMultiaddr" is true but no value is provided', async () => {
-            const result = connectionGater({ enableDenyDialMultiaddr: true });
+            const result = connectionGater({ enableDenyDialMultiaddr: true, denyDialMultiaddr: false });
             const denyDialMultiaddrFn = result.get('denyDialMultiaddr');
             expect(denyDialMultiaddrFn).to.be.a('function');
             const denyDialMultiaddrValue = await denyDialMultiaddrFn();

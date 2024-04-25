@@ -1,4 +1,4 @@
-import { createProcessOption } from "../process-interface/index.js";
+import { createProcessOption, injectDefaultValues, mapProcessOptions } from "../process-interface/index.js";
 const connectionGaterOptions = [
     createProcessOption({
         name: 'enableDenyDialMultiaddr',
@@ -15,9 +15,13 @@ const connectionGaterOptions = [
  * Default Connection Gater libp2p options
  * @category Libp2p
  */
-const connectionGater = ({ enableDenyDialMultiaddr = true, denyDialMultiaddr = false } = {}) => {
+const connectionGater = ({ ...values } = {}) => {
+    const injectedDefaultValues = injectDefaultValues({ options: connectionGaterOptions, values });
+    const { enableDenyDialMultiaddr, denyDialMultiaddr } = mapProcessOptions(injectedDefaultValues);
+    console.log(`enableDenyDialMultiaddr: ${enableDenyDialMultiaddr}`);
+    console.log(`denyDialMultiaddr: ${denyDialMultiaddr}`);
     let connectionGaters = new Map();
-    if (enableDenyDialMultiaddr) {
+    if (enableDenyDialMultiaddr === true) {
         connectionGaters.set('denyDialMultiaddr', async () => {
             return denyDialMultiaddr;
         });
