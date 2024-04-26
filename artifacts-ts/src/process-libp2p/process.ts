@@ -8,40 +8,43 @@ class Libp2pProcess extends Process implements IProcess {
 
     constructor ({
         id,
-        process,
+        container,
         options,
         commands
     }: {
         id: PodProcessId,
-        process?: IProcessContainer,
+        container?: IProcessContainer,
         options?: Array<IProcessOption>,
         commands?: Array<IProcessCommand>
     }) {
-        if (process?.process === undefined) {
+        if (container?.instance === undefined) {
             if (options === undefined) {
                 options = libp2pOptionsParams()
             }
 
-            const init = async (processOptions: IProcessOptionsList | undefined): Promise<Libp2p> => { return await createLibp2p(await buildSubProcesses(processOptions)) }
-            process = createProcessContainer<ProcessType.LIBP2P>({
+            const init = async (
+                processOptions: IProcessOptionsList | undefined
+            ): Promise<Libp2p> => { 
+                return await createLibp2p(await buildSubProcesses(processOptions))
+            }
+            
+            container = createProcessContainer<ProcessType.LIBP2P>({
                 type: ProcessType.LIBP2P,
-                process,
+                instance: undefined,
                 options,
                 init
             })
         }
         super(
             id, 
-            process,
+            container,
             commands ? commands : libp2pCommands
         )
     }
 
-
-
     public async stop(): Promise<void> {
         this.jobQueue.stop()
-        this.process?.process?.stop()
+        this.container?.instance?.stop()
     }
 }
 

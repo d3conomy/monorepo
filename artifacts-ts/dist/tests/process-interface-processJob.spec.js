@@ -26,7 +26,7 @@ describe('Process Job', () => {
         };
         processCommands = new ProcessCommands({
             commands: [processCommand],
-            proc: () => console.log('test'),
+            container: { type: ProcessType.CUSTOM, instance: () => console.log('test') },
         });
         processCommands.set(processCommand.name, processCommand);
         jobId = new JobId({

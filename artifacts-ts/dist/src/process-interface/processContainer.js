@@ -1,22 +1,22 @@
 class ProcessContainer {
     type;
-    process;
+    instance;
     options;
     init;
-    constructor({ type, process, options, init }) {
+    constructor({ type, instance, options, init }) {
         this.type = type;
-        this.process = process;
+        this.instance = instance;
         this.options = options;
         this.init = init;
     }
-    loadProcess(process) {
-        this.process = process;
+    loadInstance(instance) {
+        this.instance = instance;
     }
 }
-const createProcessContainer = ({ type, process, options, init }) => {
+const createProcessContainer = ({ type, instance, options, init }) => {
     return new ProcessContainer({
         type,
-        process,
+        instance,
         options,
         init
     });

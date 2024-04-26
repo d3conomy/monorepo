@@ -5,7 +5,7 @@ import { JobQueue } from "./processJobQueue.js";
 import { ProcessStage } from "./processStages.js";
 interface IProcess {
     id: PodProcessId;
-    process?: IProcessContainer;
+    container?: IProcessContainer;
     commands: IProcessCommands;
     jobQueue: JobQueue;
     check(): boolean;
@@ -17,10 +17,10 @@ interface IProcess {
 }
 declare class Process implements IProcess {
     id: PodProcessId;
-    process?: IProcessContainer;
+    container?: IProcessContainer;
     commands: ProcessCommands;
     jobQueue: JobQueue;
-    constructor(id: PodProcessId, process: IProcessContainer, commands: Array<IProcessCommand>);
+    constructor(id: PodProcessId, container: IProcessContainer, commands: Array<IProcessCommand>);
     check(): boolean;
     status(): ProcessStage;
     init(): Promise<void>;
@@ -28,6 +28,6 @@ declare class Process implements IProcess {
     stop(): Promise<void>;
     restart(): Promise<void>;
 }
-declare const createProcess: (id: PodProcessId, process: IProcessContainer, commands: Array<IProcessCommand> | ProcessCommands) => IProcess;
+declare const createProcess: (id: PodProcessId, container: IProcessContainer, commands: Array<IProcessCommand> | ProcessCommands) => IProcess;
 export { createProcess, IProcess, Process };
 //# sourceMappingURL=process.d.ts.map

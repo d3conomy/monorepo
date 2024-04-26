@@ -5,56 +5,56 @@ import { ProcessType } from "./processTypes"
 
 interface IProcessContainer<T = ProcessType> {
     type: T
-    process?: any
+    instance?: any
     options?: IProcessOptionsList
 
     init?: (options?: IProcessOptionsList) => Promise<any>
-    loadProcess?: (process: any) => void
+    loadInstance?: (instance: any) => void
 }
 
 
 class ProcessContainer<T = ProcessType> implements IProcessContainer<T> {
     type: T
-    process?: any
+    instance?: any
     options?: IProcessOptionsList
     init?: (options?: IProcessOptionsList) => Promise<any>
 
     constructor({
         type,
-        process,
+        instance,
         options,
         init
     } : {
         type: T,
-        process?: any,
+        instance?: any,
         options?: IProcessOptionsList,
         init?: (options?: IProcessOptionsList) => Promise<any>
     }) {
         this.type = type
-        this.process = process
+        this.instance = instance
         this.options = options
         this.init = init
     }
 
-    loadProcess(process: any): void {
-        this.process = process
+    loadInstance(instance: any): void {
+        this.instance = instance
     }
 }
 
 const createProcessContainer = <T = ProcessType>({
     type,
-    process,
+    instance,
     options,
     init
 } : {
     type: T,
-    process?: any,
+    instance?: any,
     options?: IProcessOptionsList,
     init?: (options?: IProcessOptionsList) => Promise<any>
 }): ProcessContainer<T> => {
     return new ProcessContainer<T>({
         type,
-        process,
+        instance,
         options,
         init
     })

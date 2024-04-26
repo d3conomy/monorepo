@@ -9,7 +9,7 @@ import { ProcessStage } from "./processStages.js"
 
 interface IProcess {
     id: PodProcessId
-    process?: IProcessContainer
+    container?: IProcessContainer
     commands: IProcessCommands
     jobQueue: JobQueue
 
@@ -23,24 +23,24 @@ interface IProcess {
 
 class Process implements IProcess {
     id: PodProcessId;
-    process?: IProcessContainer;
+    container?: IProcessContainer;
     commands: ProcessCommands;
     jobQueue: JobQueue;
 
     constructor(
         id: PodProcessId,
-        process: IProcessContainer,
+        container: IProcessContainer,
         commands: Array<IProcessCommand>
     ) {
         this.id = id;
-        this.process = process;
-        this.commands = new ProcessCommands({commands, proc: this.process.process});
+        this.container = container;
+        this.commands = new ProcessCommands({commands, container: this.container});
         this.jobQueue = new JobQueue();
 
     }
 
     check(): boolean {
-        return this.process !== undefined;
+        return this.container !== undefined;
     }
 
     status(): ProcessStage {
@@ -50,28 +50,31 @@ class Process implements IProcess {
     async init(): Promise<void> {
         this.jobQueue.init(this.commands);
 
-        // console.log(`this.process: ${JSON.stringify(this.process)}`)
+        // console.log(`this.container: ${JSON.stringify(this.container)}`)
 
         try{
-            if (this.process?.init !== undefined) {
+            if (this.container?.init !== undefined) {
 
-                const processExec: Libp2p = await this.process?.init(this.process?.options);
+                const containerExec: any = await this.container?.init(this.container?.options);
 
-                // console.log(`processExec: ${processExec}`)
+                // console.log(`containerExec: ${containerExec}`)
 
-                if (processExec && this.process.process === undefined) {
-                    if (this.process?.loadProcess) {
-                        this.process?.loadProcess(processExec);
+                if (containerExec && this.container.instance === undefined) {
+                    if (this.container?.loadInstance) {
+                        this.container?.loadInstance(containerExec);
                     }   
                 }
             }
         } catch (e) {
-            console.error(`Error initializing process: ${e}`)
+            console.error(`Error initializing container: ${e}`)
         }
 
-        this.commands.loadProcess(this.process?.process)
+        if (this.container?.instance === undefined) {
+            throw new Error(`Container instance is undefined`)
+        }
+        this.commands.loadContainer(this.container)
 
-        // console.log(`this.process: ${JSON.stringify(this.process)}`)
+        // console.log(`this.container: ${JSON.stringify(this.container)}`)
     }
 
     async start(parallel?: boolean): Promise<void> {
@@ -95,13 +98,13 @@ class Process implements IProcess {
 
 const createProcess = (
     id: PodProcessId,
-    process: IProcessContainer,
+    container: IProcessContainer,
     commands: Array<IProcessCommand> | ProcessCommands
 ): IProcess => {
     if (commands instanceof Array) {
-        return new Process(id, process, commands);
+        return new Process(id, container, commands);
     }
-    return new Process(id, process, [...commands.values()])
+    return new Process(id, container, [...commands.values()])
 }
 
 

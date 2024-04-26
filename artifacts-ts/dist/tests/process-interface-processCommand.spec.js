@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { ProcessCommands } from '../src/process-interface/processCommand.js';
-import { ProcessType } from '../src/process-interface/index.js';
+import { ProcessType, createProcessContainer } from '../src/process-interface/index.js';
 import { importFromFile, importProcessCommandsFromJSON, importProcessContainerFromJSON } from '../src/process-interface/processImport.js';
 import { runCommand } from '../src/process-interface/processJob.js';
 import { JobId, SystemId } from '../src/id-reference-factory/index.js';
@@ -23,7 +23,10 @@ describe('Process Command Tests', () => {
     };
     const processCommands = new ProcessCommands({
         commands: [processCommand],
-        proc: () => console.log('test')
+        container: createProcessContainer({
+            type: ProcessType.CUSTOM,
+            instance: () => console.log('test')
+        })
     });
     const processCommandOutput = {
         output: 'output',
@@ -224,13 +227,13 @@ describe('Process Command Tests', () => {
         };
         expect(processCommand).to.exist;
         expect(processCommand).to.be.an('object');
-        // expect(processCommand?.process).to.exist;
+        expect(processCommands.container).to.exist;
         const jobId = new JobId({
             name: 'testJob',
             componentId: new SystemId({ name: 'testSystem' }),
         });
         const job = await runCommand(jobId, processExecuteCommand, processCommands);
-        // console.log(job);
+        console.log(job);
         expect(job).to.exist;
         expect(job).to.be.an('object');
         expect(job.result).to.exist;

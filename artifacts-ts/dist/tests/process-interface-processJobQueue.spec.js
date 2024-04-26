@@ -3,6 +3,7 @@ import { JobQueue } from '../src/process-interface/processJobQueue.js';
 import { ProcessCommands, createProcessCommand } from '../src/process-interface/processCommand.js';
 import { createProcessContainer } from '../src/process-interface/processContainer.js';
 import { JobId, SystemId } from '../src/id-reference-factory/index.js';
+import { ProcessType } from '../src/process-interface/index.js';
 const NUM_TESTS = 100;
 describe('JobQueue', () => {
     let jobQueue;
@@ -47,10 +48,10 @@ describe('JobQueue', () => {
             status: 'initializing'
         };
         const processCommand = createProcessCommand({ name: 'test', action: async () => { return "test"; } });
-        const processContainer = createProcessContainer({ type: 'custom', process: () => { return "test"; } });
+        const processContainer = createProcessContainer({ type: ProcessType.CUSTOM, instance: () => { return "test"; } });
         let processCommands = new ProcessCommands({
             commands: [processCommand],
-            proc: processContainer
+            container: processContainer
         });
         const jobQueue = new JobQueue();
         await jobQueue.init(processCommands);
@@ -78,10 +79,10 @@ describe('JobQueue', () => {
         this.timeout(0);
         let processCommandsList = [];
         processCommandsList.push(createProcessCommand({ name: 'test', action: async () => { return "test"; } }));
-        const processContainer = createProcessContainer({ type: 'custom', process: () => { return "test"; } });
+        const processContainer = createProcessContainer({ type: ProcessType.CUSTOM, instance: () => { return "test"; } });
         let processCommands = new ProcessCommands({
             commands: [...processCommandsList],
-            proc: processContainer
+            container: processContainer
         });
         jobQueue.init(processCommands);
         for (let i = 0; i < NUM_TESTS; i++) {
@@ -108,10 +109,10 @@ describe('JobQueue', () => {
         this.timeout(0);
         let processCommandsList = [];
         processCommandsList.push(createProcessCommand({ name: 'test', action: async () => { return "test"; } }));
-        const processContainer = createProcessContainer({ type: 'custom', process: () => { return "test"; } });
+        const processContainer = createProcessContainer({ type: ProcessType.CUSTOM, instance: () => { return "test"; } });
         let processCommands = new ProcessCommands({
             commands: [...processCommandsList],
-            proc: processContainer
+            container: processContainer
         });
         jobQueue.init(processCommands);
         for (let i = 0; i < NUM_TESTS; i++) {
@@ -144,10 +145,10 @@ describe('JobQueue', () => {
             status: 'initializing'
         };
         const processCommand = createProcessCommand({ name: 'test', action: async () => { return "test"; } });
-        const processContainer = createProcessContainer({ type: 'custom', process: () => { return "test"; } });
+        const processContainer = createProcessContainer({ type: ProcessType.CUSTOM, instance: () => { return "test"; } });
         let processCommands = new ProcessCommands({
             commands: [processCommand],
-            proc: processContainer
+            container: processContainer
         });
         jobQueue.init(processCommands);
         const result = await jobQueue.execute(job);
@@ -157,10 +158,10 @@ describe('JobQueue', () => {
         this.timeout(0);
         let processCommandsList = [];
         processCommandsList.push(createProcessCommand({ name: 'test', action: async () => { return "test"; } }));
-        const processContainer = createProcessContainer({ type: 'custom', process: () => { return "test"; } });
+        const processContainer = createProcessContainer({ type: ProcessType.CUSTOM, instance: () => { return "test"; } });
         let processCommands = new ProcessCommands({
             commands: [...processCommandsList],
-            proc: processContainer
+            container: processContainer
         });
         jobQueue.init(processCommands);
         for (let i = 0; i < NUM_TESTS; i++) {

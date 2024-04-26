@@ -4,6 +4,7 @@ import { IProcessCommands, ProcessCommands, createProcessCommand } from '../src/
 import { IProcessContainer, createProcessContainer } from '../src/process-interface/processContainer.js';
 import { IProcessJob, runCommand } from '../src/process-interface/processJob.js';
 import { JobId, SystemId } from '../src/id-reference-factory/index.js';
+import { ProcessType } from '../src/process-interface/index.js';
 
 const NUM_TESTS = 100
 
@@ -58,12 +59,12 @@ describe('JobQueue', () => {
 
         const processCommand = createProcessCommand({ name: 'test', action: async (): Promise<string> => { return "test" }});
 
-        const processContainer = createProcessContainer({type: 'custom', process: () => { return "test" }});
+        const processContainer = createProcessContainer<ProcessType.CUSTOM>({type: ProcessType.CUSTOM, instance: () => { return "test" }});
 
 
         let processCommands = new ProcessCommands({
             commands: [processCommand],
-            proc: processContainer
+            container: processContainer
         });
 
         const jobQueue = new JobQueue();
@@ -98,11 +99,11 @@ describe('JobQueue', () => {
         this.timeout(0);
         let processCommandsList = [];
         processCommandsList.push(createProcessCommand({ name: 'test', action: async () => { return "test" }}));
-        const processContainer = createProcessContainer({type: 'custom', process: () => { return "test" }});
+        const processContainer = createProcessContainer<ProcessType.CUSTOM>({type: ProcessType.CUSTOM, instance: () => { return "test" }});
 
         let processCommands = new ProcessCommands({
             commands: [...processCommandsList],
-            proc: processContainer
+            container: processContainer
         });
 
         jobQueue.init(processCommands);
@@ -133,11 +134,11 @@ describe('JobQueue', () => {
         this.timeout(0);
         let processCommandsList = [];
         processCommandsList.push(createProcessCommand({ name: 'test', action: async () => { return "test" }}));
-        const processContainer = createProcessContainer({type: 'custom', process: () => { return "test" }});
+        const processContainer = createProcessContainer<ProcessType.CUSTOM>({type: ProcessType.CUSTOM, instance: () => { return "test" }});
 
         let processCommands = new ProcessCommands({
             commands: [...processCommandsList],
-            proc: processContainer
+            container: processContainer
         });
 
         jobQueue.init(processCommands);
@@ -176,12 +177,12 @@ describe('JobQueue', () => {
 
         const processCommand = createProcessCommand({ name: 'test', action: async () => { return "test" }});
 
-        const processContainer = createProcessContainer({type: 'custom', process: () => { return "test" }});
+        const processContainer = createProcessContainer<ProcessType.CUSTOM>({type: ProcessType.CUSTOM, instance: () => { return "test" }});
 
 
         let processCommands = new ProcessCommands({
             commands: [processCommand],
-            proc: processContainer
+            container: processContainer
         });
 
         jobQueue.init(processCommands);
@@ -195,11 +196,11 @@ describe('JobQueue', () => {
         this.timeout(0);
         let processCommandsList = [];
         processCommandsList.push(createProcessCommand({ name: 'test', action: async () => { return "test" }}));
-        const processContainer = createProcessContainer({type: 'custom', process: () => { return "test" }});
+        const processContainer = createProcessContainer<ProcessType.CUSTOM>({type: ProcessType.CUSTOM, instance: () => { return "test" }});
 
         let processCommands = new ProcessCommands({
             commands: [...processCommandsList],
-            proc: processContainer
+            container: processContainer
         });
 
         jobQueue.init(processCommands);

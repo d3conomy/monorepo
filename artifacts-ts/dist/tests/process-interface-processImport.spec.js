@@ -32,8 +32,8 @@ describe('importFromFile', () => {
 describe('importProcessContainerFromJSON', () => {
     it('should create a process container from JSON', () => {
         const json = {
-            type: 'custom',
-            process: "() => { return 'hello' }",
+            type: ProcessType.CUSTOM,
+            instance: "() => { return 'hello' }",
             options: { foo: 'bar' }
         };
         const result = importProcessContainerFromJSON(json);
@@ -45,7 +45,7 @@ describe('importProcessContainerFromJSON', () => {
 });
 describe('importProcessCommandsFromJSON', () => {
     it('should create process commands from JSON', () => {
-        const process = createProcessContainer({ type: ProcessType.CUSTOM, process: () => { return 'hello'; } });
+        const process = createProcessContainer({ type: ProcessType.CUSTOM, instance: () => { return 'hello'; } });
         const json = {
             commands: [
                 { name: 'command1', action: '() => { return "action1"}' },

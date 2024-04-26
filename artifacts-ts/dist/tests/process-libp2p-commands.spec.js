@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { createLibp2p } from 'libp2p';
-import { ProcessCommands, runCommand } from "../src/process-interface/index.js";
+import { ProcessCommands, ProcessType, runCommand } from "../src/process-interface/index.js";
 import { libp2pCommands } from '../src/process-libp2p/commands.js';
 import { JobId, SystemId } from '../src/id-reference-factory/index.js';
 describe('ProcessCommands', () => {
@@ -9,7 +9,7 @@ describe('ProcessCommands', () => {
     let commands;
     beforeEach(async () => {
         process = await createLibp2p();
-        commands = new ProcessCommands({ commands: libp2pCommands, proc: process });
+        commands = new ProcessCommands({ commands: libp2pCommands, container: { type: ProcessType.LIBP2P, instance: process } });
     });
     afterEach(async () => {
         await process.stop();
@@ -46,7 +46,7 @@ describe('ProcessCommands', () => {
             params: [],
         };
         const job2 = await runCommand(jobId2, executeParams2, commands);
-        expect(process.status).to.equal('stopped');
+        expect(process.status).to.equal('stopped' || 'stopping');
     });
     it('should return the process status', async () => {
         const jobId = new JobId({

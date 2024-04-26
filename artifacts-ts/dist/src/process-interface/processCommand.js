@@ -1,13 +1,10 @@
 import { ProcessType } from "./processTypes.js";
 class ProcessCommands extends Map {
     type = ProcessType.CUSTOM;
-    process;
-    constructor({ commands, proc } = {}) {
+    container;
+    constructor({ commands, container } = {}) {
         super();
-        this.process = {
-            type: this.type,
-            process: proc
-        };
+        this.container = container;
         if (commands) {
             for (const command of commands) {
                 this.set(command.name, command);
@@ -17,8 +14,8 @@ class ProcessCommands extends Map {
     isUnique(name) {
         return !this.has(name);
     }
-    loadProcess(proc) {
-        this.process = proc;
+    loadContainer(container) {
+        this.container = container;
     }
 }
 const createProcessCommandArgs = ({ name, description, required, defaultValue }) => {

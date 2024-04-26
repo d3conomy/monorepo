@@ -1,9 +1,9 @@
 {
     "id": "customProcess",
     "type": "custom",
-    "process": "(args) => { return `Process has been run ${args[0].value}` }",
+    "instance": "(args) => { return `Process has been run ${args[0].value}` }",
     "description": "A Custom process that runs a process",
-    "init": "(args, process) => { return `Process has been initialized ${...args}` }",
+    "init": "(args, instance) => { return `Process has been initialized ${args}` }",
     "options": [
         {
             "name": "option1",
@@ -67,7 +67,7 @@
             "type": "custom",
             "description": "A Custom command that runs a process",
             "args": [],
-            "action": "(args, process) => { return process(args) }"
+            "action": "(args, instance) => { return instance(args) }"
         }
     ]
 }

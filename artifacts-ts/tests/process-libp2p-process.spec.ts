@@ -42,8 +42,8 @@ describe("Libp2pProcess", () => {
         );
 
         // await process.init()
-        await process.process?.process?.start()
-        expect(typeof process.process?.process).to.be.equal('object');
+        await process.container?.instance?.start()
+        expect(typeof process.container?.instance).to.be.equal('object');
         await process.stop()
     });
 
@@ -63,7 +63,7 @@ describe("Libp2pProcess", () => {
         // await process.init()
         const process = await createLibp2pProcess(processId, options)
         // console.log(process)
-        expect(typeof process.process?.process).to.be.equal('object');
+        expect(typeof process.container?.instance).to.be.equal('object');
         const executeCommand: IProcessExecuteCommand = {
             command: "peerId"
         }
@@ -95,8 +95,8 @@ describe("Libp2pProcess", () => {
         });
 
         await process.init()
-        console.log(`process.process?.process: ${process.process?.process}`)
-        expect(typeof process.process?.process).to.be.equal('object');
+        console.log(`process.container?.container: ${process.container?.instance}`)
+        expect(typeof process.container?.instance).to.be.equal('object');
         
         for (const command in libp2pCommands) {
             // // console.log(libp2pCommands[command])

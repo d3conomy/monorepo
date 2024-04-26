@@ -40,22 +40,23 @@ const importFromFile = async (filepath: string): Promise<any> => {
 const importProcessContainerFromJSON = (json: any): IProcessContainer => {
     const processContainer: IProcessContainer = createProcessContainer({
         type: isProcessType(json.type),
-        process: sanitizeEval(json.process),
-        options: json.options
+        instance: sanitizeEval(json.instance),
+        options: json.options,
+        init: json.init !== undefined ? sanitizeEval(json.init) : undefined
 });
 
     return processContainer;
 }
 
 
-const importProcessCommandsFromJSON = (process: IProcessContainer, json: any): IProcessCommands => {
+const importProcessCommandsFromJSON = (container: IProcessContainer, json: any): IProcessCommands => {
     let commands: ProcessCommands;
     
     commands = new ProcessCommands({
-        proc: process.process
+        container
     });
 
-    for (const command of json.commands) {
+    for (let command of json.commands) {
         command.action = sanitizeEval(command.action);
         commands.set(command.name, command);
     }

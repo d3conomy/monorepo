@@ -1,6 +1,6 @@
 import { JobId } from "../id-reference-factory/index.js";
 import { IProcessCommand, IProcessCommands, IProcessExecuteCommand } from "./processCommand.js";
-import { IProcessContainer } from "./processContainer";
+import { IProcessContainer } from "./processContainer.js";
 import { ProcessStage } from "./processStages.js";
 /**
  * Interface for process jobs

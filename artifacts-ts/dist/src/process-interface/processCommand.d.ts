@@ -18,7 +18,7 @@ interface IProcessCommandOutput {
 interface IProcessCommand {
     type: ProcessType;
     name: string;
-    action: (args?: Array<IProcessCommandArgInput>, process?: IProcessContainer<ProcessType>['process']) => Promise<any> | any;
+    action: (args?: Array<IProcessCommandArgInput>, instance?: IProcessContainer<ProcessType>['instance']) => Promise<any> | any;
     args: Array<IProcessCommandArg>;
     description?: string;
 }
@@ -29,19 +29,19 @@ interface IProcessExecuteCommand {
 }
 interface IProcessCommands extends Map<IProcessCommand['name'], IProcessCommand>, IProcessContainer<ProcessType> {
     type: IProcessCommand['type'];
-    process?: IProcessContainer | undefined;
+    container?: IProcessContainer | undefined;
     isUnique(name: IProcessCommand['name']): boolean;
-    loadProcess(proc: IProcessContainer<IProcessCommand['type']>): void;
+    loadContainer(container: IProcessContainer<IProcessCommand['type']>): void;
 }
 declare class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> implements IProcessCommands, IProcessContainer<IProcessCommand['type']> {
     readonly type: ProcessType;
-    process?: IProcessContainer | undefined;
-    constructor({ commands, proc }?: {
+    container: IProcessContainer | undefined;
+    constructor({ commands, container }?: {
         commands?: Array<IProcessCommand>;
-        proc?: any;
+        container?: IProcessContainer<IProcessCommand['type']>;
     });
     isUnique(name: IProcessCommand['name']): boolean;
-    loadProcess(proc: IProcessContainer<ProcessType>): void;
+    loadContainer(container: IProcessContainer<ProcessType>): void;
 }
 declare const createProcessCommandArgs: ({ name, description, required, defaultValue }: {
     name: string;

@@ -1,6 +1,6 @@
 
 import { ProcessType } from "./processTypes.js";
-import { IProcessContainer } from './processContainer.js';
+import { IProcessContainer, createProcessContainer } from './processContainer.js';
 
 interface IProcessCommandArg {
     name: string;
@@ -24,7 +24,7 @@ interface IProcessCommandOutput {
 interface IProcessCommand {
     type: ProcessType;
     name: string;
-    action: (args?: Array<IProcessCommandArgInput>, process?: IProcessContainer<ProcessType>['process']) => Promise<any> | any ;
+    action: (args?: Array<IProcessCommandArgInput>, instance?: IProcessContainer<ProcessType>['instance']) => Promise<any> | any ;
     args: Array<IProcessCommandArg>;
     description?: string;
 }
@@ -37,30 +37,27 @@ interface IProcessExecuteCommand {
 
 interface IProcessCommands extends Map<IProcessCommand['name'], IProcessCommand>, IProcessContainer<ProcessType> {
     type: IProcessCommand['type'];
-    process?: IProcessContainer | undefined;
+    container?: IProcessContainer | undefined;
 
     isUnique(name: IProcessCommand['name']): boolean;
-    loadProcess(proc: IProcessContainer<IProcessCommand['type']>): void
+    loadContainer(container: IProcessContainer<IProcessCommand['type']>): void
 }
 
 
 class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> implements IProcessCommands, IProcessContainer<IProcessCommand['type']>{
     public readonly type: ProcessType = ProcessType.CUSTOM;
-    public process?: IProcessContainer | undefined;
+    public container: IProcessContainer | undefined;
 
     constructor({
         commands,
-        proc
+        container
     }:{
         commands?: Array<IProcessCommand>,
-        proc?: any
+        container?: IProcessContainer<IProcessCommand['type']>
     } = {}) {
         super();
 
-        this.process = {
-            type: this.type,
-            process: proc
-        }
+        this.container = container;
 
         if (commands) {
             for (const command of commands) {
@@ -73,8 +70,8 @@ class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> impl
         return !this.has(name);
     }
 
-    loadProcess(proc: IProcessContainer<ProcessType>): void {
-        this.process = proc
+    loadContainer(container: IProcessContainer<ProcessType>): void {
+        this.container = container
     }
 }
 

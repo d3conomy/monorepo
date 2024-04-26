@@ -1,6 +1,6 @@
 import { JobId } from "../id-reference-factory/index.js";
 import { IProcessCommand, IProcessCommands, IProcessExecuteCommand } from "./processCommand.js";
-import { IProcessContainer } from "./processContainer";
+import { IProcessContainer } from "./processContainer.js";
 import { ProcessStage } from "./processStages.js";
 
 
@@ -24,8 +24,8 @@ const jobRunner = async (
     const startTime = new Date();
     try{
         job.status = ProcessStage.RUNNING;
-        // console.log(`Job ${job.jobId} started, running command ${job.command}, with params: ${job.params}, on process ${process?.process}`)
-        output = await processCommand.action(job.params, process?.process);
+        // console.log(`Job ${job.jobId} started, running command ${job.command}, with params: ${job.params}, on process ${process?.container`)
+        output = await processCommand.action(job.params, process?.instance);
         // console.log(`Job ${job.jobId} finished, with output: ${output}`)
         job.status = ProcessStage.FINISHED;
     }
@@ -78,7 +78,7 @@ const runCommand = async (
     }
     const processCommand = commandSelector(job, processCommands);
 
-    return await jobRunner(job, processCommand, processCommands.process);
+    return await jobRunner(job, processCommand, processCommands.container);
 }
 
 

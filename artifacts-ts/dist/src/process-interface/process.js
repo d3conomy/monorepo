@@ -3,40 +3,43 @@ import { JobQueue } from "./processJobQueue.js";
 import { ProcessStage } from "./processStages.js";
 class Process {
     id;
-    process;
+    container;
     commands;
     jobQueue;
-    constructor(id, process, commands) {
+    constructor(id, container, commands) {
         this.id = id;
-        this.process = process;
-        this.commands = new ProcessCommands({ commands, proc: this.process.process });
+        this.container = container;
+        this.commands = new ProcessCommands({ commands, container: this.container });
         this.jobQueue = new JobQueue();
     }
     check() {
-        return this.process !== undefined;
+        return this.container !== undefined;
     }
     status() {
         return this.jobQueue.isEmpty() ? ProcessStage.PENDING : ProcessStage.RUNNING;
     }
     async init() {
         this.jobQueue.init(this.commands);
-        // console.log(`this.process: ${JSON.stringify(this.process)}`)
+        // console.log(`this.container: ${JSON.stringify(this.container)}`)
         try {
-            if (this.process?.init !== undefined) {
-                const processExec = await this.process?.init(this.process?.options);
-                // console.log(`processExec: ${processExec}`)
-                if (processExec && this.process.process === undefined) {
-                    if (this.process?.loadProcess) {
-                        this.process?.loadProcess(processExec);
+            if (this.container?.init !== undefined) {
+                const containerExec = await this.container?.init(this.container?.options);
+                // console.log(`containerExec: ${containerExec}`)
+                if (containerExec && this.container.instance === undefined) {
+                    if (this.container?.loadInstance) {
+                        this.container?.loadInstance(containerExec);
                     }
                 }
             }
         }
         catch (e) {
-            console.error(`Error initializing process: ${e}`);
+            console.error(`Error initializing container: ${e}`);
         }
-        this.commands.loadProcess(this.process?.process);
-        // console.log(`this.process: ${JSON.stringify(this.process)}`)
+        if (this.container?.instance === undefined) {
+            throw new Error(`Container instance is undefined`);
+        }
+        this.commands.loadContainer(this.container);
+        // console.log(`this.container: ${JSON.stringify(this.container)}`)
     }
     async start(parallel) {
         if (parallel) {
@@ -54,10 +57,10 @@ class Process {
         await this.start(false);
     }
 }
-const createProcess = (id, process, commands) => {
+const createProcess = (id, container, commands) => {
     if (commands instanceof Array) {
-        return new Process(id, process, commands);
+        return new Process(id, container, commands);
     }
-    return new Process(id, process, [...commands.values()]);
+    return new Process(id, container, [...commands.values()]);
 };
 export { createProcess, Process };
