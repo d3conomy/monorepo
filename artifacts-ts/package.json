@@ -21,7 +21,6 @@
   "author": "d3",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.6.8",
     "@chainsafe/libp2p-gossipsub": "^13.0.0",
     "@chainsafe/libp2p-noise": "15.0.0",
     "@chainsafe/libp2p-yamux": "^6.0.2",
@@ -43,8 +42,9 @@
     "@libp2p/websockets": "^8.0.17",
     "@libp2p/webtransport": "^4.0.22",
     "@multiformats/multiaddr": "^12.1.1",
-    "@orbitdb/core": "2.1.0",
+    "@orbitdb/core": "^2.2.0",
     "@orbitdb/identity-provider-did": "^1.0.2",
+    "axios": "^1.6.8",
     "blockstore-core": "^4.4.0",
     "blockstore-level": "^1.1.8",
     "chance": "^1.1.11",
@@ -66,9 +66,9 @@
     "@types/node": "^20.12.7",
     "@types/sinon": "^17.0.3",
     "@types/uuid": "^9.0.8",
-    "sinon": "^17.0.1",
-    "mocha": "^10.4.0",
     "chai": "^5.1.0",
+    "mocha": "^10.4.0",
+    "sinon": "^17.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.2"
   }

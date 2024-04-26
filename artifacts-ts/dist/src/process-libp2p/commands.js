@@ -4,59 +4,59 @@ const commands = [
     {
         name: 'start',
         type: ProcessType.LIBP2P,
-        action: async (args = new Array, process) => {
-            await process?.start();
+        action: async (args = new Array, instance) => {
+            await instance?.start();
         },
         args: []
     },
     {
         name: 'stop',
         type: ProcessType.LIBP2P,
-        action: async (args, process) => {
-            await process?.stop();
+        action: async (args, instance) => {
+            await instance?.stop();
         },
         args: []
     },
     {
         name: 'status',
         type: ProcessType.LIBP2P,
-        action: async (args, process) => {
-            return process?.status;
+        action: async (args, instance) => {
+            return instance?.status;
         },
         args: []
     },
     {
         name: 'peerId',
         type: ProcessType.LIBP2P,
-        action: async (args, process) => {
-            return process?.peerId;
+        action: async (args, instance) => {
+            return instance?.peerId;
         },
         args: []
     },
     {
         name: 'multiaddrs',
         type: ProcessType.LIBP2P,
-        action: async (args, process) => {
-            return process?.getMultiaddrs();
+        action: async (args, instance) => {
+            return instance?.getMultiaddrs();
         },
         args: []
     },
     {
         name: 'peers',
         type: ProcessType.LIBP2P,
-        action: async (args, process) => {
-            return process?.getPeers();
+        action: async (args, instance) => {
+            return instance?.getPeers();
         },
         args: []
     },
     {
         name: 'connections',
         type: ProcessType.LIBP2P,
-        action: async (args, process) => {
+        action: async (args, instance) => {
             if (args) {
                 const peerId = args.find(arg => arg.name === 'peerId');
                 if (peerId) {
-                    return process?.getConnections(peerIdFromString(peerId.value));
+                    return instance?.getConnections(peerIdFromString(peerId.value));
                 }
             }
         },
@@ -71,16 +71,16 @@ const commands = [
     {
         name: 'protocols',
         type: ProcessType.LIBP2P,
-        action: async (args, process) => {
-            return process?.getProtocols();
+        action: async (args, instance) => {
+            return instance?.getProtocols();
         },
         args: []
     },
     {
         name: 'listeners',
         type: ProcessType.LIBP2P,
-        action: async (args, process) => {
-            return process?.listenerCount(args?.find(arg => arg.name === 'eventName')?.value);
+        action: async (args, instance) => {
+            return instance?.listenerCount(args?.find(arg => arg.name === 'eventName')?.value);
         },
         args: [
             {
@@ -94,8 +94,8 @@ const commands = [
     {
         name: 'dial',
         type: ProcessType.LIBP2P,
-        action: async (args, process) => {
-            return await process?.dial(args?.find(arg => arg.name === 'peerId')?.value);
+        action: async (args, instance) => {
+            return await instance?.dial(args?.find(arg => arg.name === 'peerId')?.value);
         },
         args: [
             {
@@ -108,8 +108,8 @@ const commands = [
     {
         name: 'hangup',
         type: ProcessType.LIBP2P,
-        action: async (args, process) => {
-            return await process?.hangUp(args?.find(arg => arg.name === 'peerId')?.value);
+        action: async (args, instance) => {
+            return await instance?.hangUp(args?.find(arg => arg.name === 'peerId')?.value);
         },
         args: [
             {
@@ -122,8 +122,8 @@ const commands = [
     {
         name: 'dialProtocol',
         type: ProcessType.LIBP2P,
-        action: async (args, process) => {
-            return await process?.dialProtocol(args?.find(arg => arg.name === 'peerId')?.value, args?.find(arg => arg.name === 'protocol')?.value);
+        action: async (args, instance) => {
+            return await instance?.dialProtocol(args?.find(arg => arg.name === 'peerId')?.value, args?.find(arg => arg.name === 'protocol')?.value);
         },
         args: [
             {

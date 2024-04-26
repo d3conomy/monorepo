@@ -7,60 +7,60 @@ const commands: Array<IProcessCommand> = [
     {
         name: 'start',
         type: ProcessType.LIBP2P,
-        action: async (args: IProcessCommandArgInput[] = new Array<IProcessCommandArgInput>, process?: Libp2p): Promise<any> => {
-            await process?.start();
+        action: async (args: IProcessCommandArgInput[] = new Array<IProcessCommandArgInput>, instance?: Libp2p): Promise<any> => {
+            await instance?.start();
         },
         args: []
     },
     {
         name: 'stop',
         type: ProcessType.LIBP2P,
-        action: async (args?: IProcessCommandArgInput[], process?: Libp2p): Promise<any> => {
-            await process?.stop();
+        action: async (args?: IProcessCommandArgInput[], instance?: Libp2p): Promise<any> => {
+            await instance?.stop();
         },
         args: []
     },
     {
         name: 'status',
         type: ProcessType.LIBP2P,
-        action: async (args?: IProcessCommandArgInput[], process?: Libp2p): Promise<any> => {
-            return process?.status;
+        action: async (args?: IProcessCommandArgInput[], instance?: Libp2p): Promise<any> => {
+            return instance?.status;
         },
         args: []
     },
     {
         name: 'peerId',
         type: ProcessType.LIBP2P,
-        action: async (args?: IProcessCommandArgInput[], process?: Libp2p): Promise<any> => {
-            return process?.peerId;
+        action: async (args?: IProcessCommandArgInput[], instance?: Libp2p): Promise<any> => {
+            return instance?.peerId;
         },
         args: []
     },
     {
         name: 'multiaddrs',
         type: ProcessType.LIBP2P,
-        action: async (args?: IProcessCommandArgInput[], process?: Libp2p): Promise<any> => {
-            return process?.getMultiaddrs();
+        action: async (args?: IProcessCommandArgInput[], instance?: Libp2p): Promise<any> => {
+            return instance?.getMultiaddrs();
         },
         args: []
     },
     {
         name: 'peers',
         type: ProcessType.LIBP2P,
-        action: async (args?: IProcessCommandArgInput[], process?: Libp2p): Promise<any> => {
-            return process?.getPeers();
+        action: async (args?: IProcessCommandArgInput[], instance?: Libp2p): Promise<any> => {
+            return instance?.getPeers();
         },
         args: []
     },
     {
         name: 'connections',
         type: ProcessType.LIBP2P,
-        action: async (args?: IProcessCommandArgInput[], process?: Libp2p): Promise<any> => {
+        action: async (args?: IProcessCommandArgInput[], instance?: Libp2p): Promise<any> => {
             if (args) {
                 const peerId = args.find(arg => arg.name === 'peerId')
 
                 if (peerId) {
-                    return process?.getConnections(peerIdFromString(peerId.value))
+                    return instance?.getConnections(peerIdFromString(peerId.value))
                 }
             }
         },
@@ -75,16 +75,16 @@ const commands: Array<IProcessCommand> = [
     {
         name: 'protocols',
         type: ProcessType.LIBP2P,
-        action: async (args?: IProcessCommandArgInput[], process?: Libp2p): Promise<any> => {
-            return process?.getProtocols();
+        action: async (args?: IProcessCommandArgInput[], instance?: Libp2p): Promise<any> => {
+            return instance?.getProtocols();
         },
         args: []
     },
     {
         name: 'listeners',
         type: ProcessType.LIBP2P,
-        action: async (args?: IProcessCommandArgInput[], process?: Libp2p): Promise<any> => {
-            return process?.listenerCount(args?.find(arg => arg.name === 'eventName')?.value);
+        action: async (args?: IProcessCommandArgInput[], instance?: Libp2p): Promise<any> => {
+            return instance?.listenerCount(args?.find(arg => arg.name === 'eventName')?.value);
         },
         args: [
             {
@@ -98,8 +98,8 @@ const commands: Array<IProcessCommand> = [
     {
         name: 'dial',
         type: ProcessType.LIBP2P,
-        action: async (args?: IProcessCommandArgInput[], process?: Libp2p): Promise<any> => {
-            return await process?.dial(args?.find(arg => arg.name === 'peerId')?.value);
+        action: async (args?: IProcessCommandArgInput[], instance?: Libp2p): Promise<any> => {
+            return await instance?.dial(args?.find(arg => arg.name === 'peerId')?.value);
         },
         args: [
             {
@@ -112,8 +112,8 @@ const commands: Array<IProcessCommand> = [
     {
         name: 'hangup',
         type: ProcessType.LIBP2P,
-        action: async (args?: IProcessCommandArgInput[], process?: Libp2p): Promise<any> => {
-            return await process?.hangUp(args?.find(arg => arg.name === 'peerId')?.value);
+        action: async (args?: IProcessCommandArgInput[], instance?: Libp2p): Promise<any> => {
+            return await instance?.hangUp(args?.find(arg => arg.name === 'peerId')?.value);
         },
         args: [
             {
@@ -126,8 +126,8 @@ const commands: Array<IProcessCommand> = [
     {
         name: 'dialProtocol',
         type: ProcessType.LIBP2P,
-        action: async (args?: IProcessCommandArgInput[], process?: Libp2p): Promise<any> => {
-            return await process?.dialProtocol(
+        action: async (args?: IProcessCommandArgInput[], instance?: Libp2p): Promise<any> => {
+            return await instance?.dialProtocol(
                 args?.find(arg => arg.name === 'peerId')?.value,
                 args?.find(arg => arg.name === 'protocol')?.value
             );

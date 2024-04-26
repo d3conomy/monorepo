@@ -62,7 +62,6 @@ class IpfsOptions {
     blockstore: BlockStore
     start: boolean
 
-
     constructor({ ...values }: {} = {}) {
         const injectedDefaultValues = injectDefaultValues({options: ipfsOptions(), values})
 
