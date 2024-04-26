@@ -7,7 +7,7 @@ describe('Connection Gater', () => {
         });
         it('should return an empty map when no options are provided', () => {
             const result = connectionGater();
-            console.log(result);
+            // console.log(result);
             expect(result.size).to.equal(1);
         });
         it('should return a map with the "denyDialMultiaddr" function when "enableDenyDialMultiaddr" is true', () => {
@@ -19,7 +19,7 @@ describe('Connection Gater', () => {
         it('should return a map without the "denyDialMultiaddr" function when "enableDenyDialMultiaddr" is false', () => {
             const result = connectionGater({ enableDenyDialMultiaddr: false });
             expect(result.size).to.equal(0);
-            console.log(``);
+            // console.log(``)
             expect(result.has('denyDialMultiaddr')).to.be.false;
         });
         it('should return the correct value for "denyDialMultiaddr" when "enableDenyDialMultiaddr" is true', async () => {

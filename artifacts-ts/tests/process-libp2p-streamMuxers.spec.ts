@@ -16,7 +16,7 @@ describe('streamMuxers', () => {
 
     it('should return an array with mplex when enableMplex is true', () => {
         const result = streamMuxers({ enableMplex: true, enableYamux: false});
-        console.log(result.toString());
+        // console.log(result.toString());
         expect(result.toString()).to.deep.include('Mplex');
     });
 

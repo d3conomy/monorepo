@@ -60,7 +60,7 @@ const injectDefaultValues = ({
 }): IProcessOptionsList => {
     options.forEach((option: IProcessOption) => {
 
-        console.log(`optionInjectDefaultValues: ${JSON.stringify(option)}`)
+        // console.log(`optionInjectDefaultValues: ${JSON.stringify(option)}`)
         if (values[option.name] !== undefined) {
             if (values[option.name].value !== undefined && values[option.name].value !== null) {
                 option.value = values[option.name].value;
@@ -78,7 +78,7 @@ const injectDefaultValues = ({
             option.value = option.defaultValue;
         }
     })
-    console.log(`optionInjectDefaultValues[]: ${JSON.stringify(options)}`)
+    // console.log(`optionInjectDefaultValues[]: ${JSON.stringify(options)}`)
     return options;
     // return options.map((option: IProcessOption) => {
 
@@ -112,7 +112,7 @@ const mapProcessOptions = (options: IProcessOptionsList, asMap: boolean = false)
         }
 
 
-        console.log(`mapProcessOptions set: ${JSON.stringify(option.value)}`)
+        // console.log(`mapProcessOptions set: ${JSON.stringify(option.value)}`)
 
         map.set(option.name, option.value);
         // console.log(`mapMapProcessOptions: ${JSON.stringify(map.get(option.name))}`)

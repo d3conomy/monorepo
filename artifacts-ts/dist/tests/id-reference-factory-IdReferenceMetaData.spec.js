@@ -79,7 +79,7 @@ describe('MetaData', () => {
         const json = metaData.toJSON();
         expect(json).to.be.a('string');
         const jsonObject = JSON.parse(json); //
-        console.log(jsonObject);
+        // console.log(jsonObject);
     });
     it('should convert to Map', () => {
         metaData.set('key1', 'value1');

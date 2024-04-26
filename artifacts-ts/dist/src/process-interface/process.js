@@ -20,7 +20,7 @@ class Process {
     }
     async init() {
         this.jobQueue.init(this.commands);
-        console.log(`this.process: ${JSON.stringify(this.process)}`);
+        // console.log(`this.process: ${JSON.stringify(this.process)}`)
         try {
             if (this.process?.init !== undefined) {
                 const processExec = await this.process?.init(this.process?.options);

@@ -43,7 +43,7 @@ describe('libp2p services', () => {
         let actualServiceOptions: any = compileProcessOptions(serviceOptions())
 
         actualServiceOptions = libp2pServices(actualServiceOptions);
-        console.log(actualServiceOptions)
+        // console.log(actualServiceOptions)
         const count = Object.keys(expectedServiceOptions).length;
         expect(count).to.equal(9)
     });

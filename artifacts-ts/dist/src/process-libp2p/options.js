@@ -50,7 +50,6 @@ const defaultProcessOptions = () => convertListToMap([
 const libp2pOptionsParams = (options = new Array) => {
     const loadedOptions = convertListToMap(options);
     for (const [key, value] of defaultProcessOptions()) {
-        console.log(`key: ${key}, value: ${JSON.stringify(value)}`);
         const optionInput = loadedOptions.get(key);
         if (optionInput !== undefined) {
             if (optionInput) {
@@ -94,10 +93,9 @@ const buildSubProcesses = async (options) => {
         streamMuxers: streamMuxers(mappedSubprocessOptions),
         transports: transports(mappedSubprocessOptions)
     };
-    console.log(`libp2pOptions: ${JSON.stringify(libp2pOptionsParamsSet)}`);
+    // console.log(`libp2pOptions: ${JSON.stringify(libp2pOptionsParamsSet)}`)
     const peerIdOption = subprocessOptions.find((option) => option.name === 'id');
     if (peerIdOption?.value) {
-        console.log(`peerIdOption: ${JSON.stringify(peerIdOption)}`);
         libp2pOptionsParamsSet.peerId = await libp2pPeerId(peerIdOption.value);
     }
     else if (libp2pOptionsParamsSet.peerId === undefined) {

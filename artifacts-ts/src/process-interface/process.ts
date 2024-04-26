@@ -50,7 +50,7 @@ class Process implements IProcess {
     async init(): Promise<void> {
         this.jobQueue.init(this.commands);
 
-        console.log(`this.process: ${JSON.stringify(this.process)}`)
+        // console.log(`this.process: ${JSON.stringify(this.process)}`)
 
         try{
             if (this.process?.init !== undefined) {

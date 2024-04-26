@@ -110,7 +110,7 @@ class LogEntry
                 if (
                     printLevel === LogLevel.DEBUG
                 ) {
-                    console.log(output);
+                    console.debug(output);
                 }
                 break;
                 

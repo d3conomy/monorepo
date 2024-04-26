@@ -38,7 +38,7 @@ describe('transports', () => {
 
     it('should not include circuitRelayTransport when enableCircuitRelayTransport is false', () => {
         const result = transports({ enableCircuitRelayTransport: false });
-        console.log(result.toString());
+        // console.log(result.toString());
         expect(result.toString()).to.not.deep.include("circuitRelayTransport()");
     });
 });

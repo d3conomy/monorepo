@@ -22,7 +22,7 @@ const libp2pPeerId = async ({ ...values }: {} = {}): Promise<PeerId | undefined>
 
     const { id } = mapProcessOptions(injectedDefaultValues)
 
-    console.log(`id: ${JSON.stringify(id)}`)
+    // console.log(`id: ${JSON.stringify(id)}`)
 
     let peerId: PeerId;
 
@@ -36,7 +36,7 @@ const libp2pPeerId = async ({ ...values }: {} = {}): Promise<PeerId | undefined>
         peerId = await createEd25519PeerId()
     }
 
-    console.log(`peerId: ${JSON.stringify(peerId)}`)
+    // console.log(`peerId: ${JSON.stringify(peerId)}`)
 
     return peerId;
 }

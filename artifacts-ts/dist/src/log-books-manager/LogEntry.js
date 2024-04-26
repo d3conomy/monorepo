@@ -53,7 +53,7 @@ class LogEntry {
                 break;
             case LogLevel.DEBUG:
                 if (printLevel === LogLevel.DEBUG) {
-                    console.log(output);
+                    console.debug(output);
                 }
                 break;
             default:

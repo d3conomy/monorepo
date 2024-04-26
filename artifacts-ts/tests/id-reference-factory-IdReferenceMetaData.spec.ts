@@ -105,7 +105,7 @@ describe('MetaData', () => {
 
         expect(json).to.be.a('string');
         const jsonObject = JSON.parse(json); //
-        console.log(jsonObject);
+        // console.log(jsonObject);
     });
 
     it('should convert to Map', () => {
