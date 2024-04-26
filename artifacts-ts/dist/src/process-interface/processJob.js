@@ -6,7 +6,7 @@ const jobRunner = async (job, processCommand, process) => {
         job.status = ProcessStage.RUNNING;
         // console.log(`Job ${job.jobId} started, running command ${job.command}, with params: ${job.params}, on process ${process?.process}`)
         output = await processCommand.action(job.params, process?.process);
-        console.log(`Job ${job.jobId} finished, with output: ${output}`);
+        // console.log(`Job ${job.jobId} finished, with output: ${output}`)
         job.status = ProcessStage.FINISHED;
     }
     catch (error) {

@@ -9,7 +9,7 @@ import { ipnsValidator } from 'ipns/validator';
 import { ipnsSelector } from 'ipns/selector';
 import { ping } from '@libp2p/ping';
 import { createProcessOption, injectDefaultValues, mapProcessOptions } from '../process-interface/index.js';
-const serviceOptionsParams = [
+const serviceOptionsParams = () => [
     createProcessOption({
         name: 'enableGossipSub',
         description: 'Enable GossipSub',
@@ -113,7 +113,7 @@ const serviceOptionsParams = [
  */
 const services = ({ ...values } = {}) => {
     let serviceOptions = {};
-    const injectedDefaultValues = injectDefaultValues({ options: serviceOptionsParams, values });
+    const injectedDefaultValues = injectDefaultValues({ options: serviceOptionsParams(), values });
     const { enableGossipSub, enablePublishToZeroTopicPeers, enableAutoNAT, enableIdentify, enableUPnPNAT, enableDHT, enableDHTClient, enableIpnsValidator, enableIpnsSelector, enableLanDHT, lanDhtProtocol, lanDhtPeerInfoMapperRemovePublicAddresses, lanDhtClientMode, enableRelay, enableDCUTR, enablePing, } = mapProcessOptions(injectedDefaultValues);
     if (enableGossipSub) {
         serviceOptions.pubsub = gossipsub({

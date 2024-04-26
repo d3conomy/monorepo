@@ -5,7 +5,7 @@ import { IProcessOptionsList, createProcessOption, injectDefaultValues, mapProce
 
 
 
-const connectionProtectorOptions: IProcessOptionsList = [
+const connectionProtectorOptions = (): IProcessOptionsList => [
     createProcessOption({
         name: 'swarmKeyAsHex',
         description: 'Swarm key as hexadecimal',
@@ -22,10 +22,13 @@ const createSwarmKey = (
     swarmKeyAsHex?: string
 ): Uint8Array => {
     // Generate a random 256-bit key
-    const key = crypto.randomBytes(32);
+    let key = crypto.randomBytes(32);
 
     // Convert the key to base16 (hexadecimal)
-    const swarmKey = swarmKeyAsHex ? swarmKeyAsHex : key.toString('hex');
+    if (swarmKeyAsHex && swarmKeyAsHex.length === 64) {
+        key = Buffer.from(swarmKeyAsHex, 'hex');
+    }
+    const swarmKey = key.toString('hex');
 
     // append the propers headers
     const headers = '/key/swarm/psk/1.0.0/\n';
@@ -44,7 +47,7 @@ const createSwarmKey = (
  */
 function connectionProtector({...values}: {} = {}): 
     (components: ProtectorComponents) => ConnectionProtector {
-    const injectedDefaultValues = injectDefaultValues({options: connectionProtectorOptions, values})
+    const injectedDefaultValues = injectDefaultValues({options: connectionProtectorOptions(), values})
     const { swarmKeyAsHex } = mapProcessOptions(injectedDefaultValues)
 
     const swarmKey = createSwarmKey(swarmKeyAsHex);

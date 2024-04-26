@@ -55,11 +55,11 @@ describe('JobQueue', () => {
         const jobQueue = new JobQueue();
         await jobQueue.init(processCommands);
         jobQueue.enqueue(job);
-        console.log(jobQueue.size());
+        // console.log(jobQueue.size())
         await jobQueue.run();
         // await new Promise((resolve) => setTimeout(resolve, 1000));
         // jobQueue.stop();
-        console.log(jobQueue.completed);
+        // console.log(jobQueue.completed)
         expect(jobQueue.completed.length).to.equal(1);
     });
     it('should stop the job queue', () => {
@@ -100,7 +100,7 @@ describe('JobQueue', () => {
         const startTime = new Date();
         await jobQueue.run();
         const endTime = new Date();
-        console.log(`Sequential run time: ${endTime.getTime() - startTime.getTime()}ms`);
+        // console.log(`Sequential run time: ${endTime.getTime() - startTime.getTime()}ms`);
         jobQueue.stop();
         expect(jobQueue.completed.length).to.equal(NUM_TESTS);
     });
@@ -130,7 +130,7 @@ describe('JobQueue', () => {
         const startTime = new Date();
         await jobQueue.runParallel();
         const endTime = new Date();
-        console.log(`Parallel run time: ${endTime.getTime() - startTime.getTime()}ms`);
+        // console.log(`Parallel run time: ${endTime.getTime() - startTime.getTime()}ms`);
         jobQueue.stop();
         expect(jobQueue.completed.length).to.equal(NUM_TESTS);
     });
@@ -184,7 +184,7 @@ describe('JobQueue', () => {
             }
         }
         const endTime = new Date();
-        console.log(`Sequential run time: ${endTime.getTime() - startTime.getTime()}ms`);
+        // console.log(`Sequential run time: ${endTime.getTime() - startTime.getTime()}ms`);
         expect(jobQueue.completed.length).to.equal(NUM_TESTS);
     });
 });

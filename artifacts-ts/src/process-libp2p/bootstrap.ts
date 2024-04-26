@@ -3,7 +3,7 @@ import { bootstrap } from '@libp2p/bootstrap';
 import { IProcessOption, IProcessOptionsList, compileProcessOptions, createProcessOption, injectDefaultValues, mapProcessOptions } from '../process-interface/index.js';
 
 
-const bootstrapOptions: IProcessOptionsList = [
+const bootstrapOptions = (): IProcessOptionsList => [
     createProcessOption({
         name: 'defaultConfig',
         description: 'Use default bootstrap configuration',
@@ -42,7 +42,7 @@ const defaultBootstrapConfig: Array<string> = [
 const libp2pBootstrap = ({ ...values }: {} = {}): any => {
     let addrs: Array<string> = new Array<string>();
 
-    const injectedDefaultValues = injectDefaultValues({options: bootstrapOptions, values})
+    const injectedDefaultValues = injectDefaultValues({options: bootstrapOptions(), values})
 
     const { defaultConfig, multiaddrs, list } = mapProcessOptions(injectedDefaultValues)
 

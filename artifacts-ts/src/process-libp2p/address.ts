@@ -1,5 +1,5 @@
 import { Multiaddr } from "@multiformats/multiaddr";
-import { IProcessOption, IProcessOptionsList, ProcessOption, ProcessOptions, compileProcessOptions, createProcessOption, injectDefaultValues, mapProcessOptionsParams } from "../process-interface/index.js";
+import { IProcessOption, IProcessOptionsList, ProcessOption, ProcessOptions, compileProcessOptions, createProcessOption, injectDefaultValues, mapProcessOptions, mapProcessOptionsParams } from "../process-interface/index.js";
 import { converMaptoList } from "./options.js";
 // import { libp2pOptions } from "./options.js";
  
@@ -11,7 +11,7 @@ const setListenAddresses = (
     }
 }
 
-const listenAddressesOptions: IProcessOptionsList = [
+const listenAddressesOptions = (): IProcessOptionsList => [
     createProcessOption({
         name: 'enableTcp',
         description: 'Enable TCP transport',
@@ -136,22 +136,22 @@ const listenAddressesOptions: IProcessOptionsList = [
 //     additionalMultiaddrs?: Array<Multiaddr | string>
 // } = {}): { listen: Array<string> } => {
 
-const listenAddresses = ({...inputValues}): { listen: Array<string> } => {
+const listenAddresses = ({...values}): { listen: Array<string> } => {
 
-    for (const key in inputValues) {
-        if (inputValues[key] === undefined) {
-            delete inputValues[key]
-        }
-    }
+    // for (const key in inputValues) {
+    //     if (inputValues[key] === undefined) {
+    //         delete inputValues[key]
+    //     }
+    // }
 
     // const mappedProcessOptionsParams = Object.entries(inputValues).map(([key, value]) => [key, {name: key, value}])
     // console.log(`mappedProcessOptionsParams: ${JSON.stringify(mappedProcessOptionsParams)}`)
 
     // const formattedInputValues = converMaptoList(inputValues)
     // console.log(`formattedInputValues: ${JSON.stringify(formattedInputValues)}`)
-    const injectedDefaults = injectDefaultValues({values: inputValues, options: listenAddressesOptions})
+    const injectedDefaults = injectDefaultValues({values, options: listenAddressesOptions()})
     // console.log(`injectedDefaults: ${JSON.stringify(injectedDefaults)}`)
-    const compiledListenAddressOptions = compileProcessOptions(injectedDefaults)
+    // const compiledListenAddressOptions = 
     // const compiledListenAddressOptions = injectDefaultValues({values: formattedInputValues, options: listenAddressesOptions})
     // console.log(`compiledListenAddressOptions: ${JSON.stringify(compiledListenAddressOptions)}`)
 
@@ -174,7 +174,28 @@ const listenAddresses = ({...inputValues}): { listen: Array<string> } => {
         webRTCStarAddress,
         enableCircuitRelayTransport,
         additionalMultiaddrs
-    } = compiledListenAddressOptions
+    } = mapProcessOptions(injectedDefaults)
+    // } : {
+    //     enableTcp?: boolean,
+    //     tcpPort?: number,
+    //     enableIp4?: boolean,
+    //     ip4Domain?: string,
+    //     enableUdp?: boolean,
+    //     udpPort?: number,
+    //     enableIp6?: boolean,
+    //     ip6Domain?: string,
+    //     enableQuicv1?: boolean,
+    //     enableWebTransport?: boolean,
+    //     enableWebSockets?: boolean,
+    //     enableWebRTC?: boolean,
+    //     enableWebRTCStar?: boolean,
+    //     webRTCStarAddress?: Multiaddr | string,
+    //     enableCircuitRelayTransport?: boolean,
+    //     additionalMultiaddrs?: Array<Multiaddr | string>
+    
+    // } = compiledListenAddressOptions
+
+    console.log(`mappedProcessOptions: ${JSON.stringify({enableTcp, tcpPort, enableIp4, ip4Domain, enableUdp, udpPort, enableIp6, ip6Domain, enableQuicv1, enableWebTransport, enableWebSockets, enableWebRTC, enableWebRTCStar, webRTCStarAddress, enableCircuitRelayTransport, additionalMultiaddrs})}`)
 
 
     const listenAddresses: Array<string> = []

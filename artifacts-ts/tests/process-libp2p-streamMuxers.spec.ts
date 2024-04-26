@@ -29,14 +29,14 @@ describe('streamMuxers', () => {
 
 describe('streamMuxerOptions', () => {
     it('should have the correct structure', () => {
-        expect(streamMuxerOptions).to.be.an('array').that.has.lengthOf(2);
-        expect(streamMuxerOptions[0]).to.have.property('name', 'enableYamux');
-        expect(streamMuxerOptions[0]).to.have.property('description', 'Enable Yamux');
-        expect(streamMuxerOptions[0]).to.have.property('required', false);
-        expect(streamMuxerOptions[0]).to.have.property('defaultValue', true);
-        expect(streamMuxerOptions[1]).to.have.property('name', 'enableMplex');
-        expect(streamMuxerOptions[1]).to.have.property('description', 'Enable Mplex');
-        expect(streamMuxerOptions[1]).to.have.property('required', false);
-        expect(streamMuxerOptions[1]).to.have.property('defaultValue', false);
+        expect(streamMuxerOptions()).to.be.an('array').that.has.lengthOf(2);
+        expect(streamMuxerOptions()[0]).to.have.property('name', 'enableYamux');
+        expect(streamMuxerOptions()[0]).to.have.property('description', 'Enable Yamux');
+        expect(streamMuxerOptions()[0]).to.have.property('required', false);
+        expect(streamMuxerOptions()[0]).to.have.property('defaultValue', true);
+        expect(streamMuxerOptions()[1]).to.have.property('name', 'enableMplex');
+        expect(streamMuxerOptions()[1]).to.have.property('description', 'Enable Mplex');
+        expect(streamMuxerOptions()[1]).to.have.property('required', false);
+        expect(streamMuxerOptions()[1]).to.have.property('defaultValue', false);
     });
 });

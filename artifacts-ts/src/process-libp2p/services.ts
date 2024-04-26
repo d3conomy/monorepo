@@ -12,7 +12,7 @@ import { ServiceFactoryMap } from 'libp2p'
 import { IProcessOptionsList, createProcessOption, injectDefaultValues, mapProcessOptions } from '../process-interface/index.js'
 
 
-const serviceOptionsParams: IProcessOptionsList = [
+const serviceOptionsParams = (): IProcessOptionsList => [
     createProcessOption({
         name: 'enableGossipSub',
         description: 'Enable GossipSub',
@@ -133,7 +133,7 @@ const services = ({ ...values } : {} = {}): any => {
         ping?: any
     } = {}
 
-    const injectedDefaultValues = injectDefaultValues({options: serviceOptionsParams, values})
+    const injectedDefaultValues = injectDefaultValues({options: serviceOptionsParams(), values})
 
     const {
         enableGossipSub,

@@ -138,7 +138,7 @@ describe('Process', () => {
                     value: 'Hello, World'
                 })
             ],
-            init: async (options) => console.log(options)
+            init: async (options) => { return; } // console.log(options)
         }), new ProcessCommands({
             commands: [
                 createProcessCommand({
@@ -160,7 +160,7 @@ describe('Process', () => {
             status: ProcessStage.NEW
         };
         await process.jobQueue.execute(job);
-        console.log(process);
+        // console.log(process)
         // Add assertions here to verify the process
         expect(process.check()).to.be.true;
         expect(process.status()).to.equal(ProcessStage.PENDING);

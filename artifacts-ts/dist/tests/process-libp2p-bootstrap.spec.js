@@ -10,7 +10,7 @@ describe('libp2pBootstrap', () => {
     it('should return a function by default', () => {
         result = libp2pBootstrap();
         expect(result).to.be.lengthOf(1);
-        console.log(JSON.stringify(result));
+        // console.log(JSON.stringify(result));
         // expect(result[0]).to.be.a('function'); 
     });
     it('should return a function when options are provided', () => {

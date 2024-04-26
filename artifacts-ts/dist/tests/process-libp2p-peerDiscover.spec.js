@@ -48,19 +48,13 @@ describe('peerDiscovery', () => {
 });
 describe('peerDiscoveryOptions', () => {
     it('should have the correct number of options', () => {
-        expect(peerDiscoveryOptions).to.have.lengthOf(4);
+        expect(peerDiscoveryOptions()).to.have.lengthOf(4);
     });
     it('should have the correct default values', () => {
-        const defaultValues = [
-            { name: 'enableMDNS', defaultValue: false },
-            { name: 'enableBootstrap', defaultValue: true },
-            { name: 'useDefaultBootstrap', defaultValue: false },
-            { name: 'bootstrapMultiaddrs', defaultValue: [] }
-        ];
-        defaultValues.forEach(({ name, defaultValue }) => {
-            const option = peerDiscoveryOptions.find(opt => opt.name === name);
-            expect(option).to.exist;
-            expect(option.defaultValue).to.deep.equal(defaultValue);
-        });
+        const options = peerDiscoveryOptions();
+        expect(options[0].defaultValue).to.be.false;
+        expect(options[1].defaultValue).to.be.true;
+        expect(options[2].defaultValue).to.be.false;
+        expect(options[3].defaultValue).to.deep.equal([]);
     });
 });

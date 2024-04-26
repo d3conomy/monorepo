@@ -17,9 +17,13 @@ class Libp2pProcess extends Process implements IProcess {
         options?: Array<IProcessOption>,
         commands?: Array<IProcessCommand>
     }) {
-        if (!process) {
+        if (process?.process === undefined) {
+            if (options === undefined) {
+                options = libp2pOptionsParams()
+            }
+
             const init = async (processOptions: IProcessOptionsList | undefined): Promise<Libp2p> => { return await createLibp2p(await buildSubProcesses(processOptions)) }
-            process = process? process : createProcessContainer<ProcessType.LIBP2P>({
+            process = createProcessContainer<ProcessType.LIBP2P>({
                 type: ProcessType.LIBP2P,
                 process,
                 options,
@@ -32,6 +36,8 @@ class Libp2pProcess extends Process implements IProcess {
             commands ? commands : libp2pCommands
         )
     }
+
+
 
     public async stop(): Promise<void> {
         this.jobQueue.stop()

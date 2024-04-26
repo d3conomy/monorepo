@@ -159,7 +159,7 @@ describe('Process', () => {
                     name: 'test',
                     value: 'Hello, World'
                 })],
-                init: async (options) => console.log(options)
+                init: async (options) => { return; } // console.log(options)
             }),
             new ProcessCommands({
                 commands: [
@@ -187,7 +187,7 @@ describe('Process', () => {
 
         await process.jobQueue.execute(job);
 
-        console.log(process)
+        // console.log(process)
 
 
         // Add assertions here to verify the process

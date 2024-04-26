@@ -37,7 +37,7 @@ describe('libp2p services', () => {
             dcutr: {},
             ping: {}
         };
-        let actualServiceOptions = compileProcessOptions(serviceOptions);
+        let actualServiceOptions = compileProcessOptions(serviceOptions());
         actualServiceOptions = libp2pServices(actualServiceOptions);
         console.log(actualServiceOptions);
         const count = Object.keys(expectedServiceOptions).length;

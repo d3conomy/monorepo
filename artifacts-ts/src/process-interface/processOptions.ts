@@ -60,12 +60,16 @@ const injectDefaultValues = ({
 }): IProcessOptionsList => {
     options.forEach((option: IProcessOption) => {
 
+        console.log(`optionInjectDefaultValues: ${JSON.stringify(option)}`)
         if (values[option.name] !== undefined) {
-            if (values[option.name].value !== undefined) {
+            if (values[option.name].value !== undefined && values[option.name].value !== null) {
                 option.value = values[option.name].value;
             }
-            else {
+            else if (values[option.name] !== undefined && values[option.name] !== null){
                 option.value = values[option.name];
+            }
+            else {
+                option.value = option.defaultValue;
             }
             
         }
@@ -74,6 +78,7 @@ const injectDefaultValues = ({
             option.value = option.defaultValue;
         }
     })
+    console.log(`optionInjectDefaultValues[]: ${JSON.stringify(options)}`)
     return options;
     // return options.map((option: IProcessOption) => {
 
@@ -94,15 +99,26 @@ const compileProcessOptions = (options: IProcessOptionsList | IProcessOption[]):
 }
 
 
-const mapProcessOptions = (options: IProcessOptionsList): any => {
+const mapProcessOptions = (options: IProcessOptionsList, asMap: boolean = false): any => {
    
     let map: Map<string, any> = new Map();
     for (const option of options) {
    
-        const formattedOption = option.toParam();
-   
-        map.set(option.name, formattedOption[option.name]);
+        if (option.required && option.value === undefined) {
+            option.value = option.defaultValue;
+        }
+        if (option.value?.value !== undefined || option.value?.defaultValue !== undefined) {
+            option.value = option.value.value;
+        }
+
+
+        console.log(`mapProcessOptions set: ${JSON.stringify(option.value)}`)
+
+        map.set(option.name, option.value);
         // console.log(`mapMapProcessOptions: ${JSON.stringify(map.get(option.name))}`)
+    }
+    if (asMap) {
+        return map;
     }
     return Object.fromEntries(map.entries());
 }

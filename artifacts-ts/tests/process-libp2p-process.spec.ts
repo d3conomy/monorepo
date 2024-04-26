@@ -32,17 +32,17 @@ describe("Libp2pProcess", () => {
     it("should initialize the process with the provided options", async () => {
         const options: IProcessOptionsList = [
             createProcessOption({
-                name: 'autoStart',
+                name: 'start',
                 value: true
             })
         ]
-        const process = new Libp2pProcess({
-            id: processId,
-            commands: libp2pCommands
-        });
+        const process = await createLibp2pProcess(
+            processId,
+            options
+        );
 
-        await process.init()
-        console.log(process.process?.process.status)
+        // await process.init()
+        await process.process?.process?.start()
         expect(typeof process.process?.process).to.be.equal('object');
         await process.stop()
     });
@@ -50,7 +50,7 @@ describe("Libp2pProcess", () => {
     it("should initialize and run the peerId command", async () => {
         const options: IProcessOptionsList = [
             createProcessOption({
-                name: 'autoStart',
+                name: 'start',
                 value: true
             })
         ]
@@ -62,7 +62,7 @@ describe("Libp2pProcess", () => {
 
         // await process.init()
         const process = await createLibp2pProcess(processId, options)
-        console.log(process)
+        // console.log(process)
         expect(typeof process.process?.process).to.be.equal('object');
         const executeCommand: IProcessExecuteCommand = {
             command: "peerId"
@@ -76,7 +76,7 @@ describe("Libp2pProcess", () => {
         }
         process.jobQueue.enqueue(job)
         await process.start(true)
-        console.log(process.jobQueue.completed)
+        // console.log(process.jobQueue.completed)
         expect(process.jobQueue.completed.length).to.be.equal(1)
         await process.stop()
     });
@@ -84,7 +84,7 @@ describe("Libp2pProcess", () => {
     it('should execute all the libp2pProcessCommands', async () =>{
         const options: IProcessOptionsList = [
             createProcessOption({
-                name: 'autoStart',
+                name: 'start',
                 value: true
             })
         ]
@@ -95,11 +95,11 @@ describe("Libp2pProcess", () => {
         });
 
         await process.init()
-        // console.log(process)
+        console.log(`process.process?.process: ${process.process?.process}`)
         expect(typeof process.process?.process).to.be.equal('object');
         
         for (const command in libp2pCommands) {
-            // console.log(libp2pCommands[command])
+            // // console.log(libp2pCommands[command])
             const executeCommand: IProcessExecuteCommand = {
                 command: libp2pCommands[command].name
             }
@@ -114,7 +114,7 @@ describe("Libp2pProcess", () => {
         }
 
         await process.start(false)
-        // process.jobQueue.completed.forEach((job: IProcessJob) => {console.log(job)})
+        // process.jobQueue.completed.forEach((job: IProcessJob) => {// console.log(job)})
         expect(process.jobQueue.completed.length).to.be.equal(12)
         await process.stop()
     })

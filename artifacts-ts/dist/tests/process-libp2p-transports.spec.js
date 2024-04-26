@@ -33,7 +33,7 @@ describe('transports', () => {
 });
 describe('transportOptionsParams', () => {
     it('should return an array of transport options', () => {
-        expect(transportOptionsParams).to.be.an('array');
-        expect(transportOptionsParams).to.have.lengthOf(6); // Modify the expected length based on the number of transport options
+        expect(transportOptionsParams()).to.be.an('array');
+        expect(transportOptionsParams()).to.have.lengthOf(6); // Modify the expected length based on the number of transport options
     });
 });

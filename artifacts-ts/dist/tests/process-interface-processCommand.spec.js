@@ -47,7 +47,7 @@ describe('Process Command Tests', () => {
     it('should have an action', () => {
         expect(processCommand.action).to.exist;
         expect(processCommand.action).to.be.a('function');
-        console.log(processCommand.action(processExecuteCommand.params));
+        // console.log(processCommand.action(processExecuteCommand.params))
         expect(processCommand.action(processExecuteCommand.params)).to.equal('test');
     });
     it('should have a description', () => {
@@ -74,7 +74,7 @@ describe('Process Command Tests', () => {
         expect(processCommands).to.have.lengthOf(1);
     });
     it('should check if a command is unique', () => {
-        console.log(processCommands);
+        // console.log(processCommands);
         expect(processCommands.isUnique('testCommand')).to.be.false;
         expect(processCommands.isUnique('testCommand2')).to.be.true;
     });
@@ -101,7 +101,7 @@ describe('Process Command Tests', () => {
         const json = await importFromFile("tests/exampleCommands.json");
         const processContainer = importProcessContainerFromJSON(json);
         const processCommands = importProcessCommandsFromJSON(processContainer, json);
-        console.log(processCommands);
+        // console.log(processCommands);
         expect(processCommands).to.exist;
         expect(processCommands).to.be.an('map');
     });
@@ -126,7 +126,7 @@ describe('Process Command Tests', () => {
             componentId: new SystemId({ name: 'testSystem' }),
         });
         const job = await runCommand(jobId, processExecuteCommand, processCommands);
-        console.log(job);
+        // console.log(job);
         expect(job).to.exist;
         expect(job).to.be.an('object');
         expect(job.result).to.exist;
@@ -140,7 +140,7 @@ describe('Process Command Tests', () => {
             componentId: new SystemId({ name: 'testSystem' }),
         });
         const job = await runCommand(jobId, processExecuteCommand, processCommands);
-        console.log(job);
+        // console.log(job);
         expect(job).to.exist;
         expect(job).to.be.an('object');
         expect(job.result).to.exist;
@@ -168,7 +168,7 @@ describe('Process Command Tests', () => {
             componentId: new SystemId({ name: 'testSystem' }),
         });
         const job = await runCommand(jobId, processExecuteCommand, processCommands);
-        console.log(job);
+        // console.log(job);
         expect(job).to.exist;
         expect(job).to.be.an('object');
         expect(job.result).to.exist;
@@ -200,7 +200,7 @@ describe('Process Command Tests', () => {
             componentId: new SystemId({ name: 'testSystem' }),
         });
         const job = await runCommand(jobId, processExecuteCommand, processCommands);
-        console.log(job);
+        // console.log(job);
         expect(job).to.exist;
         expect(job).to.be.an('object');
         expect(job.result).to.exist;
@@ -212,7 +212,7 @@ describe('Process Command Tests', () => {
         const processContainer = importProcessContainerFromJSON(json);
         const processCommands = importProcessCommandsFromJSON(processContainer, json);
         const processCommand = processCommands.get('custom-run-process');
-        console.log(processCommand);
+        // console.log(processCommand);
         const processCommandArgInputCustom = {
             name: 'custom',
             value: 'custom-hello'
@@ -230,7 +230,7 @@ describe('Process Command Tests', () => {
             componentId: new SystemId({ name: 'testSystem' }),
         });
         const job = await runCommand(jobId, processExecuteCommand, processCommands);
-        console.log(job);
+        // console.log(job);
         expect(job).to.exist;
         expect(job).to.be.an('object');
         expect(job.result).to.exist;

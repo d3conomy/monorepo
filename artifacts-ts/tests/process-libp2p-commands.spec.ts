@@ -66,7 +66,7 @@ describe('ProcessCommands', () => {
             params: [],
         }
         const job = await runCommand(jobId, executeParams, commands);
-        console.log(job)
+        // console.log(job)
         expect(job.result?.output).to.equal('started');
     });
 
@@ -80,7 +80,7 @@ describe('ProcessCommands', () => {
             params: [],
         }
         const job = await runCommand(jobId, executeParams, commands);
-        console.log(job)
+        // console.log(job)
         expect(job.result?.output.toString()).to.be.a('string');
     });
 
@@ -95,7 +95,7 @@ describe('ProcessCommands', () => {
         }
 
         const job = await runCommand(jobId, executeParams, commands);
-        console.log(job)
+        // console.log(job)
         expect(job.result?.output).to.be.an('array');
     });
 
@@ -110,7 +110,7 @@ describe('ProcessCommands', () => {
         }
 
         const job = await runCommand(jobId, executeParams, commands);
-        console.log(job)
+        // console.log(job)
         expect(job.result?.output).to.be.an('array');
     });
 
@@ -125,7 +125,7 @@ describe('ProcessCommands', () => {
         }
 
         const job = await runCommand(jobId, executeParams, commands);
-        console.log(job)
+        // console.log(job)
         expect(job.result?.output).to.be.an('array');
     });
 });

@@ -58,7 +58,7 @@ describe('ProcessCommands', () => {
             params: [],
         };
         const job = await runCommand(jobId, executeParams, commands);
-        console.log(job);
+        // console.log(job)
         expect(job.result?.output).to.equal('started');
     });
     it('should return the process peerId', async () => {
@@ -71,7 +71,7 @@ describe('ProcessCommands', () => {
             params: [],
         };
         const job = await runCommand(jobId, executeParams, commands);
-        console.log(job);
+        // console.log(job)
         expect(job.result?.output.toString()).to.be.a('string');
     });
     it('should return the process multiaddrs', async () => {
@@ -84,7 +84,7 @@ describe('ProcessCommands', () => {
             params: [],
         };
         const job = await runCommand(jobId, executeParams, commands);
-        console.log(job);
+        // console.log(job)
         expect(job.result?.output).to.be.an('array');
     });
     it('should return the process peers', async () => {
@@ -97,7 +97,7 @@ describe('ProcessCommands', () => {
             params: [],
         };
         const job = await runCommand(jobId, executeParams, commands);
-        console.log(job);
+        // console.log(job)
         expect(job.result?.output).to.be.an('array');
     });
     it('should return the process protocols', async () => {
@@ -110,7 +110,7 @@ describe('ProcessCommands', () => {
             params: [],
         };
         const job = await runCommand(jobId, executeParams, commands);
-        console.log(job);
+        // console.log(job)
         expect(job.result?.output).to.be.an('array');
     });
 });

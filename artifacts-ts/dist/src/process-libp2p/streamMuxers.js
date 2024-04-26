@@ -1,7 +1,7 @@
 import { yamux } from '@chainsafe/libp2p-yamux';
 import { mplex } from '@libp2p/mplex';
 import { createProcessOption, injectDefaultValues, mapProcessOptions } from '../process-interface/index.js';
-const streamMuxerOptions = [
+const streamMuxerOptions = () => [
     createProcessOption({
         name: 'enableYamux',
         description: 'Enable Yamux',
@@ -16,7 +16,7 @@ const streamMuxerOptions = [
     })
 ];
 const streamMuxers = ({ ...values } = {}) => {
-    const injectedDefaultValues = injectDefaultValues({ options: streamMuxerOptions, values });
+    const injectedDefaultValues = injectDefaultValues({ options: streamMuxerOptions(), values });
     const { enableYamux = true, enableMplex = false } = mapProcessOptions(injectedDefaultValues);
     let streamMuxers = new Array();
     if (enableYamux === true) {

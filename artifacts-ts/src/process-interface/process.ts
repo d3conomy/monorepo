@@ -49,19 +49,29 @@ class Process implements IProcess {
 
     async init(): Promise<void> {
         this.jobQueue.init(this.commands);
-        if (this.process?.init) {
-            const processExec: Libp2p = await this.process.init(this.process?.options);
 
-            // console.log(`processExec: ${processExec}`)
+        console.log(`this.process: ${JSON.stringify(this.process)}`)
 
-            if (processExec && this.process.process === undefined) {
-                if (this.process?.loadProcess) {
-                    this.process?.loadProcess(processExec);
-                }   
+        try{
+            if (this.process?.init !== undefined) {
+
+                const processExec: Libp2p = await this.process?.init(this.process?.options);
+
+                // console.log(`processExec: ${processExec}`)
+
+                if (processExec && this.process.process === undefined) {
+                    if (this.process?.loadProcess) {
+                        this.process?.loadProcess(processExec);
+                    }   
+                }
             }
+        } catch (e) {
+            console.error(`Error initializing process: ${e}`)
         }
 
         this.commands.loadProcess(this.process?.process)
+
+        // console.log(`this.process: ${JSON.stringify(this.process)}`)
     }
 
     async start(parallel?: boolean): Promise<void> {

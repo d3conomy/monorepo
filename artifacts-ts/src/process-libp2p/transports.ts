@@ -5,7 +5,7 @@ import { tcp } from '@libp2p/tcp'
 import { webRTC } from '@libp2p/webrtc'
 import { IProcessOptionsList, createProcessOption, injectDefaultValues, mapProcessOptions } from '../process-interface/index.js'
 
-const transportOptionsParams: IProcessOptionsList = [
+const transportOptionsParams = (): IProcessOptionsList => [
     createProcessOption({
         name: 'enableWebSockets',
         description: 'Enable WebSockets',
@@ -45,7 +45,7 @@ const transportOptionsParams: IProcessOptionsList = [
 ]
 
 const transports = ({ ...values } : {} = {}): Array<any> => {
-    const injectedDefaultValues = injectDefaultValues({options: transportOptionsParams, values})
+    const injectedDefaultValues = injectDefaultValues({options: transportOptionsParams(), values})
     const {
         enableWebSockets,
         enableWebTransport,

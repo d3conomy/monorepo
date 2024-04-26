@@ -32,10 +32,10 @@ describe('libp2pPeerId', () => {
 
 describe('peerIdOptions', () => {
     it('should have the correct properties', () => {
-        const option = peerIdOptions[0];
-        expect(option).to.have.property('name', 'id');
-        expect(option).to.have.property('description', 'PeerId');
-        expect(option).to.have.property('required', false);
+        const option = peerIdOptions();
+        expect(option[0]).to.have.property('name', 'id');
+        expect(option[0]).to.have.property('description', 'PeerId');
+        expect(option[0]).to.have.property('required', false);
     });
 
     // Add more test cases as needed

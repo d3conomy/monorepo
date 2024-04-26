@@ -4,7 +4,7 @@ import { Multiaddr } from '@multiformats/multiaddr'
 import { libp2pBootstrap } from './bootstrap.js'
 import { IProcessOptionsList, createProcessOption, injectDefaultValues, mapProcessOptions } from '../process-interface/processOptions.js'
 
-const peerDiscoveryOptions: IProcessOptionsList = [
+const peerDiscoveryOptions = (): IProcessOptionsList => [
     createProcessOption({
         name: 'enableMDNS',
         description: 'Enable mDNS peer discovery',
@@ -32,7 +32,7 @@ const peerDiscoveryOptions: IProcessOptionsList = [
  * @category Libp2p
  */
 const peerDiscovery = ({ ...values }: {} = {}) => {
-    const injectedDefaultValues = injectDefaultValues({options: peerDiscoveryOptions, values})
+    const injectedDefaultValues = injectDefaultValues({options: peerDiscoveryOptions(), values})
 
 
     const { 
