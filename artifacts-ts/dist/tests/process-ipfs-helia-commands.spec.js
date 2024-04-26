@@ -59,7 +59,7 @@ describe("IPFS Commands", () => {
         expect(job2.status).to.equal('finished');
         expect(instance?.libp2p.status).to.equal('stopped');
     });
-    it("should add a JSON object to IPFS", async () => {
+    it("should add and get a JSON object to/from IPFS", async () => {
         const executeParams = {
             command: 'start',
             params: [],

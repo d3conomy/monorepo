@@ -3,6 +3,7 @@ import { Process } from "../process-interface/process.js";
 import { createProcessContainer } from "../process-interface/processContainer.js";
 import { ProcessType } from "../process-interface/processTypes.js";
 import { ipfsCommands } from "./commands.js";
+import { ipfsOptions } from "./options.js";
 // class HeliaLibp2pProcess extends HeliaLibp2p {
 // }
 /**
@@ -31,7 +32,7 @@ class IpfsProcess extends Process {
     constructor({ id, container, options, commands }) {
         if (container?.instance === undefined) {
             if (options === undefined) {
-                options = [];
+                options = ipfsOptions();
             }
             const init = async (processOptions) => {
                 if (processOptions === undefined) {

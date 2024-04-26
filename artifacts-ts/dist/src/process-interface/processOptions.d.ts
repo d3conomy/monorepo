@@ -18,9 +18,9 @@ declare const createProcessOption: ({ name, description, value, required, defaul
     defaultValue?: any;
 }) => ProcessOption;
 declare const findProcessOption: ({ options, name }: {
-    options: IProcessOptionsList | IProcessOption[] | {
+    options: Map<string, any> | IProcessOptionsList | IProcessOption[] | {
         [key: string]: any;
-    } | Map<string, any>;
+    };
     name: string;
 }) => IProcessOption | undefined;
 declare const injectDefaultValues: ({ options, values }: {

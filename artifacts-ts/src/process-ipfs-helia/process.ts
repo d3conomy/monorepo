@@ -10,6 +10,7 @@ import { IProcessOption, IProcessOptionsList } from "../process-interface/proces
 import { IProcessCommand } from "../process-interface/processCommand.js";
 import { ipfsCommands } from "./commands.js";
 import { PodProcessId } from "../id-reference-factory/IdReferenceClasses.js";
+import { ipfsOptions } from "./options.js";
 
 // class HeliaLibp2pProcess extends HeliaLibp2p {
 
@@ -57,7 +58,7 @@ class IpfsProcess
     }) {
         if (container?.instance === undefined) {
             if (options === undefined) {
-                options = []
+                options = ipfsOptions()
             }
 
             const init = async (
