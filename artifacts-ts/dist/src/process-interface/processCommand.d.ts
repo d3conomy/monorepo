@@ -41,7 +41,7 @@ declare class ProcessCommands extends Map<IProcessCommand['name'], IProcessComma
         container?: IProcessContainer<IProcessCommand['type']>;
     });
     isUnique(name: IProcessCommand['name']): boolean;
-    loadContainer(container: IProcessContainer<ProcessType>): void;
+    loadContainer(container?: IProcessContainer<ProcessType>): void;
 }
 declare const createProcessCommandArgs: ({ name, description, required, defaultValue }: {
     name: string;

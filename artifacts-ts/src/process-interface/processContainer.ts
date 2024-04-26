@@ -9,7 +9,7 @@ interface IProcessContainer<T = ProcessType> {
     options?: IProcessOptionsList
 
     init?: (options?: IProcessOptionsList) => Promise<any>
-    loadInstance?: (instance: any) => void
+    loadInstance?: (instance?: any) => void
 }
 
 
@@ -36,7 +36,7 @@ class ProcessContainer<T = ProcessType> implements IProcessContainer<T> {
         this.init = init
     }
 
-    loadInstance(instance: any): void {
+    loadInstance(instance?: any): void {
         this.instance = instance
     }
 }

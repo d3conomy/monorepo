@@ -25,7 +25,7 @@ describe('OrbitDbOptions', () => {
             });
         };
         libp2pProcess = await createLibp2pProcess(podProcessIdFn());
-        process = await createIpfsProcess(podProcessIdFn(), [createProcessOption({ name: "libp2p", value: libp2pProcess?.container?.instance })]);
+        process = await createIpfsProcess(podProcessIdFn(), [createProcessOption({ name: "libp2p", value: libp2pProcess })]);
         instance = process.container?.instance;
     });
     //     commands = new ProcessCommands({
@@ -36,7 +36,12 @@ describe('OrbitDbOptions', () => {
     //     expect(orbitDbProcess).to.be.an.instanceOf(OrbitDbProcess);
     // });
     afterEach(async () => {
-        instance?.stop();
+        // await orbitDbProcess.container?.instance?.ipfs.libp2p.stop()
+        // await orbitDbProcess.container?.instance?.stop()
+        // await process.container?.instance?.libp2p.stop()
+        await instance?.stop();
+        await process.container?.instance?.stop();
+        await libp2pProcess.container?.instance?.stop();
         instance = null;
         const path = 'data/pods/pod1';
         // await fs.rm(path, { recursive: true, force: true }) 
@@ -55,10 +60,10 @@ describe('OrbitDbOptions', () => {
             enableDID: true,
             identitySeed: new Uint8Array(32),
             identityProvider: undefined,
-            directory: './custom-directory'
+            directory: 'custom-directory'
         };
         const options = new OrbitDbOptions(customValues);
-        console.log(`orbitDbOptions: ${options.ipfs.id}`);
+        // console.log(`orbitDbOptions: ${options.ipfs.id}`)
         expect(options.ipfs.container?.instance).to.equal(instance);
         // expect(options.identityProvider).to.equal(customValues.identityProvider);
         expect(options.directory).to.equal(customValues.directory);

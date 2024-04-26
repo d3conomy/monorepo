@@ -70,7 +70,7 @@ class ProcessCommands extends Map<IProcessCommand['name'], IProcessCommand> impl
         return !this.has(name);
     }
 
-    loadContainer(container: IProcessContainer<ProcessType>): void {
+    loadContainer(container?: IProcessContainer<ProcessType>): void {
         this.container = container
     }
 }

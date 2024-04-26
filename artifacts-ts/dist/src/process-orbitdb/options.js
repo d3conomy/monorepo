@@ -44,8 +44,6 @@ class OrbitDbOptions {
         if (!ipfs) {
             throw new Error(`No Ipfs process found`);
         }
-        console.log(`orbitDbOptions: ${injectedDefaultValues}`);
-        console.log(`orbitDbOptions: ${ipfs.id}`);
         this.ipfs = ipfs;
         this.enableDID = enableDID !== undefined ? enableDID : false;
         this.identitySeed = identitySeed;

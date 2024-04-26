@@ -2,14 +2,15 @@ import { Libp2p } from "libp2p"
 import { PodProcessId } from "../id-reference-factory/index.js"
 import { libp2pCommands } from "../process-libp2p/commands.js"
 import { IProcessCommand, IProcessCommands, ProcessCommands } from "./processCommand.js"
-import { IProcessContainer } from "./processContainer.js"
+import { IProcessContainer, createProcessContainer } from "./processContainer.js"
 import { JobQueue } from "./processJobQueue.js"
 import { IProcessOptionsList } from "./processOptions.js"
 import { ProcessStage } from "./processStages.js"
+import { ProcessType } from "./processTypes.js"
 
 interface IProcess {
     id: PodProcessId
-    container?: IProcessContainer
+    container: IProcessContainer
     commands: IProcessCommands
     jobQueue: JobQueue
 
@@ -23,7 +24,7 @@ interface IProcess {
 
 class Process implements IProcess {
     id: PodProcessId;
-    container?: IProcessContainer;
+    container: IProcessContainer;
     commands: ProcessCommands;
     jobQueue: JobQueue;
 
@@ -33,14 +34,19 @@ class Process implements IProcess {
         commands: Array<IProcessCommand>
     ) {
         this.id = id;
-        this.container = container;
+        this.container = container ? container : createProcessContainer({
+            type: ProcessType.CUSTOM,
+            instance: undefined,
+            options: undefined,
+            init: undefined
+        });
         this.commands = new ProcessCommands({commands, container: this.container});
         this.jobQueue = new JobQueue();
 
     }
 
     check(): boolean {
-        return this.container !== undefined;
+        return this.container !== undefined ;
     }
 
     status(): ProcessStage {
@@ -50,31 +56,17 @@ class Process implements IProcess {
     async init(): Promise<void> {
         this.jobQueue.init(this.commands);
 
-        // console.log(`this.container: ${JSON.stringify(this.container)}`)
-
-        try{
-            if (this.container?.init !== undefined) {
-
-                const containerExec: any = await this.container?.init(this.container?.options);
-
-                // console.log(`containerExec: ${containerExec}`)
-
-                if (containerExec && this.container.instance === undefined) {
-                    if (this.container?.loadInstance) {
-                        this.container?.loadInstance(containerExec);
-                    }   
+        try {
+            if (typeof this.container.init === 'function') {
+                if (this.container.loadInstance) {
+                    this.container.loadInstance(await this.container.init(this.container.options));
                 }
             }
         } catch (e) {
             console.error(`Error initializing container: ${e}`)
         }
-
-        if (this.container?.instance === undefined) {
-            throw new Error(`Container instance is undefined`)
-        }
+    
         this.commands.loadContainer(this.container)
-
-        // console.log(`this.container: ${JSON.stringify(this.container)}`)
     }
 
     async start(parallel?: boolean): Promise<void> {

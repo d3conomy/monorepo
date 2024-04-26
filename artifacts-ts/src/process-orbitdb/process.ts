@@ -70,7 +70,7 @@ class OrbitDbProcess
         commands?: Array<IProcessCommand>
     }) {
         if (container?.instance === undefined) {
-            if (options === undefined) {
+            if (options === undefined || options.length === 0) {
                 options = orbitDbOptions()
             }
 
@@ -80,7 +80,7 @@ class OrbitDbProcess
                 return await createOrbitDbInstance(processOptions)
             }
 
-            container = createProcessContainer<ProcessType.ORBITDB>({
+            container = container ? container : createProcessContainer<ProcessType.ORBITDB>({
                 type: ProcessType.ORBITDB,
                 instance: undefined,
                 options,
@@ -92,6 +92,20 @@ class OrbitDbProcess
             container,
             commands ? commands : orbitDbCommands
         )
+    }
+
+    // public async init(): Promise<void> {
+    //     // await super.init()
+    //     if (this.container.instance === undefined) {
+    //         if (this.container.loadInstance !== undefined && typeof this.container.init === 'function') {
+    //             this.container.loadInstance(await this.container.init(this.container?.options))
+    //         }
+    //     }
+    // }
+
+    public async stop(): Promise<void> {
+        this.jobQueue.stop()
+        this.container?.instance?.ipfs.libp2p.stop()
     }
 }
 

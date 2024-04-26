@@ -1,6 +1,8 @@
 import { ProcessCommands } from "./processCommand.js";
+import { createProcessContainer } from "./processContainer.js";
 import { JobQueue } from "./processJobQueue.js";
 import { ProcessStage } from "./processStages.js";
+import { ProcessType } from "./processTypes.js";
 class Process {
     id;
     container;
@@ -8,7 +10,12 @@ class Process {
     jobQueue;
     constructor(id, container, commands) {
         this.id = id;
-        this.container = container;
+        this.container = container ? container : createProcessContainer({
+            type: ProcessType.CUSTOM,
+            instance: undefined,
+            options: undefined,
+            init: undefined
+        });
         this.commands = new ProcessCommands({ commands, container: this.container });
         this.jobQueue = new JobQueue();
     }
@@ -20,26 +27,17 @@ class Process {
     }
     async init() {
         this.jobQueue.init(this.commands);
-        // console.log(`this.container: ${JSON.stringify(this.container)}`)
         try {
-            if (this.container?.init !== undefined) {
-                const containerExec = await this.container?.init(this.container?.options);
-                // console.log(`containerExec: ${containerExec}`)
-                if (containerExec && this.container.instance === undefined) {
-                    if (this.container?.loadInstance) {
-                        this.container?.loadInstance(containerExec);
-                    }
+            if (typeof this.container.init === 'function') {
+                if (this.container.loadInstance) {
+                    this.container.loadInstance(await this.container.init(this.container.options));
                 }
             }
         }
         catch (e) {
             console.error(`Error initializing container: ${e}`);
         }
-        if (this.container?.instance === undefined) {
-            throw new Error(`Container instance is undefined`);
-        }
         this.commands.loadContainer(this.container);
-        // console.log(`this.container: ${JSON.stringify(this.container)}`)
     }
     async start(parallel) {
         if (parallel) {

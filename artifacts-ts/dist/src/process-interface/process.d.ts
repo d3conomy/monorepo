@@ -5,7 +5,7 @@ import { JobQueue } from "./processJobQueue.js";
 import { ProcessStage } from "./processStages.js";
 interface IProcess {
     id: PodProcessId;
-    container?: IProcessContainer;
+    container: IProcessContainer;
     commands: IProcessCommands;
     jobQueue: JobQueue;
     check(): boolean;
@@ -17,7 +17,7 @@ interface IProcess {
 }
 declare class Process implements IProcess {
     id: PodProcessId;
-    container?: IProcessContainer;
+    container: IProcessContainer;
     commands: ProcessCommands;
     jobQueue: JobQueue;
     constructor(id: PodProcessId, container: IProcessContainer, commands: Array<IProcessCommand>);

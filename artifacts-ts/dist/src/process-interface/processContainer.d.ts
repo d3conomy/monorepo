@@ -5,7 +5,7 @@ interface IProcessContainer<T = ProcessType> {
     instance?: any;
     options?: IProcessOptionsList;
     init?: (options?: IProcessOptionsList) => Promise<any>;
-    loadInstance?: (instance: any) => void;
+    loadInstance?: (instance?: any) => void;
 }
 declare class ProcessContainer<T = ProcessType> implements IProcessContainer<T> {
     type: T;
@@ -18,7 +18,7 @@ declare class ProcessContainer<T = ProcessType> implements IProcessContainer<T> 
         options?: IProcessOptionsList;
         init?: (options?: IProcessOptionsList) => Promise<any>;
     });
-    loadInstance(instance: any): void;
+    loadInstance(instance?: any): void;
 }
 declare const createProcessContainer: <T = ProcessType>({ type, instance, options, init }: {
     type: T;

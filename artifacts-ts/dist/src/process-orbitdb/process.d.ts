@@ -14,6 +14,7 @@ declare class OrbitDbProcess extends Process implements IProcess {
         options?: Array<IProcessOption>;
         commands?: Array<IProcessCommand>;
     });
+    stop(): Promise<void>;
 }
 declare const createOrbitDbProcess: (id: PodProcessId, options?: Array<IProcessOption>) => Promise<OrbitDbProcess>;
 export { createOrbitDbProcess, OrbitDbProcess };

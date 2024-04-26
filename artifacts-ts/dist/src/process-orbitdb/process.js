@@ -36,13 +36,13 @@ const createOrbitDbInstance = async (instanceOptions) => {
 class OrbitDbProcess extends Process {
     constructor({ id, container, options, commands }) {
         if (container?.instance === undefined) {
-            if (options === undefined) {
+            if (options === undefined || options.length === 0) {
                 options = orbitDbOptions();
             }
             const init = async (processOptions) => {
                 return await createOrbitDbInstance(processOptions);
             };
-            container = createProcessContainer({
+            container = container ? container : createProcessContainer({
                 type: ProcessType.ORBITDB,
                 instance: undefined,
                 options,
@@ -50,6 +50,18 @@ class OrbitDbProcess extends Process {
             });
         }
         super(id, container, commands ? commands : orbitDbCommands);
+    }
+    // public async init(): Promise<void> {
+    //     // await super.init()
+    //     if (this.container.instance === undefined) {
+    //         if (this.container.loadInstance !== undefined && typeof this.container.init === 'function') {
+    //             this.container.loadInstance(await this.container.init(this.container?.options))
+    //         }
+    //     }
+    // }
+    async stop() {
+        this.jobQueue.stop();
+        this.container?.instance?.ipfs.libp2p.stop();
     }
 }
 const createOrbitDbProcess = async (id, options) => {
