@@ -1,6 +1,6 @@
 import { HeliaLibp2p } from "helia"
 
-import { IProcessCommand, IProcessCommandArgInput, ProcessType } from "../process-interface"
+import { IProcessCommand, IProcessCommandArgInput, ProcessType } from "../process-interface/index.js"
 import { dagJson } from "@helia/dag-json"
 import { CID } from "multiformats"
 import { Libp2p } from "libp2p"
@@ -60,7 +60,7 @@ const ipfsCommands: Array<IProcessCommand> = [
             let responseData: any;
             try {
                 const dj = dagJson(instance)
-                responseData = await dj.get(CID.parse(args[0].value));
+                responseData = await dj.get(args[0].value);
             }
             catch (error: any) {
                 throw error

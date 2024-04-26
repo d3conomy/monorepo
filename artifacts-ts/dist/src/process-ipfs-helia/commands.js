@@ -1,6 +1,5 @@
-import { ProcessType } from "../process-interface";
+import { ProcessType } from "../process-interface/index.js";
 import { dagJson } from "@helia/dag-json";
-import { CID } from "multiformats";
 const ipfsCommands = [
     {
         name: 'start',
@@ -41,7 +40,7 @@ const ipfsCommands = [
             let responseData;
             try {
                 const dj = dagJson(instance);
-                responseData = await dj.get(CID.parse(args[0].value));
+                responseData = await dj.get(args[0].value);
             }
             catch (error) {
                 throw error;

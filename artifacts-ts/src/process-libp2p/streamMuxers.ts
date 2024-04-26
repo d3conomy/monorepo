@@ -8,13 +8,11 @@ const streamMuxerOptions = (): IProcessOptionsList => [
     createProcessOption({
         name: 'enableYamux',
         description: 'Enable Yamux',
-        required: false,
         defaultValue: true
     }),
     createProcessOption({
         name: 'enableMplex',
         description: 'Enable Mplex',
-        required: false,
         defaultValue: false
     })
 ] 

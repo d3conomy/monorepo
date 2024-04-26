@@ -1,1 +1,1 @@
-{"version":3,"file":"commands.d.ts","sourceRoot":"","sources":["../../../src/process-ipfs-helia/commands.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,eAAe,EAAwC,MAAM,sBAAsB,CAAA;AAQ5F,QAAA,MAAM,YAAY,EAAE,KAAK,CAAC,eAAe,CA8ExC,CAAA;AAED,OAAO,EACH,YAAY,EACf,CAAA"}
+{"version":3,"file":"commands.d.ts","sourceRoot":"","sources":["../../../src/process-ipfs-helia/commands.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,eAAe,EAAwC,MAAM,+BAA+B,CAAA;AAQrG,QAAA,MAAM,YAAY,EAAE,KAAK,CAAC,eAAe,CA8ExC,CAAA;AAED,OAAO,EACH,YAAY,EACf,CAAA"}

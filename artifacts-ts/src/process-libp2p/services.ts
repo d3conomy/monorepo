@@ -16,102 +16,86 @@ const serviceOptionsParams = (): IProcessOptionsList => [
     createProcessOption({
         name: 'enableGossipSub',
         description: 'Enable GossipSub',
-        required: false,
         defaultValue: true
     }),
     createProcessOption({
         name: 'enablePublishToZeroTopicPeers',
         description: 'Enable publish to zero topic peers',
-        required: false,
         defaultValue: true
     }),
     createProcessOption({
         name: 'enableAutoNAT',
         description: 'Enable AutoNAT',
-        required: false,
         defaultValue: true
     }),
     createProcessOption({
         name: 'enableIdentify',
         description: 'Enable Identify',
-        required: false,
         defaultValue: true
     }),
     createProcessOption({
         name: 'enableUPnPNAT',
         description: 'Enable UPnP NAT',
-        required: false,
         defaultValue: true
     }),
     createProcessOption({
         name: 'enableDHT',
         description: 'Enable DHT',
-        required: false,
         defaultValue: true
     }),
     createProcessOption({
         name: 'enableDHTClient',
         description: 'Enable DHT Client',
-        required: false,
         defaultValue: true
     }),
     createProcessOption({
         name: 'enableIpnsValidator',
         description: 'Enable IPNS Validator',
-        required: false,
         defaultValue: true
     }),
     createProcessOption({
         name: 'enableIpnsSelector',
         description: 'Enable IPNS Selector',
-        required: false,
         defaultValue: true
     }),
     createProcessOption({
         name: 'enableLanDHT',
         description: 'Enable LAN DHT',
-        required: false,
         defaultValue: true
     }),
     createProcessOption({
         name: 'lanDhtProtocol',
         description: 'LAN DHT Protocol',
-        required: false,
         defaultValue: 'lan'
     }),
 
     createProcessOption({
         name: 'lanDhtPeerInfoMapperRemovePublicAddresses',
         description: 'LAN DHT Peer Info Mapper Remove Public Addresses',
-        required: false,
         defaultValue: true
     }),
 
     createProcessOption({
         name: 'lanDhtClientMode',
         description: 'LAN DHT Client Mode',
-        required: false,
         defaultValue: true
     }),
 
     createProcessOption({
         name: 'enableRelay',
         description: 'Enable Relay',
-        required: false,
         defaultValue: true
     }),
 
     createProcessOption({
         name: 'enableDCUTR',
         description: 'Enable DCUTR',
-        required: false,
         defaultValue: true
     }),
 
     createProcessOption({
         name: 'enablePing',
         description: 'Enable Ping',
-        required: false,
         defaultValue: true
     }),
 ]

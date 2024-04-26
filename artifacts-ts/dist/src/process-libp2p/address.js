@@ -161,7 +161,7 @@ const listenAddresses = ({ ...values }) => {
     //     enableCircuitRelayTransport?: boolean,
     //     additionalMultiaddrs?: Array<Multiaddr | string>
     // } = compiledListenAddressOptions
-    console.log(`mappedProcessOptions: ${JSON.stringify({ enableTcp, tcpPort, enableIp4, ip4Domain, enableUdp, udpPort, enableIp6, ip6Domain, enableQuicv1, enableWebTransport, enableWebSockets, enableWebRTC, enableWebRTCStar, webRTCStarAddress, enableCircuitRelayTransport, additionalMultiaddrs })}`);
+    // console.log(`mappedProcessOptions: ${JSON.stringify({enableTcp, tcpPort, enableIp4, ip4Domain, enableUdp, udpPort, enableIp6, ip6Domain, enableQuicv1, enableWebTransport, enableWebSockets, enableWebRTC, enableWebRTCStar, webRTCStarAddress, enableCircuitRelayTransport, additionalMultiaddrs})}`)
     const listenAddresses = [];
     if (enableIp4) {
         if (enableTcp) {

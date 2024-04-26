@@ -50,7 +50,7 @@ class Libp2pProcess extends Process implements IProcess {
 
 const createLibp2pProcess = async (
     id: PodProcessId,
-    options: Array<IProcessOption>,
+    options?: Array<IProcessOption>,
 ): Promise<Libp2pProcess> => {
     const process = new Libp2pProcess({
         id,

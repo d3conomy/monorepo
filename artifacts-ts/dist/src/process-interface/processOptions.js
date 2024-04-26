@@ -25,11 +25,8 @@ const injectDefaultValues = ({ options, values }) => {
             if (values[option.name].value !== undefined && values[option.name].value !== null) {
                 option.value = values[option.name].value;
             }
-            else if (values[option.name] !== undefined && values[option.name] !== null) {
-                option.value = values[option.name];
-            }
             else {
-                option.value = option.defaultValue;
+                option.value = values[option.name];
             }
         }
         if (option.value === undefined) {
@@ -55,7 +52,7 @@ const compileProcessOptions = (options) => {
 const mapProcessOptions = (options, asMap = false) => {
     let map = new Map();
     for (const option of options) {
-        if (option.required && option.value === undefined) {
+        if (option.value === undefined) {
             option.value = option.defaultValue;
         }
         if (option.value?.value !== undefined || option.value?.defaultValue !== undefined) {
@@ -87,12 +84,12 @@ class ProcessOption {
         this.name = name;
         this.description = description;
         this.value = value;
-        this.required = required;
+        this.required = required !== undefined ? required : false;
         this.defaultValue = defaultValue;
     }
     toParam() {
         const paramvalue = this.value;
-        if (this.value === undefined) {
+        if (this.value === undefined && this.defaultValue !== undefined) {
             return {
                 [this.name]: this.defaultValue
             };
