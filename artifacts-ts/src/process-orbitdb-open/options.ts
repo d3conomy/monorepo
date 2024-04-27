@@ -1,5 +1,6 @@
 
 import { PodProcessId } from '../id-reference-factory/IdReferenceClasses.js';
+import { IProcessOption, createProcessOption } from '../process-interface/processOptions.js';
 import { OrbitDbProcess } from '../process-orbitdb/process.js';
 
 /**
@@ -19,6 +20,30 @@ const isOrbitDbType = (value: string): OrbitDbTypes => {
     }
     throw new Error('Invalid OrbitDb type');
 }
+
+const orbitDbOptions = (): Array<IProcessOption> => [
+    createProcessOption({
+        name: "orbitdb",
+        description: "The OrbitDb process",
+        required: true
+    }),
+    createProcessOption({
+        name: "databaseName",
+        description: "The name of the database",
+        required: true
+    }),
+    createProcessOption({
+        name: "databaseType",
+        description: "The type of the database",
+        required: false,
+        defaultValue: OrbitDbTypes.EVENTS
+    }),
+    createProcessOption({
+        name: "options",
+        description: "The options for the database",
+        required: false
+    })
+]
 
 /**
  * The options for opening a database.
