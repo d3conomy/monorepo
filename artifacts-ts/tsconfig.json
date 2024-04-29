@@ -118,6 +118,7 @@
     ],
     "exclude": [
       "node_modules",
+      "./tests-bak"
       // "./src/**/*.spec.ts"
     ]
   

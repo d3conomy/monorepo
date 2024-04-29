@@ -1,3 +1,4 @@
+// import { ProcessStage, ResponseCode } from "../process-interface/index.js";
 import { LogLevel, isLogLevel } from "./LogLevels.js";
 /**
  * A class to represent a log entry
@@ -7,18 +8,21 @@ class LogEntry {
     podId;
     processId;
     level;
-    code;
-    stage;
+    // public code?: ResponseCode;
+    // public stage?: ProcessStage | string;
     timestamp;
     message;
     error;
-    constructor({ podId, processId, message, level, code, stage, error, printLevel }) {
+    constructor({ podId, processId, message, level, 
+    // code,
+    // stage,
+    error, printLevel }) {
         this.podId = podId;
         this.processId = processId;
         this.message = message;
         this.level = level ? isLogLevel(level) : LogLevel.INFO;
-        this.code = code;
-        this.stage = stage;
+        // this.code = code;
+        // this.stage = stage;
         this.timestamp = new Date();
         this.error = error;
         this.print(printLevel);

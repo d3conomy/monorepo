@@ -71,8 +71,8 @@ describe('src/log-books-manager/LogEntry.js', () => {
         expect(logEntry).to.haveOwnProperty('timestamp');
         expect(logEntry).to.haveOwnProperty('level');
         expect(logEntry).to.haveOwnProperty('message');
-        expect(logEntry).to.haveOwnProperty('code');
-        expect(logEntry).to.haveOwnProperty('stage');
+        // expect(logEntry).to.haveOwnProperty('code');
+        // expect(logEntry).to.haveOwnProperty('stage');
         expect(logEntry).to.haveOwnProperty('error');
         expect(logEntry).to.haveOwnProperty('processId');
         expect(logEntry).to.haveOwnProperty('podId');

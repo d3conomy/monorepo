@@ -1,5 +1,5 @@
 import { IdReference, IdReferenceFormats, IdReferenceTypes, isIdReferenceFormat } from "../id-reference-factory/index.js";
-import { ProcessStage, ResponseCode } from "../process-interface/index.js";
+// import { ProcessStage, ResponseCode } from "../process-interface/index.js";
 import { ILogBook, LogBook } from "./LogBook.js";
 import { ILogEntry, LogEntry } from "./LogEntry.js";
 import { LogLevel, isLogLevel } from "./LogLevels.js";
@@ -163,8 +163,8 @@ const logBooksManager = new LogBooksManager();
 const logger = ({
     name,
     level,
-    code,
-    stage,
+    // code,
+    // stage,
     message,
     error,
     processId,
@@ -173,8 +173,8 @@ const logger = ({
     name?: string,
     level?: LogLevel,
     message: string,
-    code?: ResponseCode,
-    stage?: ProcessStage | string,
+    // code?: ResponseCode,
+    // stage?: ProcessStage | string,
     error?: Error,
     processId?: IdReference,
     podId?: IdReference
@@ -197,8 +197,8 @@ const logger = ({
     const entry: LogEntry = new LogEntry({
         printLevel: logBooksManager.config.level,
         level: level ? level : LogLevel.INFO,
-        code: code,
-        stage: stage,
+        // code: code,
+        // stage: stage,
         message: message,
         error: error,
         podId: podId,

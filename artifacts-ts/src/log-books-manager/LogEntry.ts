@@ -1,5 +1,5 @@
 import { IdReference } from "../id-reference-factory/index.js";
-import { ProcessStage, ResponseCode } from "../process-interface/index.js";
+// import { ProcessStage, ResponseCode } from "../process-interface/index.js";
 import { LogLevel, isLogLevel } from "./LogLevels.js";
 
 
@@ -12,8 +12,8 @@ interface ILogEntry {
     podId?: IdReference;
     processId?: IdReference;
     level?: LogLevel;
-    code?: ResponseCode;
-    stage?: ProcessStage | string;
+    // code?: ResponseCode;
+    // stage?: ProcessStage | string;
     timestamp: Date;
     message: string;
     error?: Error;
@@ -31,8 +31,8 @@ class LogEntry
     public podId?: IdReference;
     public processId?: IdReference;
     public level?: LogLevel;
-    public code?: ResponseCode;
-    public stage?: ProcessStage | string;
+    // public code?: ResponseCode;
+    // public stage?: ProcessStage | string;
     public timestamp: Date;
     public message: string;
     public error?: Error;
@@ -42,8 +42,8 @@ class LogEntry
         processId,
         message,
         level,
-        code,
-        stage,
+        // code,
+        // stage,
         error,
         printLevel
     }: {
@@ -51,8 +51,8 @@ class LogEntry
         processId?: IdReference
         message: string,
         level?: LogLevel | string,
-        code?: ResponseCode,
-        stage?: ProcessStage | string,
+        // code?: ResponseCode,
+        // stage?: ProcessStage | string,
         error?: Error
         printLevel: LogLevel
     })  {
@@ -60,8 +60,8 @@ class LogEntry
         this.processId = processId;
         this.message = message;
         this.level = level ? isLogLevel(level) : LogLevel.INFO;
-        this.code = code;
-        this.stage = stage;
+        // this.code = code;
+        // this.stage = stage;
         this.timestamp = new Date();
         this.error = error;
 
