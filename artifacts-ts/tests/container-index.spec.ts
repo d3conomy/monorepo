@@ -135,8 +135,8 @@ describe("Container", () => {
 
     describe("options", () => {
         it("should return the options", () => {
-            const option1: InstanceOption = { name: "test", value: "test" }
-            const option2: InstanceOption = { name: "test2", value: "test2" }
+            const option1: InstanceOption<string> = { name: "test", value: "test" }
+            const option2: InstanceOption<string> = { name: "test2", value: "test2" }
             const container = new Container<InstanceTypes.Custom>({
                 type: InstanceTypes.Custom,
                 commands: new Commands({ commands: [] }),

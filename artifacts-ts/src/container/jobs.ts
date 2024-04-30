@@ -61,7 +61,7 @@ class JobQueue {
         try {
             job.status = JobStatus.Running;
             output = await job.command.run(job.params, this.instance);
-            console.log(`Job ${job.id} finished, with output: ${output.output}`);
+            // console.log(`Job ${job.id} finished, with output: ${output.output}`);
             job.status = JobStatus.Succeeded;
         } catch (error: any) {
             job.status = JobStatus.Failed;
@@ -85,8 +85,8 @@ class JobQueue {
 
         this.completed.push(job);
 
-        console.log(`completed: ${this.completed.length}`)
-        console.log(`Job ${job.id} finished in ${runtime}ms, with output: ${output.output}`);
+        // console.log(`completed: ${this.completed.length}`)
+        // console.log(`Job ${job.id} finished in ${runtime}ms, with output: ${output.output}`);
 
         return job;
     }
@@ -94,10 +94,10 @@ class JobQueue {
     run = async (parallel: boolean = false): Promise<Job[]> => {
         let jobsCompleted = new Array<Job>();
         if (parallel === true) {
-            console.log(`Running in parallel`)
+            // console.log(`Running in parallel`)
             jobsCompleted = await this.runParallel();
         } else {
-            console.log(`Running in sequence`)
+            // console.log(`Running in sequence`)
             jobsCompleted = await this.runSequential();
             
         }

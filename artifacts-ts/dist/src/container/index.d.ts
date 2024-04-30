@@ -2,16 +2,16 @@ import { Command, Commands } from "./commands.js";
 import { Job, JobQueue } from "./jobs.js";
 import { InstanceTypes } from "./instance.js";
 import { InstanceOption } from "./options.js";
-declare class Container<T extends InstanceTypes> {
+declare class Container<T extends InstanceTypes = InstanceTypes> {
     private _type;
     private instance;
     private initializer?;
-    readonly options?: Array<InstanceOption>;
+    readonly options?: Array<InstanceOption<any>>;
     commands: Commands;
     jobs: JobQueue;
     constructor({ type, options, initializer, instance, commands, jobs }: {
         type: T;
-        options?: Array<InstanceOption>;
+        options?: Array<InstanceOption<any>>;
         initializer?: (options: any) => Promise<any>;
         instance?: any;
         commands: Array<Command> | Commands;

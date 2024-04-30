@@ -31,9 +31,12 @@ class Container {
     }
     async init() {
         if (this.initializer !== null && this.initializer !== undefined) {
-            this.instance = await this.initializer(this.options);
-            this.jobs.setInstance(this.instance);
-            this.commands.setInstance(this.instance);
+            const instance = await this.initializer(this.options);
+            if (instance !== null && instance !== undefined && (this.instance === null || this.instance === undefined)) {
+                this.instance = instance;
+                this.jobs.setInstance(this.instance);
+                this.commands.setInstance(this.instance);
+            }
         }
     }
     get type() {

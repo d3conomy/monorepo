@@ -3,11 +3,11 @@ import { Job, JobQueue } from "./jobs.js";
 import { InstanceType, InstanceTypes } from "./instance.js";
 import { InstanceOption } from "./options.js";
 
-class Container<T extends InstanceTypes> {
+class Container<T extends InstanceTypes = InstanceTypes> {
   private _type: T;
   private instance: () => Promise<any>;
   private initializer?: (options?: any) => Promise<any>;
-  public readonly options?: Array<InstanceOption>;
+  public readonly options?: Array<InstanceOption<any>>;
   public commands: Commands;
   public jobs: JobQueue = new JobQueue();
 
@@ -20,7 +20,7 @@ class Container<T extends InstanceTypes> {
     jobs
   }: {
     type: T,
-    options?: Array<InstanceOption>,
+    options?: Array<InstanceOption<any>>,
     initializer?: (options: any) => Promise<any>,
     instance?: any,
     commands: Array<Command> | Commands,
@@ -52,9 +52,13 @@ class Container<T extends InstanceTypes> {
 
   public async init(): Promise<void> {
     if (this.initializer !== null && this.initializer !== undefined) {
-      this.instance = await this.initializer(this.options);
+      const instance = await this.initializer(this.options);
+
+    if (instance !== null && instance !== undefined && (this.instance === null || this.instance === undefined)) {
+      this.instance = instance;
       this.jobs.setInstance(this.instance);
       this.commands.setInstance(this.instance);
+      }
     }
   }
 

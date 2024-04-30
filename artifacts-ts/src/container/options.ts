@@ -1,11 +1,17 @@
-interface InstanceOption {
+
+
+
+interface InstanceOption<T> {
     name: string;
     description?: string;
-    value?: any;
+    value?: T;
     required?: boolean;
     defaultValue?: any;
 }
 
+interface InstanceOptionsList extends Array<InstanceOption<any>> {}
+
 export {
-    InstanceOption
+    InstanceOption,
+    InstanceOptionsList
 }
