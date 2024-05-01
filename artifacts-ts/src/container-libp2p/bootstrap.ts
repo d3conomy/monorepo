@@ -1,11 +1,11 @@
 import { Multiaddr, multiaddr } from '@multiformats/multiaddr';
 import { bootstrap } from '@libp2p/bootstrap';
 
-import { InstanceOption, InstanceOptionsList } from '../container/options.js';
+import { InstanceOption, InstanceOptions, InstanceOptionsList, createOptionsList } from '../container/options.js';
 
 
-const bootstrapOptions = (): InstanceOptionsList => {
-    return new InstanceOptionsList([
+const bootstrapOptions = (): InstanceOptions => {
+    return new InstanceOptions({options: createOptionsList([
         {
             name: 'defaultConfig',
             description: 'Use default bootstrap configuration',
@@ -21,7 +21,7 @@ const bootstrapOptions = (): InstanceOptionsList => {
             description: 'List bootstrap configuration, instead of returning a function',
             defaultValue: false
         } as InstanceOption<boolean>
-    ])
+    ])})
 }
 
 
@@ -38,14 +38,14 @@ const defaultBootstrapConfig: Array<string> = [
 ]
 
 
-const libp2pBootstrap = (instanceOptions: InstanceOptionsList): any => {
+const libp2pBootstrap = (options: InstanceOptions): any => {
     let addrs: Array<string> = new Array<string>();
 
     const {
         defaultConfig,
         multiaddrs,
         list 
-    } = instanceOptions.toParams()
+    } = options.toParams()
 
     if (defaultConfig === true) {
         defaultBootstrapConfig.forEach((addr: string) => {

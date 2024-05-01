@@ -1,4 +1,4 @@
-import { Command } from '../container/commands.js';
-declare const commands: Array<Command>;
+import { Commands } from '../container/commands.js';
+declare const commands: Commands;
 export { commands as libp2pCommands };
 //# sourceMappingURL=commands.d.ts.map

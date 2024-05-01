@@ -3,8 +3,9 @@ import { Container } from "../src/container/index.js";
 import { Commands } from "../src/container/commands.js";
 import { Job, JobQueue } from "../src/container/jobs.js";
 import { InstanceTypes } from "../src/container/instance.js";
-import { JobId, SystemId } from "../src/id-reference-factory/index.js";
+import { ContainerId, JobId, SystemId } from "../src/id-reference-factory/index.js";
 import { InstanceOption } from "./container/options.js";
+import { createId } from "./helpers.js";
 
 describe("Container", () => {
     describe("constructor", () => {
@@ -16,6 +17,7 @@ describe("Container", () => {
                 run: async () => {return{ output: null, metrics: { runtime: 0, bytesUploaded: 0, bytesDownloaded: 0 } }}
             }]});
             const container = new Container<InstanceTypes.Custom>({
+                id: createId('container') as ContainerId,
                 type: InstanceTypes.Custom,
                 commands: commands
             });
@@ -40,6 +42,7 @@ describe("Container", () => {
             const job2: Job = { id: jobId(), command: commands.get('test'), params: [] };
             const jobs = [job1, job2];
             const container = new Container<InstanceTypes.Custom>({
+                id: createId('container') as ContainerId,
                 type: InstanceTypes.Custom,
                 commands: commands,
                 jobs: jobs
@@ -55,6 +58,7 @@ describe("Container", () => {
         it("should return the instance", () => {
             const instance = { test: true };
             const container = new Container<InstanceTypes.Custom>({
+                id: createId('container') as ContainerId,
                 type: InstanceTypes.Custom,
                 commands: new Commands({ commands: [] }),
                 instance: instance
@@ -68,6 +72,7 @@ describe("Container", () => {
         it("should setInstance the instance", () => {
             const instance = { test: true };
             const container = new Container<InstanceTypes.Custom>({
+                id: createId('container') as ContainerId,
                 type: InstanceTypes.Custom,
                 commands: new Commands({ commands: [] }),
             });
@@ -83,6 +88,7 @@ describe("Container", () => {
             const instance = { test: true };
             const initializer = async () => instance;
             const container = new Container<InstanceTypes.Custom>({
+                id: createId('container') as ContainerId,
                 type: InstanceTypes.Custom,
                 commands: new Commands({ commands: [] }),
                 initializer: initializer
@@ -99,6 +105,7 @@ describe("Container", () => {
             const commands = new Commands({ commands: [] });
             const instance = { test: true };
             const container = new Container<InstanceTypes.Custom>({
+                id: createId('container') as ContainerId,
                 type: InstanceTypes.Custom,
                 commands: commands,
                 instance: instance
@@ -113,6 +120,7 @@ describe("Container", () => {
             const commands = new Commands({ commands: [] });
             const instance = { test: true };
             const container = new Container<InstanceTypes.Custom>({
+                id: createId('container') as ContainerId,                
                 type: InstanceTypes.Custom,
                 commands: commands,
                 instance: instance
@@ -125,6 +133,7 @@ describe("Container", () => {
     describe("type", () => {
         it("should return the type", () => {
             const container = new Container<InstanceTypes.Custom>({
+                id: createId('container') as ContainerId,
                 type: InstanceTypes.Custom,
                 commands: new Commands({ commands: [] }),
             });
@@ -138,6 +147,7 @@ describe("Container", () => {
             const option1: InstanceOption<string> = { name: "test", value: "test" }
             const option2: InstanceOption<string> = { name: "test2", value: "test2" }
             const container = new Container<InstanceTypes.Custom>({
+                id: createId('container') as ContainerId,
                 type: InstanceTypes.Custom,
                 commands: new Commands({ commands: [] }),
                 options: [option1, option2]
@@ -151,6 +161,7 @@ describe("Container", () => {
         it("should set the instance", () => {
             const instance = { test: true };
             const container = new Container<InstanceTypes.Custom>({
+                id: createId('container') as ContainerId,
                 type: InstanceTypes.Custom,
                 commands: new Commands({ commands: [] }),
             });

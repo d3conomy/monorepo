@@ -1,3 +1,11 @@
+class CommandError extends Error {
+    command;
+    constructor(command, message) {
+        super(message);
+        this.command = command;
+        this.name = 'CommandError';
+    }
+}
 class Commands {
     commands = [];
     instance;
@@ -18,14 +26,14 @@ class Commands {
     }
     add(command) {
         if (!this.isUnique(command.name)) {
-            throw new Error(`Command ${command.name} already exists`);
+            throw new CommandError(command.name, `Command already exists`);
         }
         this.commands.push(command);
     }
     get(name) {
         const command = this.commands.find((command) => command.name === name);
         if (!command) {
-            throw new Error(`Command ${name} not found`);
+            throw new CommandError(name, `Command not found`);
         }
         return command;
     }
@@ -33,4 +41,4 @@ class Commands {
         return this.commands;
     }
 }
-export { Commands };
+export { CommandError, Commands };

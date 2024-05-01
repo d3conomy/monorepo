@@ -7,8 +7,9 @@ const libp2pInitializer = async (options) => {
     return await createLibp2p();
 };
 class Libp2pContainer extends Container {
-    constructor(options) {
+    constructor(id, options) {
         super({
+            id,
             type: InstanceTypes.Libp2p,
             options: options,
             initializer: libp2pInitializer,
@@ -16,3 +17,4 @@ class Libp2pContainer extends Container {
         });
     }
 }
+export { Libp2pContainer };

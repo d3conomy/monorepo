@@ -11,15 +11,22 @@ declare class InstanceOptionsList extends Array<InstanceOption<any>> {
         [key: string]: any;
     };
 }
+declare const createOptionsList: (options: Array<InstanceOption<any>>) => InstanceOptionsList;
 declare class InstanceOptions {
     options: InstanceOptionsList;
-    constructor(options: Array<InstanceOption<any>> | InstanceOptionsList, injectDefaults?: boolean, defaults?: InstanceOptionsList);
+    constructor({ options, injectDefaults, defaults }?: {
+        options?: InstanceOptionsList | InstanceOptions;
+        injectDefaults?: boolean;
+        defaults?: InstanceOptions;
+    });
+    set(name: string, value: any): InstanceOption<any>;
     find(name: string): InstanceOption<any> | undefined;
     push(option: InstanceOption<any>): void;
-    injectDefaults(defaults: InstanceOptionsList): void;
+    injectDefaults(defaults: InstanceOptions): void;
+    toArray(): Array<InstanceOption<any>>;
     toParams(): {
         [key: string]: any;
     };
 }
-export { InstanceOption, InstanceOptions, InstanceOptionsList };
+export { createOptionsList, InstanceOption, InstanceOptions, InstanceOptionsList };
 //# sourceMappingURL=options.d.ts.map

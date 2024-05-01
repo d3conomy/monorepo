@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { InstanceOption, InstanceOptions, InstanceOptionsList } from '../src/container/options.js';
+import { InstanceOption, InstanceOptions, InstanceOptionsList, createOptionsList } from '../src/container/options.js';
 
 describe('InstanceOptionsList', () => {
     describe('toParams', () => {
@@ -46,31 +46,31 @@ describe('InstanceOptionsList', () => {
 describe('InstanceOptions', () => {
     describe('create instance options', () => {
         it('should create instance options with given options', () => {
-            const options: InstanceOption<any>[] = [
+            const options: InstanceOptionsList = createOptionsList([
                 { name: 'option1', defaultValue: 'default1' },
                 { name: 'option2', value: 'value2' },
                 { name: 'option3', defaultValue: 'default3' },
-            ];
+            ]);
 
-            const instanceOptions = new InstanceOptions(options);
+            const instanceOptions = new InstanceOptions({options});
 
             expect(instanceOptions.options).to.be.an.instanceOf(InstanceOptionsList);
             expect(instanceOptions.options.length).to.equal(3);
         });
 
         it('should create instance options with given options and inject defaults', () => {
-            const options: InstanceOption<any>[] = [
+            const options: InstanceOptionsList = createOptionsList([
                 { name: 'option1', defaultValue: 'default1' },
                 { name: 'option2', value: 'value2' },
                 { name: 'option3', defaultValue: 'default3' },
-            ];
+            ]);
 
-            const defaults: InstanceOption<any>[] = [
+            const defaults: InstanceOptionsList = createOptionsList([
                 { name: 'option2', defaultValue: 'default2' },
                 { name: 'option4', defaultValue: 'default4' },
-            ];
+            ]);
 
-            const instanceOptions = new InstanceOptions(options, true, new InstanceOptionsList(defaults));
+            const instanceOptions = new InstanceOptions({options, injectDefaults: true, defaults: new InstanceOptions({options: defaults})});
 
             expect(instanceOptions.options).to.be.an.instanceOf(InstanceOptionsList);
             expect(instanceOptions.options.length).to.equal(4);

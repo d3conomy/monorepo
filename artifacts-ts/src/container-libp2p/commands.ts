@@ -2,10 +2,10 @@ import { Libp2p } from 'libp2p';
 import { peerIdFromString } from '@libp2p/peer-id';
 import { PeerId, Libp2pStatus, Stream, type Connection } from '@libp2p/interface';
 
-import { Command, CommandArg } from '../container/commands.js';
+import { Command, CommandArg, Commands } from '../container/commands.js';
 import { Multiaddr } from '@multiformats/multiaddr';
 
-const commands: Array<Command> = [
+const commands: Commands = new Commands({ commands: [
     {
         name: 'start',
         description: 'Start the libp2p instance',
@@ -139,8 +139,8 @@ const commands: Array<Command> = [
                 required: true
             } as CommandArg<string>
         ]
-    }
-]
+    } as Command
+]})
 
 export {
     commands as libp2pCommands

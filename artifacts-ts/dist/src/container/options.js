@@ -6,10 +6,10 @@ class InstanceOptionsList extends Array {
     toParams() {
         let params = {};
         for (const option of this) {
-            if (params.hasOwnProperty(option.name)) {
-                if (option.value !== undefined && option.value !== params[option.name]) {
-                    throw new InstanceOptionsError(option.name, `Option with name already exists`);
-                }
+            if (params.hasOwnProperty(option.name) &&
+                option.value !== undefined &&
+                option.value !== params[option.name]) {
+                throw new InstanceOptionsError(option.name, `Option with name already exists`);
             }
             if (option.value !== undefined) {
                 params[option.name] = option.value;
@@ -26,10 +26,28 @@ const createOptionsList = (options) => {
 };
 class InstanceOptions {
     options;
-    constructor(options, injectDefaults = false, defaults) {
-        this.options = createOptionsList(options);
+    constructor({ options, injectDefaults = false, defaults } = {}) {
+        if (options instanceof Array) {
+            this.options = createOptionsList(options);
+        }
+        else if (options instanceof InstanceOptionsList) {
+            this.options = options;
+        }
+        else {
+            this.options = new InstanceOptionsList([]);
+        }
         if (injectDefaults && defaults) {
             this.injectDefaults(defaults);
+        }
+    }
+    set(name, value) {
+        const option = this.find(name);
+        if (option) {
+            option.value = value;
+            return option;
+        }
+        else {
+            throw new InstanceOptionsError(name, `Option with name not found`);
         }
     }
     find(name) {
@@ -37,12 +55,12 @@ class InstanceOptions {
     }
     push(option) {
         if (this.find(option.name)) {
-            throw new Error(`Option with name ${option.name} already exists`);
+            throw new InstanceOptionsError(option.name, `Option with name ${option.name} already exists`);
         }
         this.options.push(option);
     }
     injectDefaults(defaults) {
-        for (const defaultOption of defaults) {
+        for (const defaultOption of defaults.toArray()) {
             const option = this.find(defaultOption.name);
             if (option) {
                 if (option.value === undefined) {
@@ -57,8 +75,11 @@ class InstanceOptions {
             }
         }
     }
+    toArray() {
+        return this.options;
+    }
     toParams() {
         return this.options.toParams();
     }
 }
-export { InstanceOptions, InstanceOptionsList };
+export { createOptionsList, InstanceOptions, InstanceOptionsList };

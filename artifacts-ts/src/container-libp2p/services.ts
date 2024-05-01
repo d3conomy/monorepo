@@ -9,102 +9,104 @@ import { ipnsValidator } from 'ipns/validator'
 import { ipnsSelector } from 'ipns/selector'
 import { ping } from '@libp2p/ping'
 import { ServiceFactoryMap } from 'libp2p'
-import { IProcessOptionsList, createProcessOption, injectDefaultValues, mapProcessOptions } from '../process-interface/index.js'
+import { InstanceOption, InstanceOptions, createOptionsList } from '../container/options.js'
 
 
-const serviceOptionsParams = (): IProcessOptionsList => [
-    createProcessOption({
-        name: 'enableGossipSub',
-        description: 'Enable GossipSub',
-        defaultValue: true
-    }),
-    createProcessOption({
-        name: 'enablePublishToZeroTopicPeers',
-        description: 'Enable publish to zero topic peers',
-        defaultValue: true
-    }),
-    createProcessOption({
-        name: 'enableAutoNAT',
-        description: 'Enable AutoNAT',
-        defaultValue: true
-    }),
-    createProcessOption({
-        name: 'enableIdentify',
-        description: 'Enable Identify',
-        defaultValue: true
-    }),
-    createProcessOption({
-        name: 'enableUPnPNAT',
-        description: 'Enable UPnP NAT',
-        defaultValue: true
-    }),
-    createProcessOption({
-        name: 'enableDHT',
-        description: 'Enable DHT',
-        defaultValue: true
-    }),
-    createProcessOption({
-        name: 'enableDHTClient',
-        description: 'Enable DHT Client',
-        defaultValue: true
-    }),
-    createProcessOption({
-        name: 'enableIpnsValidator',
-        description: 'Enable IPNS Validator',
-        defaultValue: true
-    }),
-    createProcessOption({
-        name: 'enableIpnsSelector',
-        description: 'Enable IPNS Selector',
-        defaultValue: true
-    }),
-    createProcessOption({
-        name: 'enableLanDHT',
-        description: 'Enable LAN DHT',
-        defaultValue: true
-    }),
-    createProcessOption({
-        name: 'lanDhtProtocol',
-        description: 'LAN DHT Protocol',
-        defaultValue: 'lan'
-    }),
+const serviceOptions = (): InstanceOptions => {
+    return new InstanceOptions({options: createOptionsList([
+        {
+            name: 'enableGossipSub',
+            description: 'Enable GossipSub',
+            defaultValue: true
+        } as InstanceOption<boolean>,
+        {
+            name: 'enablePublishToZeroTopicPeers',
+            description: 'Enable publish to zero topic peers',
+            defaultValue: true
+        } as InstanceOption<boolean>,
+        {
+            name: 'enableAutoNAT',
+            description: 'Enable AutoNAT',
+            defaultValue: true
+        } as InstanceOption<boolean>,
+        {
+            name: 'enableIdentify',
+            description: 'Enable Identify',
+            defaultValue: true
+        } as InstanceOption<boolean>,
+        {
+            name: 'enableUPnPNAT',
+            description: 'Enable UPnP NAT',
+            defaultValue: true
+        } as InstanceOption<boolean>,
+        {
+            name: 'enableDHT',
+            description: 'Enable DHT',
+            defaultValue: true
+        } as InstanceOption<boolean>,
+        {
+            name: 'enableDHTClient',
+            description: 'Enable DHT Client',
+            defaultValue: true
+        } as InstanceOption<boolean>,
+        {
+            name: 'enableIpnsValidator',
+            description: 'Enable IPNS Validator',
+            defaultValue: true
+        } as InstanceOption<boolean>,
+        {
+            name: 'enableIpnsSelector',
+            description: 'Enable IPNS Selector',
+            defaultValue: true
+        } as InstanceOption<boolean>,
+        {
+            name: 'enableLanDHT',
+            description: 'Enable LAN DHT',
+            defaultValue: true
+        } as InstanceOption<boolean>,
+        {
+            name: 'lanDhtProtocol',
+            description: 'LAN DHT Protocol',
+            defaultValue: 'lan'
+        } as InstanceOption<string>,
 
-    createProcessOption({
-        name: 'lanDhtPeerInfoMapperRemovePublicAddresses',
-        description: 'LAN DHT Peer Info Mapper Remove Public Addresses',
-        defaultValue: true
-    }),
+        {
+            name: 'lanDhtPeerInfoMapperRemovePublicAddresses',
+            description: 'LAN DHT Peer Info Mapper Remove Public Addresses',
+            defaultValue: true
+        } as InstanceOption<boolean>,
 
-    createProcessOption({
-        name: 'lanDhtClientMode',
-        description: 'LAN DHT Client Mode',
-        defaultValue: true
-    }),
+        {
+            name: 'lanDhtClientMode',
+            description: 'LAN DHT Client Mode',
+            defaultValue: true
+        } as InstanceOption<boolean>,
 
-    createProcessOption({
-        name: 'enableRelay',
-        description: 'Enable Relay',
-        defaultValue: true
-    }),
+        {
+            name: 'enableRelay',
+            description: 'Enable Relay',
+            defaultValue: true
+        } as InstanceOption<boolean>,
 
-    createProcessOption({
-        name: 'enableDCUTR',
-        description: 'Enable DCUTR',
-        defaultValue: true
-    }),
+        {
+            name: 'enableDCUTR',
+            description: 'Enable DCUTR',
+            defaultValue: true
+        } as InstanceOption<boolean>,
 
-    createProcessOption({
-        name: 'enablePing',
-        description: 'Enable Ping',
-        defaultValue: true
-    }),
-]
+        {
+            name: 'enablePing',
+            description: 'Enable Ping',
+            defaultValue: true
+        } as InstanceOption<boolean>,
+    ])})
+}
 
 /**
  * Default libp2p options
  * @category Libp2p
  */
-const services = ({ ...values } : {} = {}): any => {
+const services = (options: InstanceOptions): any => {
     let serviceOptions: {
         pubsub?: any,
         autonat?: any,
@@ -116,8 +118,6 @@ const services = ({ ...values } : {} = {}): any => {
         dcutr?: any,
         ping?: any
     } = {}
-
-    const injectedDefaultValues = injectDefaultValues({options: serviceOptionsParams(), values})
 
     const {
         enableGossipSub,
@@ -136,7 +136,7 @@ const services = ({ ...values } : {} = {}): any => {
         enableRelay,
         enableDCUTR,
         enablePing,
-    } = mapProcessOptions(injectedDefaultValues)
+    } = options.toParams()
 
     if (enableGossipSub) {
         serviceOptions.pubsub = gossipsub({
@@ -234,5 +234,5 @@ const services = ({ ...values } : {} = {}): any => {
 
 export {
     services as libp2pServices,
-    serviceOptionsParams as serviceOptions
+    serviceOptions
 }

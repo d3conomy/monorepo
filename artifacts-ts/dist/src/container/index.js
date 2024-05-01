@@ -1,13 +1,15 @@
 import { Commands } from "./commands.js";
 import { JobQueue } from "./jobs.js";
 class Container {
+    id;
     _type;
     instance;
     initializer;
     options;
     commands;
     jobs = new JobQueue();
-    constructor({ type, options, initializer, instance, commands, jobs }) {
+    constructor({ id, type, options, initializer, instance, commands, jobs }) {
+        this.id = id;
         this._type = type;
         this.options = options;
         this.initializer = initializer;

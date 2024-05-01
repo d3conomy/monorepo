@@ -2,14 +2,17 @@ import { Command, Commands } from "./commands.js";
 import { Job, JobQueue } from "./jobs.js";
 import { InstanceTypes } from "./instance.js";
 import { InstanceOption } from "./options.js";
-declare class Container<T extends InstanceTypes = InstanceTypes> {
+import { ContainerId } from "../id-reference-factory/IdReferenceClasses.js";
+declare class Container<T extends InstanceTypes> {
+    id: ContainerId;
     private _type;
     private instance;
     private initializer?;
     readonly options?: Array<InstanceOption<any>>;
     commands: Commands;
     jobs: JobQueue;
-    constructor({ type, options, initializer, instance, commands, jobs }: {
+    constructor({ id, type, options, initializer, instance, commands, jobs }: {
+        id: ContainerId;
         type: T;
         options?: Array<InstanceOption<any>>;
         initializer?: (options: any) => Promise<any>;

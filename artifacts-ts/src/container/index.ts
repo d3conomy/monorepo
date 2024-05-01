@@ -2,8 +2,10 @@ import { Command, Commands } from "./commands.js";
 import { Job, JobQueue } from "./jobs.js";
 import { InstanceType, InstanceTypes } from "./instance.js";
 import { InstanceOption } from "./options.js";
+import { ContainerId } from "../id-reference-factory/IdReferenceClasses.js";
 
-class Container<T extends InstanceTypes = InstanceTypes> {
+class Container<T extends InstanceTypes> {
+  public id: ContainerId;
   private _type: T;
   private instance: () => Promise<any>;
   private initializer?: (options?: any) => Promise<any>;
@@ -12,6 +14,7 @@ class Container<T extends InstanceTypes = InstanceTypes> {
   public jobs: JobQueue = new JobQueue();
 
   constructor({
+    id,
     type,
     options,
     initializer,
@@ -19,6 +22,7 @@ class Container<T extends InstanceTypes = InstanceTypes> {
     commands,
     jobs
   }: {
+    id: ContainerId,
     type: T,
     options?: Array<InstanceOption<any>>,
     initializer?: (options: any) => Promise<any>,
@@ -26,6 +30,7 @@ class Container<T extends InstanceTypes = InstanceTypes> {
     commands: Array<Command> | Commands,
     jobs?: Array<Job>
   }) {
+    this.id = id;
     this._type = type;
     this.options = options;
     this.initializer = initializer 

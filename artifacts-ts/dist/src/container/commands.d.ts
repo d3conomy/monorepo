@@ -5,7 +5,9 @@ interface CommandArg<T> {
     required?: boolean;
     defaultValue?: T;
 }
-interface CommandError extends Error {
+declare class CommandError extends Error {
+    command: string;
+    constructor(command: string, message: string);
 }
 interface CommandResultMetrics {
     runtime: number;

@@ -68,9 +68,9 @@ declare class ContainerId extends IdReference<IdReferenceTypes.CONTAINER> implem
     });
 }
 declare class JobId extends IdReference<IdReferenceTypes.JOB> implements IJobId {
-    componentId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId;
+    componentId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId | ContainerId;
     constructor({ componentId, name, metadata, format }: {
-        componentId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId;
+        componentId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId | ContainerId;
         name?: string;
         metadata?: MetaData;
         format?: IdReferenceFormats | string;

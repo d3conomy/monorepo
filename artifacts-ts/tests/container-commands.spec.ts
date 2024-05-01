@@ -31,7 +31,7 @@ describe('Commands', () => {
 
         commands.add(command);
 
-        expect(() => commands.add(command)).to.throw(Error, 'Command test already exists');
+        expect(() => commands.add(command)).to.throw(Error, 'Command already exists');
     });
 
     it('should get a command by name', () => {
@@ -48,6 +48,6 @@ describe('Commands', () => {
     });
 
     it('should throw an error when getting a non-existent command', () => {
-        expect(() => commands.get('nonexistent')).to.throw(Error, 'Command nonexistent not found');
+        expect(() => commands.get('nonexistent')).to.throw(Error, 'Command not found');
     });
 });

@@ -6,7 +6,15 @@ interface CommandArg<T> {
     defaultValue?: T;
 }
 
-interface CommandError extends Error {}
+class CommandError extends Error {
+    command: string;
+
+    constructor(command: string, message: string) {
+        super(message);
+        this.command = command;
+        this.name = 'CommandError';
+    }
+}
 
 interface CommandResultMetrics {
     runtime: number;
@@ -53,7 +61,7 @@ class Commands {
 
     add(command: Command): void {
         if (!this.isUnique(command.name)) {
-            throw new Error(`Command ${command.name} already exists`);
+            throw new CommandError(command.name, `Command already exists`);
         }
         this.commands.push(command);
     }
@@ -62,7 +70,7 @@ class Commands {
         const command = this.commands.find((command) => command.name === name);
 
         if (!command) {
-            throw new Error(`Command ${name} not found`);
+            throw new CommandError(name, `Command not found`);
         }
 
         return command;

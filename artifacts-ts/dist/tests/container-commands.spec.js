@@ -23,7 +23,7 @@ describe('Commands', () => {
             run: async () => { return { output: null, metrics: { runtime: 0, bytesUploaded: 0, bytesDownloaded: 0 } }; }
         };
         commands.add(command);
-        expect(() => commands.add(command)).to.throw(Error, 'Command test already exists');
+        expect(() => commands.add(command)).to.throw(Error, 'Command already exists');
     });
     it('should get a command by name', () => {
         const command = {
@@ -36,6 +36,6 @@ describe('Commands', () => {
         expect(commands.get('test')).to.equal(command);
     });
     it('should throw an error when getting a non-existent command', () => {
-        expect(() => commands.get('nonexistent')).to.throw(Error, 'Command nonexistent not found');
+        expect(() => commands.get('nonexistent')).to.throw(Error, 'Command not found');
     });
 });
