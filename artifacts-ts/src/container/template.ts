@@ -4,15 +4,11 @@ import { InstanceOptionsList } from './options';
 import { CommandArg, Commands } from './commands';
 
 
-
-
-
 interface CommandsTemplate {
     name: string;
     description: string;
-    args: CommandArg[];
-
-    run: (args?: CommandArg[], instance?: any ) => Promise<any>;
+    args: CommandArg<any>[];
+    run: string;
 
 }
 
@@ -22,8 +18,8 @@ interface ContainerTemplate {
     description?: string;
     options?: InstanceOptionsList;
     commands?: CommandsTemplate[]
-    initializer?: () => Promise<any>;
-    instance?: () => Promise<any>;
+    initializer?: string
+    instance?: string
 }
 
 const loadFile = async (filepath: string): Promise<any> => {
