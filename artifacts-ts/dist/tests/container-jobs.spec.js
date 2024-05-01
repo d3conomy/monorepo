@@ -195,7 +195,7 @@ describe("JobQueue", () => {
                             bytesDownloaded: 0,
                         },
                     };
-                    console.log(`output: ${output.output}`);
+                    // console.log(`output: ${output.output}`)
                     return await Promise.resolve(output);
                 },
                 args: [],
@@ -216,7 +216,7 @@ describe("JobQueue", () => {
                             bytesDownloaded: 0,
                         },
                     };
-                    console.log(`output: ${output.output}`);
+                    // console.log(`output: ${output.output}`)
                     return await Promise.resolve(output);
                 },
                 args: [],

@@ -38,7 +38,7 @@ class JobQueue {
         const startTime = new Date();
         try {
             job.status = JobStatus.Running;
-            output = await job.command.run(job.params, this.instance);
+            output = await job.command.run({ args: job.params, instance: this.instance });
             // console.log(`Job ${job.id} finished, with output: ${output.output}`);
             job.status = JobStatus.Succeeded;
         }

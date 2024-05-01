@@ -49,8 +49,11 @@ interface IPodId extends IIdReference<IdReferenceTypes.POD> {
 interface IPodProcessId extends IIdReference<IdReferenceTypes.PROCESS> {
     podId: IPodId;
 }
+interface IContainerId extends IIdReference<IdReferenceTypes.CONTAINER> {
+    podId: IPodId;
+}
 interface IJobId extends IIdReference<IdReferenceTypes.JOB> {
-    componentId: IPodProcessId | IPodId | IPodBayId | IMoonbaseId | ISystemId;
+    componentId: IContainerId | IPodProcessId | IPodId | IPodBayId | IMoonbaseId | ISystemId;
 }
 interface IIdReferenceFactory {
     ids: Array<IIdReference>;
@@ -65,5 +68,5 @@ interface IIdReferenceFactory {
     deleteIdReference(name: string): void;
     deleteAllIdReferences(): void;
 }
-export { IMetaData, IIdReference, ISystemId, IMoonbaseId, IPodBayId, IPodId, IPodProcessId, IJobId, IIdReferenceFactory };
+export { IMetaData, IIdReference, ISystemId, IMoonbaseId, IPodBayId, IPodId, IContainerId, IPodProcessId, IJobId, IIdReferenceFactory };
 //# sourceMappingURL=IdReferenceInterfaces.d.ts.map

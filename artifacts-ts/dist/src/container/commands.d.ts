@@ -1,8 +1,9 @@
-interface CommandArg {
+interface CommandArg<T> {
     name: string;
-    description: string;
-    required: boolean;
-    defaultValue?: any;
+    value?: T;
+    description?: string;
+    required?: boolean;
+    defaultValue?: T;
 }
 interface CommandError extends Error {
 }
@@ -18,9 +19,12 @@ interface CommandResult {
 }
 interface Command {
     name: string;
-    description: string;
-    args: CommandArg[];
-    run: (args?: CommandArg[], instance?: any) => Promise<CommandResult>;
+    description?: string;
+    args?: CommandArg<any>[];
+    run: ({ args, instance }: {
+        args: CommandArg<any>[] | any;
+        instance: any;
+    }) => Promise<any>;
 }
 declare class Commands {
     private commands;

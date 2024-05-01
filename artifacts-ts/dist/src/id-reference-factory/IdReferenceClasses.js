@@ -53,6 +53,13 @@ class PodProcessId extends IdReference {
         this.podId = podId;
     }
 }
+class ContainerId extends IdReference {
+    podId;
+    constructor({ podId, name, metadata, format }) {
+        super({ name, metadata, format });
+        this.podId = podId;
+    }
+}
 class JobId extends IdReference {
     componentId;
     constructor({ componentId, name, metadata, format }) {
@@ -60,4 +67,4 @@ class JobId extends IdReference {
         this.componentId = componentId;
     }
 }
-export { IdReference, SystemId, MoonbaseId, PodBayId, PodId, PodProcessId, JobId };
+export { IdReference, SystemId, MoonbaseId, PodBayId, PodId, ContainerId, PodProcessId, JobId };

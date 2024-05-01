@@ -1,4 +1,4 @@
-import { IIdReference, ISystemId, IMoonbaseId, IPodBayId, IPodId, IPodProcessId, IJobId } from './IdReferenceInterfaces.js';
+import { IIdReference, ISystemId, IMoonbaseId, IPodBayId, IPodId, IPodProcessId, IJobId, IContainerId } from './IdReferenceInterfaces.js';
 import { IdReferenceFormats, IdReferenceTypes } from './IdReferenceConstants.js';
 import { MetaData } from './IdReferenceMetadata.js';
 /**
@@ -58,6 +58,15 @@ declare class PodProcessId extends IdReference<IdReferenceTypes.PROCESS> impleme
         format?: IdReferenceFormats | string;
     });
 }
+declare class ContainerId extends IdReference<IdReferenceTypes.CONTAINER> implements IContainerId {
+    podId: PodId;
+    constructor({ podId, name, metadata, format }: {
+        podId: PodId;
+        name?: string;
+        metadata?: MetaData;
+        format?: IdReferenceFormats | string;
+    });
+}
 declare class JobId extends IdReference<IdReferenceTypes.JOB> implements IJobId {
     componentId: PodProcessId | PodId | PodBayId | MoonbaseId | SystemId;
     constructor({ componentId, name, metadata, format }: {
@@ -67,5 +76,5 @@ declare class JobId extends IdReference<IdReferenceTypes.JOB> implements IJobId 
         format?: IdReferenceFormats | string;
     });
 }
-export { IdReference, SystemId, MoonbaseId, PodBayId, PodId, PodProcessId, JobId };
+export { IdReference, SystemId, MoonbaseId, PodBayId, PodId, ContainerId, PodProcessId, JobId };
 //# sourceMappingURL=IdReferenceClasses.d.ts.map

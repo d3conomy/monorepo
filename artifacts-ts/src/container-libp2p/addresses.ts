@@ -10,7 +10,7 @@ const setListenAddresses = (
     }
 }
 
-const listenAddressesOptions = (): InstanceOptionsList => {
+const listenAddressesOptions = (): Partial<InstanceOptionsList> => {
     return new InstanceOptionsList([
     {
         name: 'enableTcp',

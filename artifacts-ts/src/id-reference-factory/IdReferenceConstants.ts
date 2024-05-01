@@ -13,6 +13,7 @@ enum IdReferenceTypes {
     POD_BAY = "pod-bay",
     POD = "pod",
     PROCESS = "process",
+    CONTAINER = "container",
     JOB = "job",
 }
 

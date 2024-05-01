@@ -6,6 +6,7 @@ import {
     IPodId,
     IPodProcessId,
     IJobId,
+    IContainerId,
 } from './IdReferenceInterfaces.js';
 
 import {
@@ -158,6 +159,28 @@ class PodProcessId
     }
 }
 
+class ContainerId
+    extends IdReference<IdReferenceTypes.CONTAINER>
+    implements IContainerId
+{
+    public podId: PodId;
+
+    constructor({
+        podId,
+        name,
+        metadata,
+        format
+    }: {
+        podId: PodId,
+        name?: string,
+        metadata?: MetaData,
+        format?: IdReferenceFormats | string
+    }) {
+        super({name, metadata, format});
+        this.podId = podId;
+    }
+}
+
 class JobId
     extends IdReference<IdReferenceTypes.JOB>
     implements IJobId
@@ -186,6 +209,7 @@ export {
     MoonbaseId,
     PodBayId,
     PodId,
+    ContainerId,
     PodProcessId,
     JobId
 }

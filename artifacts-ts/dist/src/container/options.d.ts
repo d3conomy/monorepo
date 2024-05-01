@@ -3,9 +3,23 @@ interface InstanceOption<T> {
     description?: string;
     value?: T;
     required?: boolean;
-    defaultValue?: any;
+    defaultValue?: T;
 }
-interface InstanceOptionsList extends Array<InstanceOption<any>> {
+declare class InstanceOptionsList extends Array<InstanceOption<any>> {
+    constructor(options: Array<InstanceOption<any>>);
+    toParams(): {
+        [key: string]: any;
+    };
 }
-export { InstanceOption, InstanceOptionsList };
+declare class InstanceOptions {
+    options: InstanceOptionsList;
+    constructor(options: Array<InstanceOption<any>> | InstanceOptionsList, injectDefaults?: boolean, defaults?: InstanceOptionsList);
+    find(name: string): InstanceOption<any> | undefined;
+    push(option: InstanceOption<any>): void;
+    injectDefaults(defaults: InstanceOptionsList): void;
+    toParams(): {
+        [key: string]: any;
+    };
+}
+export { InstanceOption, InstanceOptions, InstanceOptionsList };
 //# sourceMappingURL=options.d.ts.map

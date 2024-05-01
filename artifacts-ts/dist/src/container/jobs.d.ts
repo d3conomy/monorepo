@@ -5,7 +5,7 @@ interface Job {
     id: JobId;
     status?: JobStatus;
     command: Command;
-    params: CommandArg[];
+    params: CommandArg<any>[];
     result?: CommandResult;
 }
 declare class JobQueue {

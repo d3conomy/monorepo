@@ -47,8 +47,12 @@ interface IPodProcessId extends IIdReference<IdReferenceTypes.PROCESS> {
     podId: IPodId;
 }
 
+interface IContainerId extends IIdReference<IdReferenceTypes.CONTAINER> {
+    podId: IPodId;
+}
+
 interface IJobId extends IIdReference<IdReferenceTypes.JOB> {
-    componentId: IPodProcessId | IPodId | IPodBayId | IMoonbaseId | ISystemId;
+    componentId: IContainerId | IPodProcessId | IPodId | IPodBayId | IMoonbaseId | ISystemId;
 }
     
 
@@ -82,6 +86,7 @@ export {
     IMoonbaseId,
     IPodBayId,
     IPodId,
+    IContainerId,
     IPodProcessId,
     IJobId,
     IIdReferenceFactory

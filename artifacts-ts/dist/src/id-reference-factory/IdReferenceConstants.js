@@ -12,6 +12,7 @@ var IdReferenceTypes;
     IdReferenceTypes["POD_BAY"] = "pod-bay";
     IdReferenceTypes["POD"] = "pod";
     IdReferenceTypes["PROCESS"] = "process";
+    IdReferenceTypes["CONTAINER"] = "container";
     IdReferenceTypes["JOB"] = "job";
 })(IdReferenceTypes || (IdReferenceTypes = {}));
 export { IdReferenceFormats, IdReferenceTypes, };
