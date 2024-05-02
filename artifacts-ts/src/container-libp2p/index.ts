@@ -1,15 +1,14 @@
 import { Libp2p, createLibp2p,  } from 'libp2p';
 
 import { Container } from '../container/index.js';
-import { InstanceOptionsList } from '../container/options';
+import { InstanceOptions, InstanceOptionsList } from '../container/options';
 import { InstanceTypes } from '../container/instance.js';
 import { libp2pCommands } from './commands.js';
-import { create } from 'domain';
 import { ContainerId } from '../id-reference-factory/IdReferenceClasses.js';
+import { createLibp2pOptions } from './options.js';
 
-const libp2pInitializer = async (options: InstanceOptionsList): Promise<Libp2p> => {
-    // const subProcessesses = await createSubProcesses(options);
-    return await createLibp2p();
+const libp2pInitializer = async (options: InstanceOptions): Promise<Libp2p> => {
+    return await createLibp2p(await createLibp2pOptions(options));
 }
 
 class Libp2pContainer extends Container<InstanceTypes.Libp2p> {

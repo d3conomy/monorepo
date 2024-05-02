@@ -1,7 +1,7 @@
 import { createEd25519PeerId } from '@libp2p/peer-id-factory';
 import { peerIdFromString, peerIdFromPeerId } from '@libp2p/peer-id';
 import { PeerId } from '@libp2p/interface';
-import { InstanceOption, InstanceOptions, createOptionsList } from '../container/options.js';
+import { InstanceOption, InstanceOptions } from '../container/options.js';
 
 
 const peerIdOptions = (): InstanceOptions => {

@@ -31,7 +31,7 @@ const defaultLibp2pOptions = (): InstanceOptions => {
     ]})
 }
 
-const createSubProcesses = async (options: InstanceOptions = defaultLibp2pOptions()): Promise<Libp2pOptions> => {
+const createLibp2pOptions= async (options: InstanceOptions = defaultLibp2pOptions()): Promise<Libp2pOptions> => {
 
     options.injectDefaults(defaultLibp2pOptions())
 
@@ -63,6 +63,6 @@ const createSubProcesses = async (options: InstanceOptions = defaultLibp2pOption
 
 export {
     defaultLibp2pOptions,
-    createSubProcesses
+    createLibp2pOptions
 }
 
