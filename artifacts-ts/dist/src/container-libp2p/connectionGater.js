@@ -1,6 +1,6 @@
-import { InstanceOptions, createOptionsList } from '../container/options.js';
+import { InstanceOptions } from '../container/options.js';
 const connectionGaterOptions = () => {
-    return new InstanceOptions({ options: createOptionsList([
+    return new InstanceOptions({ options: [
             {
                 name: 'enableDenyDialMultiaddr',
                 description: 'Enable deny dial multiaddr',
@@ -11,7 +11,7 @@ const connectionGaterOptions = () => {
                 description: 'Deny dial multiaddr',
                 defaultValue: false
             }
-        ]) });
+        ] });
 };
 /**
  * Default Connection Gater libp2p options

@@ -11,7 +11,7 @@ const setListenAddresses = (
 }
 
 const listenAddressesOptions = (): InstanceOptions => {
-    return new InstanceOptions({options: createOptionsList([
+    return new InstanceOptions({options: [
         {
             name: 'enableTcp',
             description: 'Enable TCP transport',
@@ -92,11 +92,13 @@ const listenAddressesOptions = (): InstanceOptions => {
             description: 'Additional multiaddrs',
             required: false
         } as InstanceOption<boolean>
-    ])})
+    ]})
 }
 
 
-const listenAddresses = (instanceOptions: InstanceOptions): { listen: Array<string> } => {
+const listenAddresses = (options: InstanceOptions): { listen: Array<string> } => {
+
+    options.injectDefaults(listenAddressesOptions())
 
     const {
         enableTcp,
@@ -115,7 +117,7 @@ const listenAddresses = (instanceOptions: InstanceOptions): { listen: Array<stri
         webRTCStarAddress,
         enableCircuitRelayTransport,
         additionalMultiaddrs
-    } = instanceOptions.toParams()
+    } = options.toParams()
 
     const listenAddresses: Array<string> = []
 

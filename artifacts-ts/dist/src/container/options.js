@@ -50,6 +50,15 @@ class InstanceOptions {
             throw new InstanceOptionsError(name, `Option with name not found`);
         }
     }
+    get(name) {
+        const option = this.find(name);
+        if (option) {
+            return option.value;
+        }
+        else {
+            throw new InstanceOptionsError(name, `Option with name not found`);
+        }
+    }
     find(name) {
         return this.options.find(option => option.name === name);
     }

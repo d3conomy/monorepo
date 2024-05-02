@@ -1,8 +1,8 @@
 import { multiaddr } from '@multiformats/multiaddr';
 import { bootstrap } from '@libp2p/bootstrap';
-import { InstanceOptions, createOptionsList } from '../container/options.js';
+import { InstanceOptions } from '../container/options.js';
 const bootstrapOptions = () => {
-    return new InstanceOptions({ options: createOptionsList([
+    return new InstanceOptions({ options: [
             {
                 name: 'defaultConfig',
                 description: 'Use default bootstrap configuration',
@@ -18,7 +18,7 @@ const bootstrapOptions = () => {
                 description: 'List bootstrap configuration, instead of returning a function',
                 defaultValue: false
             }
-        ]) });
+        ] });
 };
 /**
  * Default bootstrap configuration for libp2p

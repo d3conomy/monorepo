@@ -1,8 +1,8 @@
 import { yamux } from '@chainsafe/libp2p-yamux';
 import { mplex } from '@libp2p/mplex';
-import { InstanceOptions, createOptionsList } from '../container/options.js';
+import { InstanceOptions } from '../container/options.js';
 const streamMuxerOptions = () => {
-    return new InstanceOptions({ options: createOptionsList([
+    return new InstanceOptions({ options: [
             {
                 name: 'enableYamux',
                 description: 'Enable Yamux',
@@ -13,7 +13,7 @@ const streamMuxerOptions = () => {
                 description: 'Enable Mplex',
                 defaultValue: false
             }
-        ]) });
+        ] });
 };
 const streamMuxers = (options) => {
     const { enableYamux = true, enableMplex = false } = options.toParams();

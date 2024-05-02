@@ -5,7 +5,7 @@ import { InstanceOption, InstanceOptions, createOptionsList } from '../container
 
 
 const connectionEncryptionOptions = (): InstanceOptions => {
-    return new InstanceOptions({options: createOptionsList([
+    return new InstanceOptions({options: [
         {
             name: 'enableNoise',
             description: 'Enable Noise encryption',
@@ -16,7 +16,7 @@ const connectionEncryptionOptions = (): InstanceOptions => {
             description: 'Enable TLS encryption',
             defaultValue: true
         } as InstanceOption<boolean>
-    ])})
+    ]})
 }
 
 const connectionEncryption = (options: InstanceOptions): Array<any>  => {

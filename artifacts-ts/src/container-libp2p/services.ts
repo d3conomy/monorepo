@@ -13,7 +13,7 @@ import { InstanceOption, InstanceOptions, createOptionsList } from '../container
 
 
 const serviceOptions = (): InstanceOptions => {
-    return new InstanceOptions({options: createOptionsList([
+    return new InstanceOptions({options: [
         {
             name: 'enableGossipSub',
             description: 'Enable GossipSub',
@@ -99,7 +99,7 @@ const serviceOptions = (): InstanceOptions => {
             description: 'Enable Ping',
             defaultValue: true
         } as InstanceOption<boolean>,
-    ])})
+    ]})
 }
 
 /**

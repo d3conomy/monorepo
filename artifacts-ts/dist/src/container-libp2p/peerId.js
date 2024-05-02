@@ -1,15 +1,15 @@
 import { createEd25519PeerId } from '@libp2p/peer-id-factory';
 import { peerIdFromString, peerIdFromPeerId } from '@libp2p/peer-id';
-import { InstanceOptions, createOptionsList } from '../container/options.js';
+import { InstanceOptions } from '../container/options.js';
 const peerIdOptions = () => {
-    return new InstanceOptions({ options: createOptionsList([
+    return new InstanceOptions({ options: [
             {
                 name: 'id',
                 description: 'PeerId',
                 required: false,
                 defaultValue: undefined
             }
-        ]) });
+        ] });
 };
 /**
  * Create a PeerId

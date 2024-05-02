@@ -6,13 +6,19 @@ import { InstanceOption, InstanceOptions, createOptionsList } from '../container
 
 
 const connectionProtectorOptions = (): InstanceOptions => {
-    return new InstanceOptions({options: createOptionsList([
+    return new InstanceOptions({options: [
+        {
+            name:'enablePrivateSwarm',
+            description: 'Enable private swarm',
+            defaultValue: false
+        } as InstanceOption<boolean>,
         {
             name: 'swarmKeyAsHex',
             description: 'Swarm key as hexadecimal',
+            required: false,
             defaultValue: ''
         } as InstanceOption<string>
-    ])})
+    ]})
 }
 
 

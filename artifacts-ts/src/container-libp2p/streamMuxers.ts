@@ -6,7 +6,7 @@ import { InstanceOption, InstanceOptions, createOptionsList } from '../container
 
 
 const streamMuxerOptions = (): InstanceOptions => {
-    return new InstanceOptions({options: createOptionsList([
+    return new InstanceOptions({options: [
         {
             name: 'enableYamux',
             description: 'Enable Yamux',
@@ -17,7 +17,7 @@ const streamMuxerOptions = (): InstanceOptions => {
             description: 'Enable Mplex',
             defaultValue: false
         } as InstanceOption<boolean>
-    ])})
+    ]})
 } 
 
 const streamMuxers = (options: InstanceOptions): Array<any> => {

@@ -1,8 +1,8 @@
 import { mdns } from '@libp2p/mdns';
 import { libp2pBootstrap } from './bootstrap.js';
-import { InstanceOptions, createOptionsList } from '../container/options.js';
+import { InstanceOptions } from '../container/options.js';
 const peerDiscoveryOptions = () => {
-    return new InstanceOptions({ options: createOptionsList([
+    return new InstanceOptions({ options: [
             {
                 name: 'enableMDNS',
                 description: 'Enable mDNS peer discovery',
@@ -23,7 +23,7 @@ const peerDiscoveryOptions = () => {
                 description: 'Custom bootstrap configuration',
                 defaultValue: []
             }
-        ]) });
+        ] });
 };
 /**
  * Default Peer Discover libp2p options

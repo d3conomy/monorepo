@@ -1,11 +1,11 @@
-import { InstanceOptions, createOptionsList } from '../container/options.js';
+import { InstanceOptions } from '../container/options.js';
 const setListenAddresses = (multiaddrs) => {
     return {
         listen: multiaddrs.map((addr) => addr.toString())
     };
 };
 const listenAddressesOptions = () => {
-    return new InstanceOptions({ options: createOptionsList([
+    return new InstanceOptions({ options: [
             {
                 name: 'enableTcp',
                 description: 'Enable TCP transport',
@@ -86,10 +86,11 @@ const listenAddressesOptions = () => {
                 description: 'Additional multiaddrs',
                 required: false
             }
-        ]) });
+        ] });
 };
-const listenAddresses = (instanceOptions) => {
-    const { enableTcp, tcpPort, enableIp4, ip4Domain, enableUdp, udpPort, enableIp6, ip6Domain, enableQuicv1, enableWebTransport, enableWebSockets, enableWebRTC, enableWebRTCStar, webRTCStarAddress, enableCircuitRelayTransport, additionalMultiaddrs } = instanceOptions.toParams();
+const listenAddresses = (options) => {
+    options.injectDefaults(listenAddressesOptions());
+    const { enableTcp, tcpPort, enableIp4, ip4Domain, enableUdp, udpPort, enableIp6, ip6Domain, enableQuicv1, enableWebTransport, enableWebSockets, enableWebRTC, enableWebRTCStar, webRTCStarAddress, enableCircuitRelayTransport, additionalMultiaddrs } = options.toParams();
     const listenAddresses = [];
     if (enableIp4) {
         if (enableTcp) {

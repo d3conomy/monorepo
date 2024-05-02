@@ -48,7 +48,7 @@ class InstanceOptions {
         injectDefaults = false,
         defaults
     } : {
-        options?: InstanceOptionsList | InstanceOptions,
+        options?: InstanceOptionsList | InstanceOptions | Array<InstanceOption<any>>,
         injectDefaults?: boolean,
         defaults?: InstanceOptions
     } = {}) {
@@ -70,6 +70,15 @@ class InstanceOptions {
         if (option) {
             option.value = value;
             return option;
+        } else {
+            throw new InstanceOptionsError(name, `Option with name not found`);
+        }
+    }
+
+    public get(name: string): any {
+        const option = this.find(name);
+        if (option) {
+            return option.value;
         } else {
             throw new InstanceOptionsError(name, `Option with name not found`);
         }

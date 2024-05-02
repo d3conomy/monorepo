@@ -5,7 +5,7 @@ import { InstanceOption, InstanceOptions, InstanceOptionsList, createOptionsList
 
 
 const bootstrapOptions = (): InstanceOptions => {
-    return new InstanceOptions({options: createOptionsList([
+    return new InstanceOptions({options: [
         {
             name: 'defaultConfig',
             description: 'Use default bootstrap configuration',
@@ -21,7 +21,7 @@ const bootstrapOptions = (): InstanceOptions => {
             description: 'List bootstrap configuration, instead of returning a function',
             defaultValue: false
         } as InstanceOption<boolean>
-    ])})
+    ]})
 }
 
 
@@ -39,6 +39,7 @@ const defaultBootstrapConfig: Array<string> = [
 
 
 const libp2pBootstrap = (options: InstanceOptions): any => {
+    
     let addrs: Array<string> = new Array<string>();
 
     const {

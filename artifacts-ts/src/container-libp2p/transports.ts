@@ -6,7 +6,7 @@ import { webRTC } from '@libp2p/webrtc'
 import { InstanceOption, InstanceOptions, createOptionsList } from '../container/options.js'
 
 const transportOptions = (): InstanceOptions => {
-    return new InstanceOptions({options: createOptionsList([
+    return new InstanceOptions({options: [
         {
             name: 'enableWebSockets',
             description: 'Enable WebSockets',
@@ -43,7 +43,7 @@ const transportOptions = (): InstanceOptions => {
             required: false,
             defaultValue: 2
         } as InstanceOption<number>
-    ])})
+    ]})
 }
 
 const transports = (options: InstanceOptions): Array<any> => {

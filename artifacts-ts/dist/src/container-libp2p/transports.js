@@ -3,9 +3,9 @@ import { webSockets } from '@libp2p/websockets';
 import { webTransport } from '@libp2p/webtransport';
 import { tcp } from '@libp2p/tcp';
 import { webRTC } from '@libp2p/webrtc';
-import { InstanceOptions, createOptionsList } from '../container/options.js';
+import { InstanceOptions } from '../container/options.js';
 const transportOptions = () => {
-    return new InstanceOptions({ options: createOptionsList([
+    return new InstanceOptions({ options: [
             {
                 name: 'enableWebSockets',
                 description: 'Enable WebSockets',
@@ -42,7 +42,7 @@ const transportOptions = () => {
                 required: false,
                 defaultValue: 2
             }
-        ]) });
+        ] });
 };
 const transports = (options) => {
     const { enableWebSockets, enableWebTransport, enableTcp, enableWebRTC, enableCircuitRelayTransport, enableCircuitRelayTransportDiscoverRelays } = options.toParams();

@@ -1,0 +1,24 @@
+import { expect } from 'chai';
+import { Libp2pOptions } from 'libp2p';
+import { defaultLibp2pOptions, createSubProcesses } from '../src/container-libp2p/options.js';
+
+describe('Libp2pOptions', () => {
+    describe('createSubProcesses', () => {
+        it('should create libp2p options with default options', async () => {
+            const libp2pOptions: Libp2pOptions = await createSubProcesses();
+
+            console.log(libp2pOptions)
+
+            expect(libp2pOptions.start).to.equal(false);
+            // expect(libp2pOptions.addresses?.listen).to.deep.equal([]);
+            // expect(libp2pOptions.connectionEncryption).to.deep.equal([]);
+            // expect(libp2pOptions.connectionGater).to.be.undefined;
+            // expect(libp2pOptions.connectionProtector).to.be.undefined;
+            // expect(libp2pOptions.peerDiscovery).to.be.undefined;
+            // expect(libp2pOptions.peerId).to.be.undefined;
+            // expect(libp2pOptions.services).to.deep.equal([]);
+            // expect(libp2pOptions.streamMuxers).to.deep.equal([]);
+            // expect(libp2pOptions.transports).to.deep.equal([]);
+        });
+    });
+});

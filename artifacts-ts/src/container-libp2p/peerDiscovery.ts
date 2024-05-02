@@ -5,7 +5,7 @@ import { libp2pBootstrap } from './bootstrap.js'
 import { InstanceOption, InstanceOptions, createOptionsList } from '../container/options.js'
 
 const peerDiscoveryOptions = (): InstanceOptions => {
-    return new InstanceOptions({options: createOptionsList([
+    return new InstanceOptions({options: [
         {
             name: 'enableMDNS',
             description: 'Enable mDNS peer discovery',
@@ -26,7 +26,7 @@ const peerDiscoveryOptions = (): InstanceOptions => {
             description: 'Custom bootstrap configuration',
             defaultValue: []
         } as InstanceOption<Array<string>>
-    ])})
+    ]})
 }
 
 /**

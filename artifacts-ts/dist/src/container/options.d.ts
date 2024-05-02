@@ -15,11 +15,12 @@ declare const createOptionsList: (options: Array<InstanceOption<any>>) => Instan
 declare class InstanceOptions {
     options: InstanceOptionsList;
     constructor({ options, injectDefaults, defaults }?: {
-        options?: InstanceOptionsList | InstanceOptions;
+        options?: InstanceOptionsList | InstanceOptions | Array<InstanceOption<any>>;
         injectDefaults?: boolean;
         defaults?: InstanceOptions;
     });
     set(name: string, value: any): InstanceOption<any>;
+    get(name: string): any;
     find(name: string): InstanceOption<any> | undefined;
     push(option: InstanceOption<any>): void;
     injectDefaults(defaults: InstanceOptions): void;

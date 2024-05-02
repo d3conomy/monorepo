@@ -4,7 +4,7 @@ declare const setListenAddresses: (multiaddrs: Array<Multiaddr>) => {
     listen: Array<string>;
 };
 declare const listenAddressesOptions: () => InstanceOptions;
-declare const listenAddresses: (instanceOptions: InstanceOptions) => {
+declare const listenAddresses: (options: InstanceOptions) => {
     listen: Array<string>;
 };
 export { setListenAddresses, listenAddresses as listenAddressesConfig, listenAddressesOptions };

@@ -2,7 +2,7 @@
 import { InstanceOption, InstanceOptions, createOptionsList } from '../container/options.js'
 
 const connectionGaterOptions = (): InstanceOptions => {
-    return new InstanceOptions({options: createOptionsList([
+    return new InstanceOptions({options: [
         {
             name: 'enableDenyDialMultiaddr',
             description: 'Enable deny dial multiaddr',
@@ -13,7 +13,7 @@ const connectionGaterOptions = (): InstanceOptions => {
             description: 'Deny dial multiaddr',
             defaultValue: false
         } as InstanceOption<boolean>
-    ])})
+    ]})
 }
 
 /**
@@ -21,7 +21,7 @@ const connectionGaterOptions = (): InstanceOptions => {
  * @category Libp2p
  */
 
-const connectionGater = (instanceOptions: InstanceOptions): Map<string, any> => {
+const connectionGater = (instanceOptions: InstanceOptions) => {
     const {
         enableDenyDialMultiaddr,
         denyDialMultiaddr

@@ -1,14 +1,20 @@
 import { preSharedKey } from '@libp2p/pnet';
 import crypto from 'crypto';
-import { InstanceOptions, createOptionsList } from '../container/options.js';
+import { InstanceOptions } from '../container/options.js';
 const connectionProtectorOptions = () => {
-    return new InstanceOptions({ options: createOptionsList([
+    return new InstanceOptions({ options: [
+            {
+                name: 'enablePrivateSwarm',
+                description: 'Enable private swarm',
+                defaultValue: false
+            },
             {
                 name: 'swarmKeyAsHex',
                 description: 'Swarm key as hexadecimal',
+                required: false,
                 defaultValue: ''
             }
-        ]) });
+        ] });
 };
 /**
  * Create a new pre-shared key for the swarm

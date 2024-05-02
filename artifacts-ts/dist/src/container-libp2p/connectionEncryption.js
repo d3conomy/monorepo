@@ -1,8 +1,8 @@
 import { noise } from '@chainsafe/libp2p-noise';
 import { tls } from '@libp2p/tls';
-import { InstanceOptions, createOptionsList } from '../container/options.js';
+import { InstanceOptions } from '../container/options.js';
 const connectionEncryptionOptions = () => {
-    return new InstanceOptions({ options: createOptionsList([
+    return new InstanceOptions({ options: [
             {
                 name: 'enableNoise',
                 description: 'Enable Noise encryption',
@@ -13,7 +13,7 @@ const connectionEncryptionOptions = () => {
                 description: 'Enable TLS encryption',
                 defaultValue: true
             }
-        ]) });
+        ] });
 };
 const connectionEncryption = (options) => {
     const { enableNoise, enableTls } = options.toParams();

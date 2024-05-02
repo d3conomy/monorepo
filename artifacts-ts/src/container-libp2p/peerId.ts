@@ -5,21 +5,21 @@ import { InstanceOption, InstanceOptions, createOptionsList } from '../container
 
 
 const peerIdOptions = (): InstanceOptions => {
-    return new InstanceOptions({options: createOptionsList([
+    return new InstanceOptions({options: [
         {
             name: 'id',
             description: 'PeerId',
             required: false,
             defaultValue: undefined
         } as InstanceOption<PeerId>
-    ])})
+    ]})
 }
 
 /**
  * Create a PeerId
  * @category Libp2p
  */
-const libp2pPeerId = async (options: InstanceOptions): Promise<PeerId | undefined> => {
+const libp2pPeerId = async (options: InstanceOptions): Promise<PeerId> => {
 
     const { id } = options.toParams()
 

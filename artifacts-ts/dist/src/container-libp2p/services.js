@@ -8,9 +8,9 @@ import { uPnPNAT } from '@libp2p/upnp-nat';
 import { ipnsValidator } from 'ipns/validator';
 import { ipnsSelector } from 'ipns/selector';
 import { ping } from '@libp2p/ping';
-import { InstanceOptions, createOptionsList } from '../container/options.js';
+import { InstanceOptions } from '../container/options.js';
 const serviceOptions = () => {
-    return new InstanceOptions({ options: createOptionsList([
+    return new InstanceOptions({ options: [
             {
                 name: 'enableGossipSub',
                 description: 'Enable GossipSub',
@@ -91,7 +91,7 @@ const serviceOptions = () => {
                 description: 'Enable Ping',
                 defaultValue: true
             },
-        ]) });
+        ] });
 };
 /**
  * Default libp2p options
