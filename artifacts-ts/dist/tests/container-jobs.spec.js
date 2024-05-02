@@ -21,8 +21,8 @@ describe("JobQueue", () => {
                         output: "output",
                         metrics: {
                             runtime: 0,
-                            bytesUploaded: 0,
-                            bytesDownloaded: 0,
+                            bytesReceived: 0,
+                            bytesSent: 0,
                         },
                     };
                     return Promise.resolve(output);
@@ -45,8 +45,8 @@ describe("JobQueue", () => {
                         output: "hello",
                         metrics: {
                             runtime: 0,
-                            bytesUploaded: 0,
-                            bytesDownloaded: 0,
+                            bytesReceived: 0,
+                            bytesSent: 0,
                         },
                     };
                     return Promise.resolve(output);
@@ -73,8 +73,8 @@ describe("JobQueue", () => {
                         output: "hello",
                         metrics: {
                             runtime: 0,
-                            bytesUploaded: 0,
-                            bytesDownloaded: 0,
+                            bytesReceived: 0,
+                            bytesSent: 0,
                         },
                     };
                     return await Promise.resolve(output);
@@ -97,8 +97,8 @@ describe("JobQueue", () => {
                         output: "hello",
                         metrics: {
                             runtime: 0,
-                            bytesUploaded: 0,
-                            bytesDownloaded: 0,
+                            bytesReceived: 0,
+                            bytesSent: 0,
                         },
                     };
                     return await Promise.resolve(output);
@@ -121,8 +121,8 @@ describe("JobQueue", () => {
                         output: "hello",
                         metrics: {
                             runtime: 0,
-                            bytesUploaded: 0,
-                            bytesDownloaded: 0,
+                            bytesReceived: 0,
+                            bytesSent: 0,
                         },
                     };
                     return await Promise.resolve(output);
@@ -145,8 +145,8 @@ describe("JobQueue", () => {
                         output: "hello",
                         metrics: {
                             runtime: 0,
-                            bytesUploaded: 0,
-                            bytesDownloaded: 0,
+                            bytesReceived: 0,
+                            bytesSent: 0,
                         },
                     };
                     return await Promise.resolve(output);
@@ -165,8 +165,8 @@ describe("JobQueue", () => {
                         output: "hello",
                         metrics: {
                             runtime: 0,
-                            bytesUploaded: 0,
-                            bytesDownloaded: 0,
+                            bytesReceived: 0,
+                            bytesSent: 0,
                         },
                     };
                     return await Promise.resolve(output);
@@ -191,8 +191,8 @@ describe("JobQueue", () => {
                         output: "hello",
                         metrics: {
                             runtime: 0,
-                            bytesUploaded: 0,
-                            bytesDownloaded: 0,
+                            bytesReceived: 0,
+                            bytesSent: 0,
                         },
                     };
                     // console.log(`output: ${output.output}`)
@@ -212,8 +212,8 @@ describe("JobQueue", () => {
                         output: "hello2",
                         metrics: {
                             runtime: 0,
-                            bytesUploaded: 0,
-                            bytesDownloaded: 0,
+                            bytesReceived: 0,
+                            bytesSent: 0,
                         },
                     };
                     // console.log(`output: ${output.output}`)

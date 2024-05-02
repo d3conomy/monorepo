@@ -13,5 +13,5 @@ declare enum IdReferenceTypes {
     CONTAINER = "container",
     JOB = "job"
 }
-export { IdReferenceFormats, IdReferenceTypes, };
+export { IdReferenceFormats, IdReferenceTypes };
 //# sourceMappingURL=IdReferenceConstants.d.ts.map

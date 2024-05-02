@@ -13,7 +13,7 @@ describe('Commands', () => {
             name: 'test',
             description: 'Test command',
             args: [],
-            run: async () => { return { output: null, metrics: { runtime: 0, bytesUploaded: 0, bytesDownloaded: 0 } }}
+            run: async () => { return { output: null, metrics: { runtime: 0, bytesReceived: 0, bytesSent: 0 } }}
         };
 
         commands.add(command);
@@ -26,7 +26,7 @@ describe('Commands', () => {
             name: 'test',
             description: 'Test command',
             args: [],
-            run: async () => {return { output: null, metrics: { runtime: 0, bytesUploaded: 0, bytesDownloaded: 0 } }}
+            run: async () => {return { output: null, metrics: { runtime: 0, bytesReceived: 0, bytesSent: 0 } }}
         };
 
         commands.add(command);
@@ -39,7 +39,7 @@ describe('Commands', () => {
             name: 'test',
             description: 'Test command',
             args: [],
-            run: async () => {return { output: null, metrics: { runtime: 0, bytesUploaded: 0, bytesDownloaded: 0 }}}
+            run: async () => {return { output: null, metrics: { runtime: 0, bytesReceived: 0, bytesSent: 0 }}}
         };
 
         commands.add(command);

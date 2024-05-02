@@ -2,9 +2,9 @@ import { createLibp2p, } from 'libp2p';
 import { Container } from '../container/index.js';
 import { InstanceTypes } from '../container/instance.js';
 import { libp2pCommands } from './commands.js';
+import { createLibp2pOptions } from './options.js';
 const libp2pInitializer = async (options) => {
-    // const subProcessesses = await createSubProcesses(options);
-    return await createLibp2p();
+    return await createLibp2p(await createLibp2pOptions(options));
 };
 class Libp2pContainer extends Container {
     constructor(id, options) {

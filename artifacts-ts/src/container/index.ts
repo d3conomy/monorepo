@@ -1,7 +1,7 @@
 import { Command, Commands } from "./commands.js";
 import { Job, JobQueue } from "./jobs.js";
 import { InstanceType, InstanceTypes } from "./instance.js";
-import { InstanceOption } from "./options.js";
+import { InstanceOption, InstanceOptions } from "./options.js";
 import { ContainerId } from "../id-reference-factory/IdReferenceClasses.js";
 
 class Container<T extends InstanceTypes> {
@@ -9,7 +9,7 @@ class Container<T extends InstanceTypes> {
   private _type: T;
   private instance: () => Promise<any>;
   private initializer?: (options?: any) => Promise<any>;
-  public readonly options?: Array<InstanceOption<any>>;
+  public readonly options?: InstanceOptions;
   public commands: Commands;
   public jobs: JobQueue = new JobQueue();
 
@@ -24,7 +24,7 @@ class Container<T extends InstanceTypes> {
   }: {
     id: ContainerId,
     type: T,
-    options?: Array<InstanceOption<any>>,
+    options?: InstanceOptions,
     initializer?: (options: any) => Promise<any>,
     instance?: any,
     commands: Array<Command> | Commands,

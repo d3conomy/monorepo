@@ -11,8 +11,8 @@ declare class CommandError extends Error {
 }
 interface CommandResultMetrics {
     runtime: number;
-    bytesUploaded: number;
-    bytesDownloaded: number;
+    bytesReceived: number;
+    bytesSent: number;
 }
 interface CommandResult {
     output: any;

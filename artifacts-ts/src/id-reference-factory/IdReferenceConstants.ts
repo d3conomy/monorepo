@@ -1,5 +1,4 @@
 
-
 enum IdReferenceFormats {
     UUID = "uuid",
     NAME = "name",
@@ -18,8 +17,7 @@ enum IdReferenceTypes {
 }
 
 
-
 export {
     IdReferenceFormats,
-    IdReferenceTypes,
+    IdReferenceTypes
 }

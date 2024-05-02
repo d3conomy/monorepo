@@ -10,7 +10,7 @@ describe('Commands', () => {
             name: 'test',
             description: 'Test command',
             args: [],
-            run: async () => { return { output: null, metrics: { runtime: 0, bytesUploaded: 0, bytesDownloaded: 0 } }; }
+            run: async () => { return { output: null, metrics: { runtime: 0, bytesReceived: 0, bytesSent: 0 } }; }
         };
         commands.add(command);
         expect(commands.list()).to.deep.equal([command]);
@@ -20,7 +20,7 @@ describe('Commands', () => {
             name: 'test',
             description: 'Test command',
             args: [],
-            run: async () => { return { output: null, metrics: { runtime: 0, bytesUploaded: 0, bytesDownloaded: 0 } }; }
+            run: async () => { return { output: null, metrics: { runtime: 0, bytesReceived: 0, bytesSent: 0 } }; }
         };
         commands.add(command);
         expect(() => commands.add(command)).to.throw(Error, 'Command already exists');
@@ -30,7 +30,7 @@ describe('Commands', () => {
             name: 'test',
             description: 'Test command',
             args: [],
-            run: async () => { return { output: null, metrics: { runtime: 0, bytesUploaded: 0, bytesDownloaded: 0 } }; }
+            run: async () => { return { output: null, metrics: { runtime: 0, bytesReceived: 0, bytesSent: 0 } }; }
         };
         commands.add(command);
         expect(commands.get('test')).to.equal(command);

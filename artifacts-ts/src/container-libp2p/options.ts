@@ -31,7 +31,7 @@ const defaultLibp2pOptions = (): InstanceOptions => {
     ]})
 }
 
-const createLibp2pOptions= async (options: InstanceOptions = defaultLibp2pOptions()): Promise<Libp2pOptions> => {
+const createLibp2pOptions = async (options: InstanceOptions = defaultLibp2pOptions()): Promise<Libp2pOptions> => {
 
     options.injectDefaults(defaultLibp2pOptions())
 
@@ -52,7 +52,7 @@ const createLibp2pOptions= async (options: InstanceOptions = defaultLibp2pOption
         transports: transports(options)
     }
 
-    const enablePrivateSwarm = options.get('enablePrivateSwarm').value
+    const enablePrivateSwarm = options.get('enablePrivateSwarm')
 
     if (enablePrivateSwarm === true) {
         libp2pOptions.connectionProtector = connectionProtector(options)

@@ -10,34 +10,34 @@ const createId = (type: string) => {
 
     switch (type) {
         case "system":
-            return systemId;
+            return systemId as SystemId;
         case "moonbase":
             moonbaseId = new MoonbaseId({ systemId: systemId });
-            return moonbaseId;
+            return moonbaseId as MoonbaseId;
         case "podbay":
             moonbaseId = new MoonbaseId({ systemId: systemId });
             podbayId = new PodBayId({ moonbaseId: moonbaseId });
-            return podbayId;
+            return podbayId as PodBayId;
         case "pod":
             moonbaseId = new MoonbaseId({ systemId: systemId });
             podbayId = new PodBayId({ moonbaseId: moonbaseId });
             podId = new PodId({ podBayId: podbayId });
-            return podId;
+            return podId as PodId;
         case "container":
             moonbaseId = new MoonbaseId({ systemId: systemId });
             podbayId = new PodBayId({ moonbaseId: moonbaseId });
             podId = new PodId({ podBayId: podbayId });
             containerId = new ContainerId({ podId: podId });
-            return containerId;
+            return containerId as ContainerId;
         case "job":
             moonbaseId = new MoonbaseId({ systemId: systemId });
             podbayId = new PodBayId({ moonbaseId: moonbaseId });
             podId = new PodId({ podBayId: podbayId });
             containerId = new ContainerId({ podId: podId });
             jobId = new JobId({ componentId: containerId });
-            return jobId;
+            return jobId as JobId;
         default:
-            return systemId;
+            return systemId as SystemId as SystemId;
     }
 }
 

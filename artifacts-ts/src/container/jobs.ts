@@ -6,7 +6,7 @@ interface Job {
     id: JobId;
     status?: JobStatus;
     command: Command;
-    params: CommandArg<any>[];
+    params?: CommandArg<any>[];
     result?: CommandResult;
 }
 
@@ -55,34 +55,54 @@ class JobQueue {
     }
 
     public execute = async (job: Job): Promise<Job> => {
+        let jobResult: CommandResult = {output: null, metrics: {runtime: 0, bytesReceived: 0, bytesSent: 0}};
         let output: any;
+        let bytesReceived: number = 0;
+        let bytesSent: number = 0;
+
+        if (job.params) {
+            for(const param of job.params) {
+                if (param.value instanceof String) {
+                    bytesReceived += param.value.toString().length;
+                }
+            }
+        }
 
         const startTime = new Date();
+    
         try {
             job.status = JobStatus.Running;
             output = await job.command.run({args: job.params, instance: this.instance});
+            console.log(output)
+            jobResult.output = output;
+            console.log(jobResult.output)
             job.status = JobStatus.Succeeded;
         } catch (error: any) {
             job.status = JobStatus.Failed;
-            output = error;
+            jobResult.output= error;
         }
         const endTime = new Date();
         const runtime = endTime.getTime() - startTime.getTime();
 
+        if (output !== undefined) {
+            bytesSent = JSON.stringify(jobResult.output).length;
+        }
+
+        jobResult.metrics = {
+            runtime,
+            bytesReceived,
+            bytesSent,
+        },
+
+        console.log(jobResult)
+        
+        job.result = jobResult;
+
+        this.completed.push(job);
+
         if (this.queue.includes(job)) {
             this.dequeue(job.id);
         }
-
-        job.result = {
-            output,
-            metrics: {
-                runtime,
-                bytesUploaded: 0,
-                bytesDownloaded: 0,
-            },
-        };
-
-        this.completed.push(job);
 
         return job;
     }

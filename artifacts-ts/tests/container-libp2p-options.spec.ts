@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import { Libp2pOptions } from 'libp2p';
-import { defaultLibp2pOptions, createSubProcesses } from '../src/container-libp2p/options.js';
+import { defaultLibp2pOptions, createLibp2pOptions } from '../src/container-libp2p/options.js';
 
 describe('Libp2pOptions', () => {
     describe('createSubProcesses', () => {
         it('should create libp2p options with default options', async () => {
-            const libp2pOptions: Libp2pOptions = await createSubProcesses();
+            const libp2pOptions: Libp2pOptions = await createLibp2pOptions();
 
             console.log(libp2pOptions)
 

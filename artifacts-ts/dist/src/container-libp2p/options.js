@@ -28,7 +28,7 @@ const defaultLibp2pOptions = () => {
             ...transportOptions().toArray()
         ] });
 };
-const createSubProcesses = async (options = defaultLibp2pOptions()) => {
+const createLibp2pOptions = async (options = defaultLibp2pOptions()) => {
     options.injectDefaults(defaultLibp2pOptions());
     const { start } = options.toParams();
     const libp2pOptions = {
@@ -43,10 +43,10 @@ const createSubProcesses = async (options = defaultLibp2pOptions()) => {
         streamMuxers: streamMuxers(options),
         transports: transports(options)
     };
-    const enablePrivateSwarm = options.get('enablePrivateSwarm').value;
+    const enablePrivateSwarm = options.get('enablePrivateSwarm');
     if (enablePrivateSwarm === true) {
         libp2pOptions.connectionProtector = connectionProtector(options);
     }
     return libp2pOptions;
 };
-export { defaultLibp2pOptions, createSubProcesses };
+export { defaultLibp2pOptions, createLibp2pOptions };

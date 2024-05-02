@@ -15,4 +15,4 @@ var IdReferenceTypes;
     IdReferenceTypes["CONTAINER"] = "container";
     IdReferenceTypes["JOB"] = "job";
 })(IdReferenceTypes || (IdReferenceTypes = {}));
-export { IdReferenceFormats, IdReferenceTypes, };
+export { IdReferenceFormats, IdReferenceTypes };

@@ -4,6 +4,7 @@ import { Commands } from "../src/container/commands.js";
 import { JobQueue } from "../src/container/jobs.js";
 import { InstanceTypes } from "../src/container/instance.js";
 import { JobId, SystemId } from "../src/id-reference-factory/index.js";
+import { InstanceOptions } from "../src/container/options.js";
 import { createId } from "./helpers.js";
 describe("Container", () => {
     describe("constructor", () => {
@@ -12,7 +13,7 @@ describe("Container", () => {
                         name: "test",
                         description: "Test command",
                         args: [],
-                        run: async () => { return { output: null, metrics: { runtime: 0, bytesUploaded: 0, bytesDownloaded: 0 } }; }
+                        run: async () => { return { output: null, metrics: { runtime: 0, bytesReceived: 0, bytesSent: 0 } }; }
                     }] });
             const container = new Container({
                 id: createId('container'),
@@ -29,7 +30,7 @@ describe("Container", () => {
                         name: "test",
                         description: "Test command",
                         args: [],
-                        run: async () => { return { output: null, metrics: { runtime: 0, bytesUploaded: 0, bytesDownloaded: 0 } }; }
+                        run: async () => { return { output: null, metrics: { runtime: 0, bytesReceived: 0, bytesSent: 0 } }; }
                     }] });
             const jobId = () => new JobId({
                 componentId: new SystemId({ name: "component1" }),
@@ -122,17 +123,17 @@ describe("Container", () => {
             expect(container.type).to.equal(InstanceTypes.Custom);
         });
     });
-    describe("options", () => {
-        it("should return the options", () => {
+    describe("options", async () => {
+        it("should return the options", async () => {
             const option1 = { name: "test", value: "test" };
             const option2 = { name: "test2", value: "test2" };
             const container = new Container({
                 id: createId('container'),
                 type: InstanceTypes.Custom,
                 commands: new Commands({ commands: [] }),
-                options: [option1, option2]
+                options: new InstanceOptions({ options: [option1, option2] })
             });
-            expect(container.options).to.deep.equal([option1, option2]);
+            expect(container.options?.options).to.deep.equal([option1, option2]);
         });
     });
     describe("setInstance", () => {
