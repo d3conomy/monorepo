@@ -52,7 +52,7 @@ describe('Libp2pJobs', async () => {
         });
         await container.jobs.run();
         expect(container.jobs.completed.length).to.equal(6);
-        console.log(container.jobs.completed[0].result);
+        console.log(container.jobs.completed[1].result);
         await container.getInstance().stop();
     });
 });

@@ -65,6 +65,9 @@ class JobQueue {
                 if (param.value instanceof String) {
                     bytesReceived += param.value.toString().length;
                 }
+                else {
+                    bytesReceived += JSON.stringify(param.value).length;
+                }
             }
         }
 
@@ -72,10 +75,10 @@ class JobQueue {
     
         try {
             job.status = JobStatus.Running;
-            output = await job.command.run({args: job.params, instance: this.instance});
-            console.log(output)
-            jobResult.output = output;
-            console.log(jobResult.output)
+
+            jobResult.output = await job.command.run({args: job.params, instance: this.instance});
+            // jobResult.output = output;
+
             job.status = JobStatus.Succeeded;
         } catch (error: any) {
             job.status = JobStatus.Failed;
@@ -84,7 +87,7 @@ class JobQueue {
         const endTime = new Date();
         const runtime = endTime.getTime() - startTime.getTime();
 
-        if (output !== undefined) {
+        if (jobResult.output !== undefined) {
             bytesSent = JSON.stringify(jobResult.output).length;
         }
 
@@ -93,12 +96,11 @@ class JobQueue {
             bytesReceived,
             bytesSent,
         },
-
-        console.log(jobResult)
         
         job.result = jobResult;
 
         this.completed.push(job);
+        console.log(`Job ${job.id} completed with status ${job.status} - ${JSON.stringify(job.result)}`);
 
         if (this.queue.includes(job)) {
             this.dequeue(job.id);
