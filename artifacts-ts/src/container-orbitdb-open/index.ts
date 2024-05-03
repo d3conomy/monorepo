@@ -4,7 +4,7 @@ import {
     Database,
     OrbitDBAccessController
 } from '@orbitdb/core';
-import { OpenDbOptions } from './options.js';
+import { OpenDbOptions, openDbOptions } from './options.js';
 import { ContainerId } from '../id-reference-factory/index.js';
 import { openDbCommands } from './commands.js';
 import { removeLock } from './helpers.js';
@@ -18,48 +18,46 @@ import { InstanceTypes } from '../container/instance.js';
  * @category Database
  */
 const databaseInitializer = async (
-    instanceOptions: OpenDbOptions,
+    options: OpenDbOptions,
     id: ContainerId
 ): Promise<typeof Database> => {
+
+    options.injectDefaults(openDbOptions())
 
     const {
         orbitDb,
         databaseName,
         databaseType,
         databaseOptions
-    } = instanceOptions.toParams();
+    } = options.toParams();
 
     console.log(`opening database: ${databaseName}`)
 
     await removeLock(id.podId.name, databaseName);
 
     try {
-        // await orbitDb.start();
+        let openDatabaseOptions = new Map<string, any>();
+
         if (databaseName.startsWith('/orbitdb')) {
-            return await orbitDb.open(
-                databaseName,
-                {
-                    type: databaseType,
-                    sync: true,
-                    AccessController: OrbitDBAccessController({
-                        write: ['*']
-                    })
-                },
-                // ...databaseOptions.toParams()
-            );
+            openDatabaseOptions.set('sync', true);
         }
-        else {
-            return await orbitDb.open(
-                databaseName,
-                {
-                    type: databaseType,
-                    AccessController: OrbitDBAccessController({
-                        write: ['*']
-                    })
-                },
-                // options?.entries()
-            );
+
+        openDatabaseOptions.set('type', databaseType);
+
+        openDatabaseOptions.set('AccessController', OrbitDBAccessController({
+            write: ['*']
+        }));
+
+        if (databaseOptions) {
+            openDatabaseOptions = new Map([...openDatabaseOptions, ...databaseOptions]);
         }
+
+        const orbitDbInstance = orbitDb.getInstance();
+        
+        return await orbitDbInstance.open(
+            databaseName,
+            { ...openDatabaseOptions }
+        );
     }
     catch (error) {
         // logger({

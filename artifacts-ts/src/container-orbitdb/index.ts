@@ -30,7 +30,7 @@ const orbitDbInitializer = async (
 
     if (enableDID === true) {
         return await createOrbitDB({
-            ipfs: ipfs,
+            ipfs: ipfs.getInstance(),
             identity: {
                 provider: createIdentityProvider({identityProvider, identitySeed})
             },
@@ -38,7 +38,7 @@ const orbitDbInitializer = async (
         });
     }
     return await createOrbitDB({
-        ipfs: ipfs.container?.instance,
+        ipfs: ipfs.getInstance(),
         directory: directory
     });
 }

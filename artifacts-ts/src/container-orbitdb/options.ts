@@ -10,7 +10,7 @@ const orbitDbOptions = (): InstanceOptions => {
             name: 'ipfs',
             description: 'The IPFS process',
             required: true
-        } as InstanceOption<IpfsContainer['instance']>,
+        } as InstanceOption<IpfsContainer>,
         {
             name: 'enableDID',
             description: 'Enable DID',

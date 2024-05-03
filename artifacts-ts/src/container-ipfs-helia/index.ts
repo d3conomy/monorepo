@@ -30,7 +30,7 @@ const ipfsHeliaInitializer = async (
     } = options.toParams()
 
     const helia: HeliaLibp2p<Libp2p> = await createHelia({
-        libp2p: libp2p,
+        libp2p: libp2p.getInstance(),
         blockstore: blockstore,
         datastore: datastore,
         start: start
