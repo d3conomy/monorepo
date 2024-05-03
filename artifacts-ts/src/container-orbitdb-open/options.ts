@@ -2,6 +2,7 @@ import { OrbitDb } from '@orbitdb/core'
 
 import { InstanceOption, InstanceOptions } from "../container/options.js";
 import { OrbitDbTypes } from './dbTypes.js';
+import { OrbitDbContainer } from '../container-orbitdb/index.js';
 
 
 const openDbOptions = (): InstanceOptions => {
@@ -10,7 +11,7 @@ const openDbOptions = (): InstanceOptions => {
             name: "orbitDb",
             description: "The OrbitDb instance",
             required: true
-        } as InstanceOption<typeof OrbitDb>,
+        } as InstanceOption<OrbitDbContainer>,
         {
             name: "databaseName",
             description: "The name of the database",
@@ -26,7 +27,12 @@ const openDbOptions = (): InstanceOptions => {
             name: "databaseOptions",
             description: "The options for the database",
             required: false
-        } as InstanceOption<Map<string, any>>
+        } as InstanceOption<Map<string, any>>,
+        {
+            name: "directory",
+            description: "The directory for the database",
+            required: false
+        } as InstanceOption<string>
     ]})
 }
 

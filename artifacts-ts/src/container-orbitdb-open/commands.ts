@@ -11,7 +11,7 @@ const commands: Commands = new Commands({ commands:  [
     {
         name: "close",
         description: "Close a database",
-        run: async ({args, instance}: {args: CommandArg<any>[], instance: typeof Database}): Promise<void> => {
+        run: async ({instance}: {instance: typeof Database}): Promise<void> => {
             return await instance.close();
         },
         args: [
@@ -25,8 +25,8 @@ const commands: Commands = new Commands({ commands:  [
     {
         name: "address",
         description: "Get the address of a database",
-        run: async ({args, instance}: {args: CommandArg<any>[], instance: typeof Database}): Promise<string> => {
-            return instance.address();
+        run: async ({instance}: {instance: typeof Database}): Promise<string> => {
+            return instance.address;
         }
     } as Command,
     {
@@ -46,7 +46,7 @@ const commands: Commands = new Commands({ commands:  [
     {
         name: "all",
         description: "Get all data from a database",
-        run: async ({args, instance}: {args: CommandArg<any>[], instance: typeof Database}): Promise<any> => {
+        run: async ({instance}: {instance: typeof Database}): Promise<any> => {
             return await instance.all();
         }
     } as Command,

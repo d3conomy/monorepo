@@ -17,7 +17,7 @@ describe('OrbitDbContainer', async () => {
         const heliaOptions: InstanceOptions = new InstanceOptions({ options: [
             {
                 name: "libp2p",
-                value: libp2pContainer.getInstance(),
+                value: libp2pContainer,
             }
         ]})
     
@@ -27,7 +27,7 @@ describe('OrbitDbContainer', async () => {
         const orbitDbOptions = new InstanceOptions({ options: [
             {
                 name: "ipfs",
-                value: ipfsContainer.getInstance(),
+                value: ipfsContainer,
             },
             {
                 name: "enableDID",

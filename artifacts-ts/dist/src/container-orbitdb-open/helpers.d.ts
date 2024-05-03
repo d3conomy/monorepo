@@ -1,3 +1,7 @@
-declare const removeLock: (address: string, podId: string) => Promise<void>;
+declare const removeLock: ({ address, podId, directory }: {
+    address: string;
+    podId?: string | undefined;
+    directory?: string | undefined;
+}) => Promise<void>;
 export { removeLock };
 //# sourceMappingURL=helpers.d.ts.map

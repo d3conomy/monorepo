@@ -11,8 +11,6 @@ import { removeLock } from './helpers.js';
 import { Container } from '../container/index.js';
 import { InstanceTypes } from '../container/instance.js';
 
-
-
 /**
  * Opens a database.
  * @category Database
@@ -28,12 +26,13 @@ const databaseInitializer = async (
         orbitDb,
         databaseName,
         databaseType,
-        databaseOptions
+        databaseOptions,
+        directory
     } = options.toParams();
 
     console.log(`opening database: ${databaseName}`)
 
-    await removeLock(id.podId.name, databaseName);
+    await removeLock({podId: id.podId.name, address: databaseName, directory: directory});
 
     try {
         let openDatabaseOptions = new Map<string, any>();
@@ -52,18 +51,21 @@ const databaseInitializer = async (
             openDatabaseOptions = new Map([...openDatabaseOptions, ...databaseOptions]);
         }
 
-        const orbitDbInstance = orbitDb.getInstance();
+        // const orbitDbInstance = orbitDb.getInstance();
+
+        console.log(`opening using orbitdb instance: ${orbitDb.id} for database: ${databaseName} with options: ${JSON.stringify(openDatabaseOptions)} and type: ${databaseType}`)
         
-        return await orbitDbInstance.open(
+        //timeout for 1s
+
+    // await new Promise(resolve => setTimeout(resolve, 2000));
+
+        return await orbitDb.getInstance().open(
             databaseName,
             { ...openDatabaseOptions }
         );
     }
     catch (error) {
-        // logger({
-        //     level: LogLevel.ERROR,
-        //     message: `Error opening database: ${error}`
-        // });
+        console.log(`error opening database: ${error}`)
     }
 }
 

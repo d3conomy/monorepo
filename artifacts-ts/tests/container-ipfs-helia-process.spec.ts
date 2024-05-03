@@ -4,7 +4,7 @@ import { createId } from "./helpers.js";
 import { ContainerId, JobId } from "../src/id-reference-factory/index.js";
 import { InstanceOptions, createOptionsList } from "../src/container/options.js";
 import { Libp2pContainer } from "../src/container-libp2p/index.js";
-import { CommandArg } from "./container/commands.js";
+import { CommandArg } from "../src/container/commands.js";
 
 describe("IpfsContainer", () => {
     const containerId = createId("container") as ContainerId;
@@ -16,7 +16,7 @@ describe("IpfsContainer", () => {
         const heliaOptions: InstanceOptions = new InstanceOptions({ options: [
             {
                 name: "libp2p",
-                value: libp2pContainer.getInstance(),
+                value: libp2pContainer,
             }
         ]})
     
@@ -30,7 +30,7 @@ describe("IpfsContainer", () => {
         const heliaOptions: InstanceOptions = new InstanceOptions({ options: [
             {
                 name: "libp2p",
-                value: libp2pContainer.getInstance(),
+                value: libp2pContainer,
             }
         ]})
     

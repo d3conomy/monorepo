@@ -3,7 +3,7 @@ const commands = new Commands({ commands: [
         {
             name: "close",
             description: "Close a database",
-            run: async ({ args, instance }) => {
+            run: async ({ instance }) => {
                 return await instance.close();
             },
             args: [
@@ -17,8 +17,8 @@ const commands = new Commands({ commands: [
         {
             name: "address",
             description: "Get the address of a database",
-            run: async ({ args, instance }) => {
-                return instance.address();
+            run: async ({ instance }) => {
+                return instance.address;
             }
         },
         {
@@ -38,7 +38,7 @@ const commands = new Commands({ commands: [
         {
             name: "all",
             description: "Get all data from a database",
-            run: async ({ args, instance }) => {
+            run: async ({ instance }) => {
                 return await instance.all();
             }
         },

@@ -14,7 +14,7 @@ const orbitDbInitializer = async (options) => {
     console.log(`creating orbitdb in directory: ${directory}`);
     if (enableDID === true) {
         return await createOrbitDB({
-            ipfs: ipfs,
+            ipfs: ipfs.getInstance(),
             identity: {
                 provider: createIdentityProvider({ identityProvider, identitySeed })
             },
@@ -22,7 +22,7 @@ const orbitDbInitializer = async (options) => {
         });
     }
     return await createOrbitDB({
-        ipfs: ipfs.container?.instance,
+        ipfs: ipfs.getInstance(),
         directory: directory
     });
 };

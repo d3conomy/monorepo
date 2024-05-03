@@ -11,7 +11,7 @@ describe("IpfsContainer", () => {
         const heliaOptions = new InstanceOptions({ options: [
                 {
                     name: "libp2p",
-                    value: libp2pContainer.getInstance(),
+                    value: libp2pContainer,
                 }
             ] });
         const container = new IpfsContainer(containerId2, heliaOptions);
@@ -22,7 +22,7 @@ describe("IpfsContainer", () => {
         const heliaOptions = new InstanceOptions({ options: [
                 {
                     name: "libp2p",
-                    value: libp2pContainer.getInstance(),
+                    value: libp2pContainer,
                 }
             ] });
         const container = new IpfsContainer(containerId2, heliaOptions);

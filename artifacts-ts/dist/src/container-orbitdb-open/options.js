@@ -22,6 +22,11 @@ const openDbOptions = () => {
                 name: "databaseOptions",
                 description: "The options for the database",
                 required: false
+            },
+            {
+                name: "directory",
+                description: "The directory for the database",
+                required: false
             }
         ] });
 };
