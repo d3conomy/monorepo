@@ -1,1 +1,0 @@
-{"version":3,"file":"options.d.ts","sourceRoot":"","sources":["../../../src/container-libp2p/options.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,MAAM,QAAQ,CAAC;AACvC,OAAO,EAAkB,eAAe,EAA0C,MAAM,yBAAyB,CAAC;AAYlH,QAAA,MAAM,oBAAoB,QAAO,eAkBhC,CAAA;AAED,QAAA,MAAM,mBAAmB,aAAmB,eAAe,KAA4B,QAAQ,aAAa,CA4B3G,CAAA;AAED,OAAO,EACH,oBAAoB,EACpB,mBAAmB,EACtB,CAAA"}

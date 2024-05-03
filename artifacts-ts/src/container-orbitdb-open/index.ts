@@ -42,7 +42,6 @@ const databaseInitializer = async (
         }
 
         openDatabaseOptions.set('type', databaseType);
-
         openDatabaseOptions.set('AccessController', OrbitDBAccessController({
             write: ['*']
         }));
@@ -51,13 +50,7 @@ const databaseInitializer = async (
             openDatabaseOptions = new Map([...openDatabaseOptions, ...databaseOptions]);
         }
 
-        // const orbitDbInstance = orbitDb.getInstance();
-
         console.log(`opening using orbitdb instance: ${orbitDb.id} for database: ${databaseName} with options: ${JSON.stringify(openDatabaseOptions)} and type: ${databaseType}`)
-        
-        //timeout for 1s
-
-    // await new Promise(resolve => setTimeout(resolve, 2000));
 
         return await orbitDb.getInstance().open(
             databaseName,
