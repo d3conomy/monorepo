@@ -1,7 +1,7 @@
 import { Libp2p, createLibp2p,  } from 'libp2p';
 
 import { Container } from '../container/index.js';
-import { InstanceOptions, InstanceOptionsList } from '../container/options';
+import { InstanceOptions } from '../container/options.js';
 import { InstanceTypes } from '../container/instance.js';
 import { libp2pCommands } from './commands.js';
 import { ContainerId } from '../id-reference-factory/IdReferenceClasses.js';

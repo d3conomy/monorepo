@@ -1,3 +1,4 @@
+import { ContainerId, JobId, MoonbaseId, PodBayId, PodId, SystemId } from "./IdReferenceClasses";
 declare enum IdReferenceFormats {
     UUID = "uuid",
     NAME = "name",
@@ -13,5 +14,6 @@ declare enum IdReferenceTypes {
     CONTAINER = "container",
     JOB = "job"
 }
-export { IdReferenceFormats, IdReferenceTypes };
+type IdReferenceType = SystemId | MoonbaseId | PodBayId | PodId | ContainerId | JobId;
+export { IdReferenceFormats, IdReferenceType, IdReferenceTypes };
 //# sourceMappingURL=IdReferenceConstants.d.ts.map

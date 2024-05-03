@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { IpfsContainer } from "../src/container-ipfs-helia/process.js";
+import { IpfsContainer } from "../src/container-ipfs-helia/index.js";
 import { createId } from "./helpers.js";
 import { ContainerId, JobId } from "../src/id-reference-factory/index.js";
 import { InstanceOptions, createOptionsList } from "../src/container/options.js";

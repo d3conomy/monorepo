@@ -1,3 +1,4 @@
+import { ContainerId, JobId, MoonbaseId, PodBayId, PodId, PodProcessId, SystemId } from "./IdReferenceClasses"
 
 enum IdReferenceFormats {
     UUID = "uuid",
@@ -16,8 +17,11 @@ enum IdReferenceTypes {
     JOB = "job",
 }
 
+type IdReferenceType = SystemId | MoonbaseId | PodBayId | PodId | ContainerId | JobId
+
 
 export {
     IdReferenceFormats,
+    IdReferenceType,
     IdReferenceTypes
 }

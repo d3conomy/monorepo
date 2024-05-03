@@ -1,7 +1,7 @@
 import { MemoryDatastore } from "datastore-core";
 import { MemoryBlockstore } from "blockstore-core";
 import { LevelBlockstore } from "blockstore-level";
-import { InstanceOptions } from "../container/options";
+import { InstanceOptions } from "../container/options.js";
 var BlockStores;
 (function (BlockStores) {
     BlockStores["MEMORY"] = "MemoryBlockstore";
@@ -16,11 +16,11 @@ const createBlockStore = (blockstore, path) => {
             return new LevelBlockstore(path);
     }
 };
-const defaultIpfsOptions = () => {
+const ipfsOptions = () => {
     return new InstanceOptions({ options: [
             {
                 name: 'libp2p',
-                description: 'Libp2p process',
+                description: 'Libp2p container',
                 required: true
             },
             {
@@ -42,7 +42,7 @@ const defaultIpfsOptions = () => {
             },
             {
                 name: 'start',
-                description: 'Start the process',
+                description: 'Start the instance',
                 required: false,
                 defaultValue: false
             }
@@ -53,8 +53,9 @@ const defaultIpfsOptions = () => {
  * @category IPFS
  */
 class IpfsOptions extends InstanceOptions {
-    constructor(options = defaultIpfsOptions()) {
+    constructor(options = ipfsOptions()) {
         super({ options: options.toArray() });
+        this.init();
     }
     init() {
         if (this.get('blockstorePath') !== undefined) {
@@ -62,4 +63,4 @@ class IpfsOptions extends InstanceOptions {
         }
     }
 }
-export { defaultIpfsOptions, IpfsOptions };
+export { ipfsOptions, IpfsOptions };

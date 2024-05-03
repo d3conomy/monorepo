@@ -37,7 +37,7 @@ const createId = (type: string) => {
             jobId = new JobId({ componentId: containerId });
             return jobId as JobId;
         default:
-            return systemId as SystemId as SystemId;
+            return systemId as SystemId;
     }
 }
 

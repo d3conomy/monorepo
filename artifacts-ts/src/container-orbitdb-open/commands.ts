@@ -4,18 +4,14 @@ import {
     Database
 } from '@orbitdb/core';
 
-import { IProcessCommand, IProcessCommandArgInput, ProcessType } from '../process-interface/index.js';
+import { Command, CommandArg, Commands } from '../container/commands.js';
 
 
-const openDbCommands: Array<IProcessCommand> = [
+const commands: Commands = new Commands({ commands:  [
     {
         name: "close",
         description: "Close a database",
-        type: ProcessType.OPEN_DB,
-        action: async (
-            args: IProcessCommandArgInput[] = new Array<IProcessCommandArgInput>,
-            instance: typeof Database
-        ): Promise<void> => {
+        run: async ({args, instance}: {args: CommandArg<any>[], instance: typeof Database}): Promise<void> => {
             return await instance.close();
         },
         args: [
@@ -23,29 +19,20 @@ const openDbCommands: Array<IProcessCommand> = [
                 name: "databaseName",
                 description: "The name of the database to close",
                 required: true
-            }
+            } as CommandArg<string>
         ]
-    },
+    } as Command,
     {
         name: "address",
         description: "Get the address of a database",
-        type: ProcessType.OPEN_DB,
-        action: async (
-            args: IProcessCommandArgInput[] = new Array<IProcessCommandArgInput>,
-            instance: typeof Database
-        ): Promise<string> => {
+        run: async ({args, instance}: {args: CommandArg<any>[], instance: typeof Database}): Promise<string> => {
             return instance.address();
-        },
-        args: []
-    },
+        }
+    } as Command,
     {
         name: "add",
         description: "Add data to a database",
-        type: ProcessType.OPEN_DB,
-        action: async (
-            args: IProcessCommandArgInput[] = new Array<IProcessCommandArgInput>,
-            instance: typeof Database
-        ): Promise<string> => {
+        run: async ({args, instance}: {args: CommandArg<any>[], instance: typeof Database}): Promise<string> => {
             return await instance.add(args[0].value);
         },
         args: [
@@ -53,47 +40,34 @@ const openDbCommands: Array<IProcessCommand> = [
                 name: "data",
                 description: "The data to add to the database",
                 required: true
-            }
+            } as CommandArg<any>
         ]
-    },
+    } as Command,
     {
         name: "all",
         description: "Get all data from a database",
-        type: ProcessType.OPEN_DB,
-        action: async (
-            args: IProcessCommandArgInput[] = new Array<IProcessCommandArgInput>,
-            instance: typeof Database
-        ): Promise<any> => {
+        run: async ({args, instance}: {args: CommandArg<any>[], instance: typeof Database}): Promise<any> => {
             return await instance.all();
-        },
-        args: []
-    },
+        }
+    } as Command,
     {
         name: "get",
         description: "Get data from a database",
-        type: ProcessType.OPEN_DB,
-        action: async (
-            args: IProcessCommandArgInput[] = new Array<IProcessCommandArgInput>,
-            instance: typeof Database
-        ): Promise<any> => {
+        run: async ({args, instance}: {args: CommandArg<any>[], instance: typeof Database}): Promise<any> => {
             return await instance.get(args[0].value);
         },
         args: [
             {
-                name: "hash",
-                description: "The hash of the data to get from the database",
+                name: "cid",
+                description: "The cid of the data to get from the database",
                 required: true
-            }
+            } as CommandArg<string>
         ]
-    },
+    } as Command,
     {
         name: "put",
         description: "Put data into a database",
-        type: ProcessType.OPEN_DB,
-        action: async (
-            args: IProcessCommandArgInput[] = new Array<IProcessCommandArgInput>,
-            instance: typeof Database
-        ): Promise<string> => {
+        run: async ({args, instance}: {args: CommandArg<any>[], instance: typeof Database}): Promise<string> => {
             return await instance.put(args[0].value, args[1].value);
         },
         args: [
@@ -101,22 +75,18 @@ const openDbCommands: Array<IProcessCommand> = [
                 name: "key",
                 description: "The key to use when putting data into the database",
                 required: true
-            },
+            } as CommandArg<string>,
             {
                 name: "value",
                 description: "The value to put into the database",
                 required: true
-            }
+            } as CommandArg<any>
         ]
-    },
+    } as Command,
     {
         name: "putDoc",
         description: "Put a document into a database",
-        type: ProcessType.OPEN_DB,
-        action: async (
-            args: IProcessCommandArgInput[] = new Array<IProcessCommandArgInput>,
-            instance: typeof Database
-        ): Promise<string> => {
+        run: async ({args, instance}: {args: CommandArg<any>[], instance: typeof Database}): Promise<string> => {
             return await instance.putDoc(args[0].value);
         },
         args: [
@@ -126,15 +96,11 @@ const openDbCommands: Array<IProcessCommand> = [
                 required: true
             }
         ]
-    },
+    } as Command,
     {
         name: "del",
         description: "Delete data from a database",
-        type: ProcessType.OPEN_DB,
-        action: async (
-            args: IProcessCommandArgInput[] = new Array<IProcessCommandArgInput>,
-            instance: typeof Database
-        ): Promise<void> => {
+        run: async ({args, instance}: {args: CommandArg<any>[], instance: typeof Database}): Promise<void> => {
             return await instance.del(args[0].value);
         },
         args: [
@@ -142,17 +108,13 @@ const openDbCommands: Array<IProcessCommand> = [
                 name: "key",
                 description: "The key of the data to delete from the database",
                 required: true
-            }
+            } as CommandArg<string>
         ]
-    },
+    } as Command,
     {
         name: "query",
         description: "Query a database",
-        type: ProcessType.OPEN_DB,
-        action: async (
-            args: IProcessCommandArgInput[] = new Array<IProcessCommandArgInput>,
-            instance: typeof Database
-        ): Promise<any> => {
+        run: async ({args, instance}: {args: CommandArg<any>[], instance: typeof Database}): Promise<any> => {
             return await instance.query(args[0].value);
         },
         args: [
@@ -160,13 +122,13 @@ const openDbCommands: Array<IProcessCommand> = [
                 name: "mapper",
                 description: "The mapper function to use when querying the database",
                 required: true
-            }
+            } as CommandArg<any>
         ]
-    }
-];
+    } as Command
+]});
 
 
 
 export {
-    openDbCommands
+    commands as openDbCommands
 };

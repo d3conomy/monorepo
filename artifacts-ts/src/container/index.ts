@@ -3,12 +3,13 @@ import { Job, JobQueue } from "./jobs.js";
 import { InstanceType, InstanceTypes } from "./instance.js";
 import { InstanceOption, InstanceOptions } from "./options.js";
 import { ContainerId } from "../id-reference-factory/IdReferenceClasses.js";
+import { IdReferenceType } from "../id-reference-factory/IdReferenceConstants.js";
 
 class Container<T extends InstanceTypes> {
   public id: ContainerId;
   private _type: T;
   private instance: () => Promise<any>;
-  private initializer?: (options?: any) => Promise<any>;
+  private initializer?: (options?: any, id?: any) => Promise<any>;
   public readonly options?: InstanceOptions;
   public commands: Commands;
   public jobs: JobQueue = new JobQueue();
@@ -25,7 +26,7 @@ class Container<T extends InstanceTypes> {
     id: ContainerId,
     type: T,
     options?: InstanceOptions,
-    initializer?: (options: any) => Promise<any>,
+    initializer?: (options: any, id?: any) => Promise<any>,
     instance?: any,
     commands: Array<Command> | Commands,
     jobs?: Array<Job>
@@ -57,7 +58,7 @@ class Container<T extends InstanceTypes> {
 
   public async init(): Promise<void> {
     if (this.initializer !== null && this.initializer !== undefined) {
-      const instance = await this.initializer(this.options);
+      const instance = await this.initializer(this.options, this.id);
 
     if (instance !== null && instance !== undefined && (this.instance === null || this.instance === undefined)) {
       this.instance = instance;

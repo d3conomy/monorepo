@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { IpfsContainer } from "../src/container-ipfs-helia/process.js";
+import { IpfsContainer } from "../src/container-ipfs-helia/index.js";
 import { createId } from "./helpers.js";
 import { InstanceOptions } from "../src/container/options.js";
 import { Libp2pContainer } from "../src/container-libp2p/index.js";

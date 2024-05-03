@@ -8,8 +8,8 @@ import { InstanceTypes } from "../container/instance.js";
  * Create an IPFS process
  * @category IPFS
  */
-const IpfsHeliaInitializer = async (options) => {
-    const { libp2p, blockstore, datastore, start, } = options.toParams();
+const ipfsHeliaInitializer = async (options) => {
+    const { libp2p, blockstore, datastore, start } = options.toParams();
     const helia = await createHelia({
         libp2p: libp2p,
         blockstore: blockstore,
@@ -30,7 +30,7 @@ class IpfsContainer extends Container {
             id,
             type: InstanceTypes.IPFS,
             options,
-            initializer: IpfsHeliaInitializer,
+            initializer: ipfsHeliaInitializer,
             commands: ipfsCommands,
         });
     }

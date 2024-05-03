@@ -33,7 +33,7 @@ class Container {
     }
     async init() {
         if (this.initializer !== null && this.initializer !== undefined) {
-            const instance = await this.initializer(this.options);
+            const instance = await this.initializer(this.options, this.id);
             if (instance !== null && instance !== undefined && (this.instance === null || this.instance === undefined)) {
                 this.instance = instance;
                 this.jobs.setInstance(this.instance);

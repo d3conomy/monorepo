@@ -1,8 +1,8 @@
 import { MemoryDatastore } from "datastore-core";
 import { MemoryBlockstore } from "blockstore-core";
 import { LevelBlockstore } from "blockstore-level";
-import { InstanceOption, InstanceOptions } from "../container/options";
-import { Libp2pContainer } from "../container-libp2p";
+import { InstanceOption, InstanceOptions } from "../container/options.js";
+import { Libp2pContainer } from "../container-libp2p/index.js";
 
 enum BlockStores {
     MEMORY = "MemoryBlockstore",
@@ -21,11 +21,11 @@ const createBlockStore = (blockstore: BlockStores, path: string) => {
     }
 }
 
-const defaultIpfsOptions = (): InstanceOptions => {
+const ipfsOptions = (): InstanceOptions => {
     return new InstanceOptions({options: [
         {
             name: 'libp2p',
-            description: 'Libp2p process',
+            description: 'Libp2p container',
             required: true
         } as InstanceOption<Libp2pContainer>,    
         {
@@ -47,7 +47,7 @@ const defaultIpfsOptions = (): InstanceOptions => {
         } as InstanceOption<string>,    
         {
             name: 'start',
-            description: 'Start the process',
+            description: 'Start the instance',
             required: false,
             defaultValue: false
         } as InstanceOption<boolean>
@@ -61,18 +61,22 @@ const defaultIpfsOptions = (): InstanceOptions => {
 class IpfsOptions
     extends InstanceOptions
 {
-    constructor(options: InstanceOptions = defaultIpfsOptions()) {
+    constructor(options: InstanceOptions = ipfsOptions()) {
         super({options: options.toArray()});
+        this.init()
     }
 
     init(): void {
         if (this.get('blockstorePath') !== undefined) {
-            this.set('blockstore', createBlockStore(BlockStores.LEVEL, this.get('blockstorePath')))
+            this.set('blockstore', createBlockStore(
+                BlockStores.LEVEL,
+                this.get('blockstorePath')
+            ))
         }
     }
 }
 
 export {
-    defaultIpfsOptions,
+    ipfsOptions,
     IpfsOptions
 }

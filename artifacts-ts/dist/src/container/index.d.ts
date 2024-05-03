@@ -15,7 +15,7 @@ declare class Container<T extends InstanceTypes> {
         id: ContainerId;
         type: T;
         options?: InstanceOptions;
-        initializer?: (options: any) => Promise<any>;
+        initializer?: (options: any, id?: any) => Promise<any>;
         instance?: any;
         commands: Array<Command> | Commands;
         jobs?: Array<Job>;
