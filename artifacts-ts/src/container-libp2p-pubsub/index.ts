@@ -1,11 +1,11 @@
 
 import { GossipSub } from '@chainsafe/libp2p-gossipsub';
-import { InstanceTypes } from '../container/instance';
-import { Container } from '../container';
-import { ContainerId } from '../id-reference-factory';
-import { InstanceOptions } from '../container/options';
+import { InstanceTypes } from '../container/instance.js';
+import { Container } from '../container/index.js';
+import { ContainerId } from '../id-reference-factory/index.js';
+import { InstanceOptions } from '../container/options.js';
 import { gossipSubCommands } from './commands.js';
-import { Libp2pContainer } from '../container-libp2p';
+import { Libp2pContainer } from '../container-libp2p/index.js';
 
 
 const gossipSubInitializer = async (

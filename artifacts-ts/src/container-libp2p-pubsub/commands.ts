@@ -34,7 +34,7 @@ const commands: Commands = new Commands({ commands:  [
                 name: "message",
                 description: "The message to publish",
                 required: true
-            } as CommandArg<string>
+            } as CommandArg<Uint8Array>
         ]
     } as Command,
     {
