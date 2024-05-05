@@ -79,14 +79,14 @@ describe("IpfsFileSystemContainer", () => {
         });
         fsContainer.jobs.enqueue({
             id: createId('job'),
-            command: fsContainer.commands.get('listDirectory'),
+            command: fsContainer.commands.get('getBytes'),
             params: [{
                     name: 'path',
                     value: '/test/file.txt'
                 }]
         });
         await fsContainer.jobs.run();
-        expect(container.jobs.completed.length).to.equal(3);
+        expect(container.jobs.completed.length).to.equal(2);
         expect(fsContainer.jobs.completed.length).to.equal(3);
     });
 });

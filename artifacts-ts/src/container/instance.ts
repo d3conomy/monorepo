@@ -3,7 +3,7 @@ import { ContainerId } from "../id-reference-factory/index.js";
 import { ContainerError } from "./error.js";
 import { InstanceOption } from "./options";
 
-type InstanceType = keyof InstanceTypes;
+type InstanceType = keyof typeof InstanceTypes;
 
 enum InstanceTypes {
     Libp2p = 'Libp2p',

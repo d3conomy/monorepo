@@ -11,10 +11,12 @@ import { ContainerId } from '../id-reference-factory/IdReferenceClasses.js';
 
 // Define the Pod class
 class Pod {
-    private containers: Container<InstanceTypes>[];
+    private containers: Array<Container<InstanceTypes>>;
+    // private manifest: PodManifest;
 
     constructor() {
         this.containers = new Array<Container<InstanceTypes>>();
+
     }
 
     

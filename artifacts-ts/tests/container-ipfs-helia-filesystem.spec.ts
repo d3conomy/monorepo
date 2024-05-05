@@ -85,7 +85,7 @@ describe("IpfsFileSystemContainer", () => {
 
         fsContainer.jobs.enqueue({
             id: createId('job') as JobId,
-            command: fsContainer.commands.get('writeFile'),
+            command: fsContainer.commands.get('addFile'),
             params: [{
                 name: 'path',
                 value: '/test/file.txt'
@@ -97,7 +97,7 @@ describe("IpfsFileSystemContainer", () => {
 
         fsContainer.jobs.enqueue({
             id: createId('job') as JobId,
-            command: fsContainer.commands.get('readFile'),
+            command: fsContainer.commands.get('getBytes'),
             params: [{
                 name: 'path',
                 value: '/test/file.txt'
@@ -106,7 +106,7 @@ describe("IpfsFileSystemContainer", () => {
 
         await fsContainer.jobs.run();
 
-        expect(container.jobs.completed.length).to.equal(3);
+        expect(container.jobs.completed.length).to.equal(2);
         expect(fsContainer.jobs.completed.length).to.equal(3);
 
     });

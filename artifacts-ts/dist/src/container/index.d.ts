@@ -1,9 +1,9 @@
 import { Command, Commands } from "./commands.js";
 import { Job, JobQueue } from "./jobs.js";
-import { InstanceTypes } from "./instance.js";
+import { InstanceType } from "./instance.js";
 import { InstanceOptions } from "./options.js";
 import { ContainerId } from "../id-reference-factory/IdReferenceClasses.js";
-declare class Container<T extends InstanceTypes> {
+declare class Container<T = InstanceType> {
     id: ContainerId;
     private _type;
     private instance;

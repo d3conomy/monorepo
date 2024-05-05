@@ -13,14 +13,7 @@ const commands: Commands = new Commands({ commands:  [
         description: "Close a database",
         run: async ({instance}: {instance: typeof Database}): Promise<void> => {
             return await instance.close();
-        },
-        args: [
-            {
-                name: "databaseName",
-                description: "The name of the database to close",
-                required: true
-            } as CommandArg<string>
-        ]
+        }
     } as Command,
     {
         name: "address",

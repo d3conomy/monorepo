@@ -5,14 +5,7 @@ const commands = new Commands({ commands: [
             description: "Close a database",
             run: async ({ instance }) => {
                 return await instance.close();
-            },
-            args: [
-                {
-                    name: "databaseName",
-                    description: "The name of the database to close",
-                    required: true
-                }
-            ]
+            }
         },
         {
             name: "address",
