@@ -31,6 +31,7 @@ interface Command {
 declare class Commands {
     private commands;
     private instance;
+    private readonly constants;
     constructor({ commands, instance }: {
         commands: Command[];
         instance?: any;

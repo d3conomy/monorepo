@@ -1,0 +1,1 @@
+{"version":3,"file":"options.d.ts","sourceRoot":"","sources":["../../../src/container-ipfs-helia-filesystem/options.ts"],"names":[],"mappings":"AAAA,OAAO,EAAkB,eAAe,EAAE,MAAM,yBAAyB,CAAC;AAI1E,QAAA,MAAM,qBAAqB,QAAO,eAajC,CAAA;AAGD,cAAM,qBACF,SAAQ,eAAe;gBAGX,OAAO,GAAE,eAAyC;CAGjE;AAGD,OAAO,EACH,qBAAqB,EACrB,qBAAqB,EACxB,CAAA"}

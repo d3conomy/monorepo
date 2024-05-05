@@ -33,9 +33,19 @@ class JobQueue {
     size() {
         return this.queue.length;
     }
+    verifyJobParams = (job) => {
+        if (!job.command.args) {
+            return true;
+        }
+        for (const arg of job.command.args) {
+            if (arg.required && !job.params?.find((jobParam) => jobParam.name === arg.name)) {
+                return false;
+            }
+        }
+        return true;
+    };
     execute = async (job) => {
         let jobResult = { output: null, metrics: { runtime: 0, bytesReceived: 0, bytesSent: 0 } };
-        let output;
         let bytesReceived = 0;
         let bytesSent = 0;
         if (job.params) {
@@ -51,6 +61,9 @@ class JobQueue {
         const startTime = new Date();
         try {
             job.status = JobStatus.Running;
+            if (this.verifyJobParams(job) === false) {
+                throw new Error(`Job ${job.id} failed: Missing required parameters`);
+            }
             jobResult.output = await job.command.run({ args: job.params, instance: this.instance });
             // jobResult.output = output;
             job.status = JobStatus.Succeeded;

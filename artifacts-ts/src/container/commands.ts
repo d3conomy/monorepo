@@ -39,6 +39,7 @@ interface Command {
 class Commands {
     private commands: Command[] = [];
     private instance: any;
+    private readonly constants: CommandArg<any>[] = [];
 
     constructor({commands, instance}: {commands: Command[], instance?: any}) {
         this.instance = instance;

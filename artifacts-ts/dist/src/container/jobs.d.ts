@@ -21,6 +21,7 @@ declare class JobQueue {
     dequeue(jobid?: JobId): Job | undefined;
     isEmpty(): boolean;
     size(): number;
+    private verifyJobParams;
     execute: (job: Job) => Promise<Job>;
     run: (parallel?: boolean) => Promise<Job[]>;
     private runParallel;

@@ -9,6 +9,7 @@ class CommandError extends Error {
 class Commands {
     commands = [];
     instance;
+    constants = [];
     constructor({ commands, instance }) {
         this.instance = instance;
         for (const command of commands) {
