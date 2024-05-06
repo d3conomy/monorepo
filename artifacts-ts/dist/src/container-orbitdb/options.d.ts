@@ -5,7 +5,7 @@ declare const orbitDbOptions: () => InstanceOptions;
 * @category OrbitDb
 */
 declare class OrbitDbOptions extends InstanceOptions {
-    constructor(options?: InstanceOptions);
+    constructor(options: InstanceOptions, defaults?: boolean);
     init(): void;
 }
 export { orbitDbOptions, OrbitDbOptions };

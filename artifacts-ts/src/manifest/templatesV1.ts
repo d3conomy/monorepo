@@ -1,7 +1,7 @@
 
-import { InstanceOption, InstanceOptionsList } from '../container/options';
-import { CommandArg, Commands } from '../container/commands';
-import { InstanceType } from '../container/instance';
+import { InstanceOption } from '../container/options.js';
+import { CommandArg, Commands } from '../container/commands.js';
+import { InstanceType } from '../container/instance.js';
 
 
 enum TemplateVersions {
@@ -23,9 +23,9 @@ enum TemplateTypes {
 type TemplateType = keyof typeof TemplateTypes;
 
 interface Template<T = TemplateType, U = TemplateVersion> {
-    version: U;
-    type: T;
-    name: string;
+    version?: U;
+    type?: T;
+    name?: string;
     description?: string;
     spec?: any;
 }
@@ -53,8 +53,8 @@ interface ContainerTemplate<T = InstanceType>
 {
     spec: {
         instanceType: T;
-        options: InstanceOption<any>[];
-        commands: CommandTemplate[]
+        options?: InstanceOption<any>[];
+        commands?: CommandTemplate[]
         init?: string;
         instance?: string;
         jobs?: JobTemplate[];
@@ -74,7 +74,7 @@ interface PodBayTemplate
 {
     spec: {
         pods: PodTemplate[];
-        options: InstanceOptionsList;
+        options: InstanceOption<any>[];
     }
 }
 
@@ -82,7 +82,9 @@ interface MoonbaseTemplate
     extends Template<TemplateTypes.MOONBASE, TemplateVersions.V1>
 {
     spec: {
+        // api: MoonbaseApi;
         podBays: PodBayTemplate[];
+        options: InstanceOption<any>[];
     }
 }
 
@@ -91,6 +93,7 @@ interface SystemTemplate
 {
     spec: {
         moonbases: MoonbaseTemplate[];
+        options: InstanceOption<any>[];
     }
 }
 

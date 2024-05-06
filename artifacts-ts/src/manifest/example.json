@@ -1,0 +1,34 @@
+{
+    "version": "V1",
+    "type": "lunar-pod",
+    "name": "lunar-pod-01",
+    "description": "Lunar Pod 01",
+    "spec": {
+        "containers": [
+            {
+                "name": "libp2p-container",
+                "spec": {
+                    "instanceType": "libp2p"
+                }
+            },
+            {
+                "name": "ipfs-container",
+                "spec": {
+                    "instanceType": "ipfs"
+                }
+            },
+            {
+                "name": "orbitdb-container",
+                "spec": {
+                    "instanceType": "orbitdb"
+                }
+            },
+            {
+                "name": "database-container",
+                "spec": {
+                    "instanceType": "database"
+                }
+            }
+        ]
+    }
+}

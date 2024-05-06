@@ -35,8 +35,8 @@ const orbitDbOptions = () => {
 * @category OrbitDb
 */
 class OrbitDbOptions extends InstanceOptions {
-    constructor(options = orbitDbOptions()) {
-        super({ options: options.toArray() });
+    constructor(options, defaults = true) {
+        super({ options: options.toArray(), injectDefaults: defaults, defaults: orbitDbOptions() });
         this.init();
     }
     init() {

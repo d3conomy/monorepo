@@ -56,6 +56,8 @@ class InstanceOptions {
             this.options = createOptionsList(options);
         } else if (options instanceof InstanceOptionsList) {
             this.options = options;
+        } else if (options instanceof InstanceOptions) {
+            this.options = options.options;
         } else {
             this.options = new InstanceOptionsList([]);
         }

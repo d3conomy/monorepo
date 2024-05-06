@@ -8,4 +8,9 @@ const gossipSubOptions = () => {
             }
         ] });
 };
-export { gossipSubOptions };
+class GossipSubOptions extends InstanceOptions {
+    constructor(options, defaults = true) {
+        super({ options: options.toArray(), injectDefaults: defaults, defaults: gossipSubOptions() });
+    }
+}
+export { gossipSubOptions, GossipSubOptions };

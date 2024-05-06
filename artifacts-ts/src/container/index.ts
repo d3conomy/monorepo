@@ -5,8 +5,8 @@ import {InstanceOptions } from "./options.js";
 import { ContainerId } from "../id-reference-factory/IdReferenceClasses.js";
 
 class Container<T = InstanceType> {
-  public id: ContainerId;
-  private _type: T;
+  public readonly id: ContainerId;
+  private readonly _type: T;
   private instance: () => Promise<any>;
   private initializer?: (options?: any, id?: any) => Promise<any>;
   public readonly options?: InstanceOptions;

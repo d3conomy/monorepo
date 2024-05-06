@@ -1,6 +1,5 @@
 import { createOrbitDB } from '@orbitdb/core';
 ;
-import { orbitDbOptions } from './options.js';
 import { createIdentityProvider } from './identityProvider.js';
 import { Container } from '../container/index.js';
 import { InstanceTypes } from '../container/instance.js';
@@ -9,7 +8,7 @@ import { InstanceTypes } from '../container/instance.js';
  * @category OrbitDb
  */
 const orbitDbInitializer = async (options) => {
-    options.injectDefaults(orbitDbOptions());
+    // options.injectDefaults(orbitDbOptions())
     const { ipfs, enableDID, identitySeed, identityProvider, directory } = options.toParams();
     console.log(`creating orbitdb in directory: ${directory}`);
     if (enableDID === true) {

@@ -2,7 +2,6 @@ import { createHelia, } from "helia";
 import { ipfsCommands } from "./commands.js";
 import { Container } from "../container/index.js";
 import { InstanceTypes } from "../container/instance.js";
-import { ipfsOptions } from "./options.js";
 // class HeliaLibp2pProcess extends HeliaLibp2p {
 // }
 /**
@@ -10,7 +9,7 @@ import { ipfsOptions } from "./options.js";
  * @category IPFS
  */
 const ipfsHeliaInitializer = async (options) => {
-    options.injectDefaults(ipfsOptions());
+    // options.injectDefaults(ipfsOptions())
     const { libp2p, blockstore, datastore, start } = options.toParams();
     const helia = await createHelia({
         libp2p: libp2p.getInstance(),

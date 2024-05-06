@@ -16,7 +16,7 @@ const orbitDbInitializer = async (
     options: OrbitDbOptions
 ): Promise<typeof OrbitDb> => {
 
-    options.injectDefaults(orbitDbOptions())
+    // options.injectDefaults(orbitDbOptions())
 
     const {
         ipfs,

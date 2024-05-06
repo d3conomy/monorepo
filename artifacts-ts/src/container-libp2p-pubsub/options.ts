@@ -12,6 +12,15 @@ const gossipSubOptions = (): InstanceOptions => {
     ]})
 }
 
+class GossipSubOptions
+    extends InstanceOptions
+{
+    constructor(options: InstanceOptions, defaults: boolean = true) {
+        super({options: options.toArray(), injectDefaults: defaults, defaults: gossipSubOptions()})
+    }
+}
+
 export {
-    gossipSubOptions
+    gossipSubOptions,
+    GossipSubOptions
 }

@@ -6,13 +6,13 @@ import { InstanceOption } from "./options";
 type InstanceType = keyof typeof InstanceTypes;
 
 enum InstanceTypes {
-    Libp2p = 'Libp2p',
-    IPFS = 'IPFS',
-    OrbitDb = 'OrbitDb',
-    Database = 'Database',
-    File_System = 'File_System',
-    Pub_Sub = 'Pub_Sub',
-    Custom = 'Custom'
+    Libp2p = 'libp2p',
+    IPFS = 'ipfs',
+    OrbitDb = 'orbitdb',
+    Database = 'database',
+    File_System = 'filesystem',
+    Pub_Sub = 'pubsub',
+    Custom = 'custom'
 }
 
 class InstanceError extends ContainerError {

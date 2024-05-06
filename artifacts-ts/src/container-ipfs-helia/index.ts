@@ -8,7 +8,7 @@ import { ContainerId } from "../id-reference-factory/IdReferenceClasses.js";
 import { Container } from "../container/index.js";
 import { InstanceTypes } from "../container/instance.js";
 import { InstanceOptions } from "../container/options.js";
-import { ipfsOptions } from "./options.js";
+import { IpfsOptions, ipfsOptions } from "./options.js";
 
 // class HeliaLibp2pProcess extends HeliaLibp2p {
 
@@ -20,7 +20,7 @@ import { ipfsOptions } from "./options.js";
 const ipfsHeliaInitializer = async (
     options: InstanceOptions
 ): Promise<HeliaLibp2p<Libp2p>> => {
-    options.injectDefaults(ipfsOptions())
+    // options.injectDefaults(ipfsOptions())
 
     const {
         libp2p,
@@ -50,7 +50,7 @@ class IpfsContainer
 {
     constructor(
         id: ContainerId,
-        options?:InstanceOptions,
+        options?: InstanceOptions,
     ) {
         super({
             id,
