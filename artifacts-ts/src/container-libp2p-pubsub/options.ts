@@ -1,6 +1,6 @@
 import exp from "constants";
 import { Libp2pContainer } from "../container-libp2p";
-import { InstanceOption, InstanceOptions } from "../container/options";
+import { InstanceOption, InstanceOptions } from "../container/options.js";
 
 const gossipSubOptions = (): InstanceOptions => {
     return new InstanceOptions({options: [
@@ -15,8 +15,8 @@ const gossipSubOptions = (): InstanceOptions => {
 class GossipSubOptions
     extends InstanceOptions
 {
-    constructor(options: InstanceOptions, defaults: boolean = true) {
-        super({options: options.toArray(), injectDefaults: defaults, defaults: gossipSubOptions()})
+    constructor(options?: InstanceOptions, defaults: boolean = true) {
+        super({options: options?.toArray(), injectDefaults: defaults, defaults: gossipSubOptions()})
     }
 }
 

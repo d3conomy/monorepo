@@ -23,7 +23,7 @@ const databaseInitializer = async (
     options.injectDefaults(openDbOptions())
 
     const {
-        orbitDb,
+        orbitdb,
         databaseName,
         databaseType,
         databaseOptions,
@@ -50,9 +50,9 @@ const databaseInitializer = async (
             openDatabaseOptions = new Map([...openDatabaseOptions, ...databaseOptions]);
         }
 
-        console.log(`opening using orbitdb instance: ${orbitDb.id} for database: ${databaseName} with options: ${JSON.stringify(openDatabaseOptions)} and type: ${databaseType}`)
+        console.log(`opening using orbitdb instance: ${orbitdb.id} for database: ${databaseName} with options: ${JSON.stringify(openDatabaseOptions)} and type: ${databaseType}`)
 
-        return await orbitDb.getInstance().open(
+        return await orbitdb.getInstance().open(
             databaseName,
             { ...openDatabaseOptions }
         );

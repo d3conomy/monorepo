@@ -1,62 +1,52 @@
-"use strict";
-// import { Libp2p } from 'libp2p';
-// import { GossipSubContainer } from '../container-libp2p-pubsub/index.js';
-// import { Libp2pContainer } from '../container-libp2p/index.js';
-// import { Commands } from '../container/commands.js';
-// import { Container } from '../container/index.js';
-// import { InstanceType, InstanceTypes } from '../container/instance.js';
-// import { InstanceOptions } from '../container/options.js';
-// import { ContainerId, PodId } from '../id-reference-factory/IdReferenceClasses.js';
-// import { ContainerTemplate, PodTemplate } from '../manifest/templatesV1.js';
-// import { LunarPodOptions, lunarPodOptions } from './options.js';
-// // import { Stack, StackType } from './stack.js';
-// import { IdReferenceFactory } from '../id-reference-factory/IdReferenceFactory.js';
-// // Define the Pod class
-// class Pod
-// {
-//     private containers: Array<Container<InstanceType>> = [];
-//     private options: LunarPodOptions;
-//     private readonly idReferenceFactory: IdReferenceFactory; 
-//     public readonly id: PodId;
-//     public readonly template?: PodTemplate;
-//     constructor({
-//         id,
-//         idReferenceFactory,
-//         template,
-//         options,
-//         containers
-//     }: {
-//         id: PodId,
-//         idReferenceFactory: IdReferenceFactory,
-//         template?: PodTemplate,
-//         options?: InstanceOptions,
-//         containers?: Array<Container<InstanceType>>
-//     }) {
-//         this.id = id;
-//         this.idReferenceFactory = idReferenceFactory;
-//         this.template = template;
-//         this.options = new LunarPodOptions(options);
-//         if (containers) {
-//             this.containers = containers;
-//         }
-//     }
-//     async createContainer<T = InstanceType, U = InstanceOptions>(options: U): Promise<Container<T>> {
-//         this.containers.push(container);
-//         return container;
-//     }
-//     // async createContainer<T extends InstanceType>(template: ContainerTemplate<T>, options?: InstanceOptions): Promise<Container<T>> {
-//     //     const container = new Container<T>({
-//     //         id: this.idReferenceFactory.createIdReference({
-//     //             name: template.name,
-//     //             type: template.type,
-//     //             format: template.format
-//     //         }),
-//     //         template: template,
-//     //         options: options
-//     //     });
-//     //     this.containers.push(container);
-//     //     return container;
-//     // }
-// }
-// // Export the Pod class
-// export { Pod };
+import { InstanceTypes } from '../container/instance.js';
+import { LunarPodOptions } from './options.js';
+import { DatabaseStack, GossipSubStack, IpfsFileSystemStack } from './stack.js';
+import { OpenDbOptions } from '../container-orbitdb-open/options.js';
+// Define the Pod class
+class Pod {
+    containers;
+    options;
+    idReferenceFactory;
+    id;
+    // public readonly template?: PodTemplate;
+    constructor(id, idReferenceFactory, options) {
+        this.id = id;
+        this.options = new LunarPodOptions(options, true);
+        const podStackType = options.get('podStackType');
+        const ids = [];
+        switch (podStackType) {
+            case 'database':
+                ids.push(idReferenceFactory.createIdReference({ type: InstanceTypes.Libp2p }));
+                ids.push(idReferenceFactory.createIdReference({ type: InstanceTypes.IPFS }));
+                ids.push(idReferenceFactory.createIdReference({ type: InstanceTypes.OrbitDb }));
+                const dbOptions = options.get('openDbOptions');
+                if (!dbOptions) {
+                    options.set('openDbOptions', [new OpenDbOptions()]);
+                    ids.push(idReferenceFactory.createIdReference({ type: InstanceTypes.Database, name: options.get('databaseName') }));
+                }
+                for (const option in dbOptions) {
+                    ids.push(idReferenceFactory.createIdReference({ type: InstanceTypes.Database, name: options.get('databaseName') }));
+                }
+                this.containers = new DatabaseStack(ids, options);
+                break;
+            case 'gossipsub':
+                ids.push(idReferenceFactory.createIdReference({ type: InstanceTypes.Libp2p }));
+                ids.push(idReferenceFactory.createIdReference({ type: InstanceTypes.Pub_Sub }));
+                this.containers = new GossipSubStack(ids, options);
+                break;
+            case 'ipfs-filesystem':
+                ids.push(idReferenceFactory.createIdReference({ type: InstanceTypes.Libp2p }));
+                ids.push(idReferenceFactory.createIdReference({ type: InstanceTypes.IPFS }));
+                ids.push(idReferenceFactory.createIdReference({ type: InstanceTypes.File_System }));
+                this.containers = new IpfsFileSystemStack(ids, options);
+                break;
+            default:
+                throw new Error(`Invalid Pod Stack Type: ${podStackType}`);
+        }
+        this.idReferenceFactory = idReferenceFactory;
+    }
+    async init() {
+        await this.containers.init();
+    }
+}
+export { Pod };

@@ -22,8 +22,8 @@ class IpfsFileSystemOptions
     extends InstanceOptions 
 {
 
-    constructor(options: InstanceOptions, defaults: boolean = true) {
-        super({options: options.toArray(), injectDefaults: defaults, defaults: ipfsFileSystemOptions()})
+    constructor(options?: InstanceOptions, defaults: boolean = true) {
+        super({options: options?.toArray(), injectDefaults: defaults, defaults: ipfsFileSystemOptions()})
     }
 }
 

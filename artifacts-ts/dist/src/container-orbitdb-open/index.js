@@ -10,7 +10,7 @@ import { InstanceTypes } from '../container/instance.js';
  */
 const databaseInitializer = async (options, id) => {
     options.injectDefaults(openDbOptions());
-    const { orbitDb, databaseName, databaseType, databaseOptions, directory } = options.toParams();
+    const { orbitdb, databaseName, databaseType, databaseOptions, directory } = options.toParams();
     console.log(`opening database: ${databaseName}`);
     await removeLock({ podId: id.podId.name, address: databaseName, directory: directory });
     try {
@@ -25,8 +25,8 @@ const databaseInitializer = async (options, id) => {
         if (databaseOptions) {
             openDatabaseOptions = new Map([...openDatabaseOptions, ...databaseOptions]);
         }
-        console.log(`opening using orbitdb instance: ${orbitDb.id} for database: ${databaseName} with options: ${JSON.stringify(openDatabaseOptions)} and type: ${databaseType}`);
-        return await orbitDb.getInstance().open(databaseName, { ...openDatabaseOptions });
+        console.log(`opening using orbitdb instance: ${orbitdb.id} for database: ${databaseName} with options: ${JSON.stringify(openDatabaseOptions)} and type: ${databaseType}`);
+        return await orbitdb.getInstance().open(databaseName, { ...openDatabaseOptions });
     }
     catch (error) {
         console.log(`error opening database: ${error}`);

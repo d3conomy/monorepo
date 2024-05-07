@@ -73,7 +73,13 @@ class InstanceOptions {
             option.value = value;
             return option;
         } else {
-            throw new InstanceOptionsError(name, `Option with name not found`);
+            const newOption = { name, value } as InstanceOption<any>;
+
+            this.push(newOption);
+
+            return newOption;
+
+            // throw new InstanceOptionsError(name, `Option with name ${name} not found`);
         }
     }
 
@@ -82,7 +88,7 @@ class InstanceOptions {
         if (option) {
             return option.value;
         } else {
-            throw new InstanceOptionsError(name, `Option with name not found`);
+            // throw new InstanceOptionsError(name, `Option with name ${name} not found`);
         }
     }
 

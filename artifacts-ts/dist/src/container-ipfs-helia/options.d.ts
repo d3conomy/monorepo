@@ -5,7 +5,7 @@ declare const ipfsOptions: () => InstanceOptions;
  * @category IPFS
  */
 declare class IpfsOptions extends InstanceOptions {
-    constructor(options: InstanceOptions, defaults?: boolean);
+    constructor(options?: InstanceOptions, defaults?: boolean);
     init(): void;
 }
 export { ipfsOptions, IpfsOptions };

@@ -1,206 +1,127 @@
-// import { IpfsOptions } from "../container-ipfs-helia/options.js"
-// import { IpfsFileSystemOptions } from "../container-ipfs-helia-filesystem/options.js"
-// import { GossipSubOptions } from "../container-libp2p-pubsub/options.js"
-// import { OpenDbOptions } from "../container-orbitdb-open/options.js"
-// import { OrbitDbOptions } from "../container-orbitdb/options.js"
-// import { InstanceOption, InstanceOptions } from "../container/options.js"
-// import { Libp2pContainer } from "../container-libp2p/index.js"
-// import { IpfsContainer } from "../container-ipfs-helia/index.js"
-// import { OrbitDbContainer } from "../container-orbitdb/index.js"
-// import { DatabaseContainer } from "../container-orbitdb-open/index.js"
-// import { GossipSubContainer } from "../container-libp2p-pubsub/index.js"
-// import { IpfsFileSystemContainer } from "../container-ipfs-helia-filesystem/index.js"
-// import { Container } from "../container/index.js"
-// import { IdReferenceFactory } from "../id-reference-factory/IdReferenceFactory.js"
-// import { ContainerId } from "../id-reference-factory/IdReferenceClasses.js"
-
-// import { InstanceType, InstanceTypes } from "../container/instance.js";
+import { IpfsFileSystemContainer } from "../container-ipfs-helia-filesystem/index.js";
+import { IpfsContainer } from "../container-ipfs-helia/index.js";
+import { GossipSubContainer } from "../container-libp2p-pubsub/index.js";
+import { Libp2pContainer } from "../container-libp2p/index.js";
+import { DatabaseContainer } from "../container-orbitdb-open/index.js";
+import { OrbitDbContainer } from "../container-orbitdb/index.js";
+import { Container } from "../container/index.js";
+import { InstanceTypes } from "../container/instance.js";
+import { ContainerId } from "../id-reference-factory/IdReferenceClasses.js"
+import { Libp2pLevel, IpfsLevel, OrbitDbLevel, DatabaseLevel, GossipSubLevel, IpfsFileSystemLevel } from "./levels.js";
+import { LunarPodOptions } from "./options.js";
 
 
-// type ContainerType = Libp2pContainer | IpfsContainer | OrbitDbContainer | DatabaseContainer | GossipSubContainer | IpfsFileSystemContainer | Container<InstanceType>;
-// type ContainerOptions = IpfsOptions | IpfsFileSystemOptions | GossipSubOptions | OpenDbOptions | OrbitDbOptions | InstanceOptions;
+interface FullStack {
+    libp2p: Libp2pLevel;
+    ipfs: IpfsLevel;
+    orbitdb: OrbitDbLevel;
+    databases: DatabaseLevel;
+    gossipsub: GossipSubLevel;
+    ipfsFileSystem: IpfsFileSystemLevel;
+    custom?: Container<InstanceTypes.Custom>[];
+}
 
-// interface StackContainers {
-//     libp2p: {
-//         type: InstanceTypes.Libp2p,
-//         container: Libp2pContainer,
-//         options: InstanceOptions
-//     },
-//     ipfs: {
-//         type: InstanceTypes.IPFS,
-//         container: IpfsContainer,
-//         options: InstanceOptions
-//     },
-//     orbitdb: {
-//         type: InstanceTypes.OrbitDb,
-//         container: OrbitDbContainer,
-//         options: InstanceOptions
-//     },
-//     databases: [{
-//         type: InstanceTypes.Database,
-//         container: DatabaseContainer,
-//         options: InstanceOptions
-//     }],
-//     pubsub: {
-//         type: InstanceTypes.Pub_Sub,
-//         container: GossipSubContainer,
-//         options: InstanceOptions
-//     },
-//     filesystem: {
-//         type: InstanceTypes.File_System,
-//         container: IpfsFileSystemContainer,
-//         options: InstanceOptions
-//     },
-//     customs: [{
-//         type: InstanceTypes.Custom,
-//         container: Container<InstanceTypes.Custom>,
-//         options: InstanceOptions
-//     }]
-// }
+class DatabaseStack implements Pick<FullStack, 'libp2p' | 'ipfs' | 'orbitdb' | 'databases'> {
+    options: LunarPodOptions;
+    libp2p: Libp2pLevel;
+    ipfs: IpfsLevel;
+    orbitdb: OrbitDbLevel;
+    databases: DatabaseLevel;
 
-// type DatabaseStack = Pick<StackContainers, 'libp2p' | 'ipfs' | 'orbitdb' | 'databases'>;
-// type GossipSubStack = Pick<StackContainers, 'libp2p' | 'pubsub'>;
-// type FileSystemStack = Pick<StackContainers, 'libp2p' | 'ipfs' | 'filesystem'>;
+    constructor(id: ContainerId[], options: LunarPodOptions) {
+        this.options = options;
+        this.libp2p = new Libp2pLevel(id[0], options.get('libp2pOptions'));
+        this.ipfs = new IpfsLevel(id[1], options.get('ipfsOptions'));
+        this.orbitdb = new OrbitDbLevel(id[2], options.get('orbitDbOptions'));
+        this.databases = new DatabaseLevel(id.slice(3), options.get('openDbOptions'));
+    }
 
+    async init(): Promise<void> {
+        console.log('DatabaseStack init', this.libp2p, this.ipfs, this.orbitdb, this.databases)
 
-// type StackType = DatabaseStack | GossipSubStack | FileSystemStack;
+        await this.libp2p.init();
+        await this.ipfs.init(this.libp2p.container);
+        await this.orbitdb.init(this.ipfs.container);
+        await this.databases.init(this.orbitdb.container);
+    }
 
-// class Stack<T extends StackType> {
-//     private readonly stackType: keyof T;
-//     private containers?: T;
-//     private readonly options: Partial<StackContainers>;
+    getContainers():  [Libp2pContainer?, IpfsContainer?, OrbitDbContainer?, ...DatabaseContainer[]] {
+        return [
+            this.libp2p.container,
+            this.ipfs.container,
+            this.orbitdb.container,
+            ...this.databases.getContainers()
+        ];
+    }
 
-//     constructor({
-//         stackType,
-//         options
-//     }: {
-//         stackType: keyof T,
-//         options: Partial<StackContainers>
-//     }) {
-//         this.stackType = stackType;
-//         this.options = options;
-//     }
+}
 
-//     checkForDependencies(type: InstanceTypes) {
-//         const container = Object.values(this.options).find((container) => container.type === type);
-//     }
+class GossipSubStack implements Pick<FullStack, 'libp2p' | 'gossipsub'> {
+    options: LunarPodOptions;
+    libp2p: Libp2pLevel;
+    gossipsub: GossipSubLevel;
 
-//     async createContainer(id: ContainerId, type: InstanceTypes, dependant?: ContainerType): Promise<ContainerType> {
-//         let container: ContainerType;
-        
-//         switch (type) {
-//             case InstanceTypes.Libp2p:
-//                 container = new Libp2pContainer(
-//                     id,
-//                     this.options.Libp2p?.options
-//                 );
-//                 break;
+    constructor(id: ContainerId[], options: LunarPodOptions) {
+        this.options = options;
+        this.libp2p = new Libp2pLevel(id[0], options.get('libp2pOptions'));
+        this.gossipsub = new GossipSubLevel(id[1], options.get('gossipSubOptions'));
+    }
 
-//             case InstanceTypes.IPFS:
-//                 if (!dependant) {
-//                     throw new Error(`Dependant container required for IPFS container`);
-//                 }
-                
-//                 options = this.options.Ipfs?.options;
-//                 if (!options || !options.get('libp2p')) {
-//                     new IpfsOptions(
-//                         new InstanceOptions({
-//                             options: [
-//                                 {
-//                                     name: 'libp2p',
-//                                     description: 'Libp2p container',
-//                                     required: true
-//                                 } as InstanceOption<Libp2pContainer>
-//                             ]
-//                         })
-//                     )
-//                 }
+    async init(): Promise<void> {
+        await this.libp2p.init();
+        await this.gossipsub.init(this.libp2p?.container);
+    }
 
-//                 options?.set('libp2p', dependant.getInstance());
-//                 container = new IpfsContainer(
-//                     id,
-//                     options
-//                 );
-//                 break;
+    getContainers(): [Libp2pContainer?, GossipSubContainer?] {
+        return [
+            this.libp2p.container,
+            this.gossipsub.container
+        ];
+    }
+}
 
-//             case InstanceTypes.OrbitDb:
-//                 if (!dependant) {
-//                     throw new Error(`Dependant container required for OrbitDb container`);
-//                 }
+class IpfsFileSystemStack implements Pick<FullStack, 'libp2p' | 'ipfs' | 'ipfsFileSystem'> {
+    options: LunarPodOptions;
+    libp2p: Libp2pLevel;
+    ipfs: IpfsLevel;
+    ipfsFileSystem: IpfsFileSystemLevel;
 
-//                 options = this.options.OrbitDb?.options;
-//                 if (!options || !options.get('ipfs')) {
-//                     new OrbitDbOptions(
-//                         new InstanceOptions({
-//                             options: [
-//                                 {
-//                                     name: 'ipfs',
-//                                     description: 'IPFS container',
-//                                     required: true
-//                                 } as InstanceOption<IpfsContainer>
-//                             ]
-//                         })
-//                     )
-//                 }
-//                 options.set('ipfs', dependant.getInstance());
+    constructor(id: ContainerId[], options: LunarPodOptions) {
+        this.options = options;
+        this.libp2p = new Libp2pLevel(id[0], options.get('libp2pOptions'));
+        this.ipfs = new IpfsLevel(id[1], options.get('ipfsOptions'));
+        this.ipfsFileSystem = new IpfsFileSystemLevel(id[2], options.get('ipfsFileSystemOptions'));
+    }
 
-//                 container = new OrbitDbContainer(
-//                     id,
-//                     options
-//                 );
-//                 break;
+    async init(): Promise<void> {
+        await this.libp2p.init();
+        await this.ipfs.init(this.libp2p?.container);
+        await this.ipfsFileSystem.init(this.ipfs?.container);
+    }
 
-//             case InstanceTypes.Database:
-//                 if (!dependant) {
-//                     throw new Error(`Dependant container required for Database container`);
-//                 }
+    getContainers(): [Libp2pContainer?, IpfsContainer?, IpfsFileSystemContainer?] {
+        return [
+            this.libp2p.container,
+            this.ipfs.container,
+            this.ipfsFileSystem.container
+        ];
+    }
+}
 
-//                 options = this.options.Databases[0]?.options;
-//                 if (!options || !options.get('orbitdb')) {
-//                     new OpenDbOptions(
-//                         new InstanceOptions({
-//                             options: [
-//                                 {
-//                                     name: 'orbitdb',
-//                                     description: 'OrbitDb container',
-//                                     required: true
-//                                 } as InstanceOption<OrbitDbContainer>
-//                             ]
-//                         })
-//                     )
-//                 }
-//                 options.set('orbitdb', dependant.getInstance());
+type StackType = DatabaseStack | GossipSubStack | IpfsFileSystemStack ; // | FullStack;
+ enum StackTypes {
+    Database = 'database',
+    GossipSub = 'gossipsub',
+    IpfsFileSystem = 'ipfsFileSystem',
+    Full = 'full'
+}
 
-//                 container = new DatabaseContainer(
-//                     id,
-//                     options
-//                 );
-//                 break;
-
-
-
-//             default:
-//                 throw new Error(`Invalid instance type: ${type}`);
-
-            
-//         }
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // export {
-// //     // Stack,
-// //     StackType,
-// //     StackOptions
-// // }
+export {
+    // Stack,
+    StackType,
+    StackTypes,
+    DatabaseStack,
+    GossipSubStack,
+    IpfsFileSystemStack,
+    FullStack
+}

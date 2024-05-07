@@ -1,4 +1,4 @@
-import { InstanceOptions } from "../container/options";
+import { InstanceOptions } from "../container/options.js";
 const gossipSubOptions = () => {
     return new InstanceOptions({ options: [
             {
@@ -10,7 +10,7 @@ const gossipSubOptions = () => {
 };
 class GossipSubOptions extends InstanceOptions {
     constructor(options, defaults = true) {
-        super({ options: options.toArray(), injectDefaults: defaults, defaults: gossipSubOptions() });
+        super({ options: options?.toArray(), injectDefaults: defaults, defaults: gossipSubOptions() });
     }
 }
 export { gossipSubOptions, GossipSubOptions };

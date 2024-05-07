@@ -15,7 +15,7 @@ const ipfsFileSystemOptions = () => {
 };
 class IpfsFileSystemOptions extends InstanceOptions {
     constructor(options, defaults = true) {
-        super({ options: options.toArray(), injectDefaults: defaults, defaults: ipfsFileSystemOptions() });
+        super({ options: options?.toArray(), injectDefaults: defaults, defaults: ipfsFileSystemOptions() });
     }
 }
 export { ipfsFileSystemOptions, IpfsFileSystemOptions };

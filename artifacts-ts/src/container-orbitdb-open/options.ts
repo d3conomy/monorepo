@@ -3,19 +3,21 @@ import { OrbitDb } from '@orbitdb/core'
 import { InstanceOption, InstanceOptions } from "../container/options.js";
 import { OrbitDbTypes } from './dbTypes.js';
 import { OrbitDbContainer } from '../container-orbitdb/index.js';
+import { createRandomId } from '../id-reference-factory/IdReferenceFunctions.js';
 
 
 const openDbOptions = (): InstanceOptions => {
     return new InstanceOptions({ options: [
         {
-            name: "orbitDb",
+            name: "orbitdb",
             description: "The OrbitDb instance",
-            required: true
+            required: false
         } as InstanceOption<OrbitDbContainer>,
         {
             name: "databaseName",
             description: "The name of the database",
-            required: true
+            required: true,
+            value: createRandomId()
         } as InstanceOption<string>,
         {
             name: "databaseType",
@@ -31,7 +33,8 @@ const openDbOptions = (): InstanceOptions => {
         {
             name: "directory",
             description: "The directory for the database",
-            required: false
+            required: false,
+            defaultValue: './orbitdb'
         } as InstanceOption<string>
     ]})
 }
@@ -44,8 +47,8 @@ class OpenDbOptions
     extends InstanceOptions 
 {
 
-    constructor(options: InstanceOptions = openDbOptions()) {
-        super({options: options.toArray()})
+    constructor(options?: InstanceOptions, defaults: boolean = true) {
+        super({options: options, injectDefaults: defaults, defaults: openDbOptions()})
     }
 }
 

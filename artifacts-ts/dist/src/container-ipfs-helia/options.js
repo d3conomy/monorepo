@@ -54,7 +54,7 @@ const ipfsOptions = () => {
  */
 class IpfsOptions extends InstanceOptions {
     constructor(options, defaults = true) {
-        super({ options: options.toArray(), injectDefaults: defaults, defaults: ipfsOptions() });
+        super({ options: options?.toArray(), injectDefaults: defaults, defaults: ipfsOptions() });
         this.init();
     }
     init() {

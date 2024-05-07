@@ -5,7 +5,7 @@ declare const openDbOptions: () => InstanceOptions;
  * @category Database
  */
 declare class OpenDbOptions extends InstanceOptions {
-    constructor(options?: InstanceOptions);
+    constructor(options?: InstanceOptions, defaults?: boolean);
 }
 export { openDbOptions, OpenDbOptions };
 //# sourceMappingURL=options.d.ts.map
