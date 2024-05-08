@@ -49,7 +49,7 @@ describe('DatabaseContainer', async () => {
         expect(orbitDbContainer).to.be.an.instanceOf(OrbitDbContainer);
         const openDatabaseOptions = new InstanceOptions({ options: [
                 {
-                    name: "orbitDb",
+                    name: "orbitdb",
                     value: orbitDbContainer,
                 },
                 {

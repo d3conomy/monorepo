@@ -59,7 +59,7 @@ describe('DatabaseContainer', async () => {
 
         const openDatabaseOptions = new InstanceOptions({ options: [
             {
-                name: "orbitDb",
+                name: "orbitdb",
                 value: orbitDbContainer,
             },
             {
