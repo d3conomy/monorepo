@@ -15,10 +15,10 @@ type StackContainers = Libp2pContainer | IpfsContainer | OrbitDbContainer | Data
 class StackLevel<T = StackContainers, U = StackContainers > {
     id: ContainerId;
     type: InstanceTypes;
-    options: InstanceOptions;
+    options?: InstanceOptions | undefined;
     dependant: U | undefined;
     container?: T;
-    builder: (id: ContainerId, options: InstanceOptions, dependant: U | undefined) => Promise<T>;
+    builder: (id: ContainerId, options?: InstanceOptions | undefined, dependant?: U | undefined) => Promise<T>;
 
     constructor({
         id,
@@ -30,15 +30,15 @@ class StackLevel<T = StackContainers, U = StackContainers > {
     }:{
         id: ContainerId,
         type: InstanceTypes,
-        options: InstanceOptions,
-        builder: (id: ContainerId, options: InstanceOptions, dependant: U | undefined) => Promise<T>,
+        options?: InstanceOptions,
+        builder: (id: ContainerId, options?: InstanceOptions | undefined, dependant?: U | undefined) => Promise<T>,
         dependant?: U,
     }) {
         this.id = id;
         this.type = type;
         this.options = options;
         this.dependant = dependant;
-        this.builder = builder !== undefined ? builder : async (id: ContainerId, options: InstanceOptions, dependant?: U): Promise<T> => {
+        this.builder = builder !== undefined ? builder : async (id: ContainerId, options?: InstanceOptions, dependant?: U): Promise<T> => {
             throw new Error('Builder not implemented');
         }
     }
@@ -53,12 +53,12 @@ class StackLevel<T = StackContainers, U = StackContainers > {
 }
 
 class Libp2pLevel extends StackLevel<Libp2pContainer, undefined> {
-    constructor(id: ContainerId, options: InstanceOptions) {
+    constructor({id, options}: {id: ContainerId, options?: InstanceOptions}) {
         super({
             id,
             type: InstanceTypes.Libp2p,
             options,
-            builder: async (id: ContainerId, options: InstanceOptions, dependant: undefined): Promise<Libp2pContainer> => {
+            builder: async (id: ContainerId, options?: InstanceOptions, dependant?: undefined): Promise<Libp2pContainer> => {
                 const container = new Libp2pContainer(id, options);
                 await container.init();
                 return container;
@@ -69,16 +69,21 @@ class Libp2pLevel extends StackLevel<Libp2pContainer, undefined> {
 }
 
 class IpfsLevel extends StackLevel<IpfsContainer, Libp2pContainer> {
-    constructor(id: ContainerId, options: InstanceOptions, dependant?: Libp2pContainer) {
+    constructor({id, options, dependant}: {id: ContainerId, options?: InstanceOptions, dependant?: Libp2pContainer}) {
         super({
             id,
             type: InstanceTypes.IPFS,
             options,
-            builder: async (id: ContainerId, options: InstanceOptions, dependant?: Libp2pContainer): Promise<IpfsContainer> => {
+            builder: async (id: ContainerId, options?: InstanceOptions, dependant?: Libp2pContainer): Promise<IpfsContainer> => {
                 if (!dependant) {
                     throw new Error('Dependant not provided');
                 }
+
+                if (!options) {
+                    options = new InstanceOptions();
+                }
                 options.set('libp2p', dependant);
+                
                 const container = new IpfsContainer(id, options);
                 await container.init();
                 return container;
@@ -89,13 +94,21 @@ class IpfsLevel extends StackLevel<IpfsContainer, Libp2pContainer> {
 }
 
 class OrbitDbLevel extends StackLevel<OrbitDbContainer, IpfsContainer> {
-    constructor(id: ContainerId, options: InstanceOptions, dependant?: IpfsContainer) {
+    constructor({id, options, dependant}: {id: ContainerId, options?: InstanceOptions, dependant?: IpfsContainer}) {
         super({
             id,
             type: InstanceTypes.OrbitDb,
             options,
-            builder: async (id: ContainerId, options: InstanceOptions, dependant?: IpfsContainer): Promise<OrbitDbContainer> => {
+            builder: async (id: ContainerId, options?: InstanceOptions, dependant?: IpfsContainer): Promise<OrbitDbContainer> => {
+                if (!dependant) {
+                    throw new Error('Dependant not provided');
+                }
+
+                if (!options) {
+                    options = new InstanceOptions();
+                }
                 options.set('ipfs', dependant);
+                
                 const container = new OrbitDbContainer(id, options);
                 await container.init();
                 return container;
@@ -106,13 +119,21 @@ class OrbitDbLevel extends StackLevel<OrbitDbContainer, IpfsContainer> {
 }
 
 class DatabaseLevel extends StackLevel<DatabaseContainer, OrbitDbContainer> {
-    constructor(id: ContainerId, options: InstanceOptions, dependant?: OrbitDbContainer) {
+    constructor({id, options, dependant}: {id: ContainerId, options?: InstanceOptions, dependant?: OrbitDbContainer}) {
         super({
             id,
             type: InstanceTypes.Database,
             options,
-            builder: async (id: ContainerId, options: InstanceOptions, dependant?: OrbitDbContainer): Promise<DatabaseContainer> => {
+            builder: async (id: ContainerId, options?: InstanceOptions, dependant?: OrbitDbContainer): Promise<DatabaseContainer> => {
+                if (!dependant) {
+                    throw new Error('Dependant not provided');
+                }
+                
+                if (!options) {
+                    options = new InstanceOptions();
+                }
                 options.set('orbitdb', dependant);
+                
                 const container = new DatabaseContainer(id, options);
                 await container.init();
                 return container;
@@ -123,13 +144,21 @@ class DatabaseLevel extends StackLevel<DatabaseContainer, OrbitDbContainer> {
 }
 
 class GossipSubLevel extends StackLevel<GossipSubContainer, Libp2pContainer> {
-    constructor(id: ContainerId, options: InstanceOptions, dependant?: Libp2pContainer) {
+    constructor({id, options, dependant}: {id: ContainerId, options?: InstanceOptions, dependant?: Libp2pContainer}) {
         super({
             id,
             type: InstanceTypes.Pub_Sub,
             options,
-            builder: async (id: ContainerId, options: InstanceOptions, dependant?: Libp2pContainer): Promise<GossipSubContainer> => {
+            builder: async (id: ContainerId, options?: InstanceOptions, dependant?: Libp2pContainer): Promise<GossipSubContainer> => {
+                if (!dependant) {
+                    throw new Error('Dependant not provided');
+                }
+
+                if (!options) {
+                    options = new InstanceOptions();
+                }
                 options.set('libp2p', dependant);
+                
                 const container = new GossipSubContainer(id, options);
                 await container.init();
                 return container;
@@ -140,13 +169,21 @@ class GossipSubLevel extends StackLevel<GossipSubContainer, Libp2pContainer> {
 }
 
 class IpfsFileSystemLevel extends StackLevel<IpfsFileSystemContainer, IpfsContainer> {
-    constructor(id: ContainerId, options: InstanceOptions, dependant?: IpfsContainer) {
+    constructor({id, options, dependant}: {id: ContainerId, options: InstanceOptions, dependant?: IpfsContainer}) {
         super({
             id,
             type: InstanceTypes.File_System,
             options,
-            builder: async (id: ContainerId, options: InstanceOptions, dependant?: IpfsContainer): Promise<IpfsFileSystemContainer> => {
+            builder: async (id: ContainerId, options?: InstanceOptions, dependant?: IpfsContainer): Promise<IpfsFileSystemContainer> => {
+                if (!dependant) {
+                    throw new Error('Dependant not provided');
+                }
+                
+                if (!options) {
+                    options = new InstanceOptions();
+                }
                 options.set('ipfs', dependant);
+                
                 const container = new IpfsFileSystemContainer(id, options);
                 await container.init();
                 return container;

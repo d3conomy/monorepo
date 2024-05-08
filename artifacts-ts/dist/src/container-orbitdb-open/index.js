@@ -1,5 +1,4 @@
 import { OrbitDBAccessController } from '@orbitdb/core';
-import { openDbOptions } from './options.js';
 import { openDbCommands } from './commands.js';
 import { removeLock } from './helpers.js';
 import { Container } from '../container/index.js';
@@ -9,7 +8,7 @@ import { InstanceTypes } from '../container/instance.js';
  * @category Database
  */
 const databaseInitializer = async (options, id) => {
-    options.injectDefaults(openDbOptions());
+    // options.injectDefaults(openDbOptions())
     const { orbitdb, databaseName, databaseType, databaseOptions, directory } = options.toParams();
     console.log(`opening database: ${databaseName}`);
     await removeLock({ podId: id.podId.name, address: databaseName, directory: directory });

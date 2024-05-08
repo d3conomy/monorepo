@@ -11,36 +11,59 @@ type StackContainers = Libp2pContainer | IpfsContainer | OrbitDbContainer | Data
 declare class StackLevel<T = StackContainers, U = StackContainers> {
     id: ContainerId;
     type: InstanceTypes;
-    options: InstanceOptions;
+    options?: InstanceOptions | undefined;
     dependant: U | undefined;
     container?: T;
-    builder: (id: ContainerId, options: InstanceOptions, dependant: U | undefined) => Promise<T>;
+    builder: (id: ContainerId, options?: InstanceOptions | undefined, dependant?: U | undefined) => Promise<T>;
     constructor({ id, type, options, builder, dependant, }: {
         id: ContainerId;
         type: InstanceTypes;
-        options: InstanceOptions;
-        builder: (id: ContainerId, options: InstanceOptions, dependant: U | undefined) => Promise<T>;
+        options?: InstanceOptions;
+        builder: (id: ContainerId, options?: InstanceOptions | undefined, dependant?: U | undefined) => Promise<T>;
         dependant?: U;
     });
     init(dependant?: U): Promise<void>;
 }
 declare class Libp2pLevel extends StackLevel<Libp2pContainer, undefined> {
-    constructor(id: ContainerId, options: InstanceOptions);
+    constructor({ id, options }: {
+        id: ContainerId;
+        options?: InstanceOptions;
+    });
 }
 declare class IpfsLevel extends StackLevel<IpfsContainer, Libp2pContainer> {
-    constructor(id: ContainerId, options: InstanceOptions, dependant?: Libp2pContainer);
+    constructor({ id, options, dependant }: {
+        id: ContainerId;
+        options?: InstanceOptions;
+        dependant?: Libp2pContainer;
+    });
 }
 declare class OrbitDbLevel extends StackLevel<OrbitDbContainer, IpfsContainer> {
-    constructor(id: ContainerId, options: InstanceOptions, dependant?: IpfsContainer);
+    constructor({ id, options, dependant }: {
+        id: ContainerId;
+        options?: InstanceOptions;
+        dependant?: IpfsContainer;
+    });
 }
 declare class DatabaseLevel extends StackLevel<DatabaseContainer, OrbitDbContainer> {
-    constructor(id: ContainerId, options: InstanceOptions, dependant?: OrbitDbContainer);
+    constructor({ id, options, dependant }: {
+        id: ContainerId;
+        options?: InstanceOptions;
+        dependant?: OrbitDbContainer;
+    });
 }
 declare class GossipSubLevel extends StackLevel<GossipSubContainer, Libp2pContainer> {
-    constructor(id: ContainerId, options: InstanceOptions, dependant?: Libp2pContainer);
+    constructor({ id, options, dependant }: {
+        id: ContainerId;
+        options?: InstanceOptions;
+        dependant?: Libp2pContainer;
+    });
 }
 declare class IpfsFileSystemLevel extends StackLevel<IpfsFileSystemContainer, IpfsContainer> {
-    constructor(id: ContainerId, options: InstanceOptions, dependant?: IpfsContainer);
+    constructor({ id, options, dependant }: {
+        id: ContainerId;
+        options: InstanceOptions;
+        dependant?: IpfsContainer;
+    });
 }
 export { Libp2pLevel, IpfsLevel, OrbitDbLevel, DatabaseLevel, GossipSubLevel, IpfsFileSystemLevel, StackContainers };
 //# sourceMappingURL=levels.d.ts.map

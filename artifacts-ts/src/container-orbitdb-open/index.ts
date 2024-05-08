@@ -20,7 +20,7 @@ const databaseInitializer = async (
     id: ContainerId
 ): Promise<typeof Database> => {
 
-    options.injectDefaults(openDbOptions())
+    // options.injectDefaults(openDbOptions())
 
     const {
         orbitdb,

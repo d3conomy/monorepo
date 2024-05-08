@@ -13,17 +13,40 @@
 // import { IdReferenceFactory } from '../id-reference-factory/IdReferenceFactory.js';
 // import { DatabaseStack, GossipSubStack, IpfsFileSystemStack, StackType, StackTypes } from './stack.js';
 // import { OpenDbOptions } from '../container-orbitdb-open/options.js';
+// import { IpfsContainer } from '../container-ipfs-helia/index.js';
+// import { OrbitDbContainer } from '../container-orbitdb/index.js';
+// import { DatabaseContainer } from '../container-orbitdb-open/index.js';
+// import { Job, JobQueue } from '../container/jobs.js';
 // // Define the Pod class
 // class Pod
+//     implements Pick<Container, 'options' | 'jobs'>
 // {
+//     private libp2p?: Libp2pContainer;
+//     private ipfs?: IpfsContainer;
+//     private orbitdb?: OrbitDbContainer;
+//     private databases: Array<DatabaseContainer> = [];
+//     private gossipsub?: GossipSubContainer;
+//     private fileSystem?: IpfsFileSystemStack;
+//     private jobs: JobQueue = new JobQueue();
 //     // private containers: Map<ContainerId, Container | Container[] | undefined> = new Map<ContainerId, Container | Container[] | undefined>();
-//     private options: LunarPodOptions;
+//     private options: InstanceOptions;
 //     private readonly idReferenceFactory: IdReferenceFactory; 
 //     public readonly id: PodId;
 //     // public readonly template?: PodTemplate;
-//     constructor(id: PodId, idReferenceFactory: IdReferenceFactory, options: LunarPodOptions)
+//     constructor(id: PodId, idReferenceFactory: IdReferenceFactory, options: InstanceOptions)
 //     {
 //         this.id = id;
+//         this.idReferenceFactory = idReferenceFactory;
 //         this.options = new LunarPodOptions(options, true);
+//     }
+//     private async createContainer<T extends Container>(
+//         id: ContainerId,
+//         type: InstanceType,
+//         options: InstanceOptions,
+//         builder: (id: ContainerId, options?: InstanceOptions) => Promise<T>
+//     ): Promise<T>
+//     {
+//         return await builder(id, options);
+//     }
 // }
 // export { Pod };
