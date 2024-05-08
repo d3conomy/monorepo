@@ -1,6 +1,6 @@
 import { logger } from "../log-books-manager/LogBooksManager.js";
 import { LogLevel } from "../log-books-manager/LogLevels.js";
-import { IdReference, JobId, MoonbaseId, PodBayId, PodId, PodProcessId, SystemId } from "./IdReferenceClasses.js";
+import { ContainerId, IdReference, JobId, MoonbaseId, PodBayId, PodId, PodProcessId, SystemId } from "./IdReferenceClasses.js";
 import { IdReferenceConfig } from "./IdReferenceConfig.js";
 import { IdReferenceFormats, IdReferenceTypes } from "./IdReferenceConstants.js";
 import { createRandomId } from "./IdReferenceFunctions.js";
@@ -89,6 +89,9 @@ class IdReferenceFactory {
                 break;
             case IdReferenceTypes.POD:
                 idref = new PodId({name, metadata, format, podBayId: dependsOnId as PodBayId});
+                break;
+            case IdReferenceTypes.CONTAINER:
+                idref = new ContainerId({name, metadata, format, podId: dependsOnId as PodId});
                 break;
             case IdReferenceTypes.PROCESS:
                 idref = new PodProcessId({name, metadata, format, podId: dependsOnId as PodId});

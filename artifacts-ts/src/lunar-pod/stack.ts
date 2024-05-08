@@ -1,12 +1,5 @@
-import { IpfsFileSystemContainer } from "../container-ipfs-helia-filesystem/index.js";
-import { IpfsContainer } from "../container-ipfs-helia/index.js";
-import { GossipSubContainer } from "../container-libp2p-pubsub/index.js";
-import { Libp2pContainer } from "../container-libp2p/index.js";
-import { DatabaseContainer } from "../container-orbitdb-open/index.js";
-import { OrbitDbContainer } from "../container-orbitdb/index.js";
-import { Container } from "../container/index.js";
-import { InstanceTypes } from "../container/instance.js";
-import { ContainerId, IdReference, PodId } from "../id-reference-factory/IdReferenceClasses.js"
+import { ContainerId, PodId } from "../id-reference-factory/IdReferenceClasses.js"
+import { IdReferenceTypes } from "../id-reference-factory/IdReferenceConstants.js";
 import { IdReferenceFactory } from "../id-reference-factory/IdReferenceFactory.js";
 import { Libp2pLevel, IpfsLevel, OrbitDbLevel, DatabaseLevel, GossipSubLevel, IpfsFileSystemLevel } from "./levels.js";
 import { LunarPodOptions } from "./options.js";
@@ -18,7 +11,7 @@ interface Stack {
     databases: DatabaseLevel[];
     gossipsub: GossipSubLevel;
     ipfsFileSystem: IpfsFileSystemLevel;
-    custom?: Container<InstanceTypes.custom>[];
+    // custom?: Container<InstanceTypes.custom>[];
 }
 
 type DatabaseStack = Pick<Stack, 'libp2p' | 'ipfs' | 'orbitdb' | 'databases'>;
@@ -32,11 +25,49 @@ enum StackTypes {
     IpfsFileSystem = 'ipfs-filesystem'
 }
 
+class StackFactory{
+
+    static async createStack<T = Stacks>(type: StackTypes, podId: PodId, idReferenceFactory: IdReferenceFactory, options?: LunarPodOptions): Promise<T> {
+        const containerId = () => { return idReferenceFactory.createIdReference({type: IdReferenceTypes.CONTAINER, dependsOn: podId}) as ContainerId};
+        console.log(containerId())
+
+        const libp2p = async (): Promise<Libp2pLevel> => { const level = new Libp2pLevel({id: containerId(), options}); await level.init(); return level};
+        const ipfs = async (d: Libp2pLevel): Promise<IpfsLevel> => { const level = new IpfsLevel({id: containerId(), options, dependant: d.container}); await level.init(); return level};
+        const orbitdb = async (d: IpfsLevel): Promise<OrbitDbLevel> => { const level = new OrbitDbLevel({id: containerId(), options, dependant: d.container}); await level.init(); return level};
+        const database = async (d: OrbitDbLevel): Promise<DatabaseLevel> => {const level = new DatabaseLevel({id: containerId(), options, dependant: d.container}); await level.init(); return level};
+        const gossipsub = async (d: Libp2pLevel): Promise<GossipSubLevel> => { const level = new GossipSubLevel({id: containerId(), options, dependant: d.container}); await level.init(); return level};
+        const ipfsFileSystem = async (d: IpfsLevel): Promise<IpfsFileSystemLevel> => { const level = new IpfsFileSystemLevel({id: containerId(), options, dependant: d.container}); await level.init(); return level};
+
+        switch (type) {
+            case StackTypes.Database:
+                const libp2pLevel = await libp2p();
+                const ipfsLevel = await ipfs(libp2pLevel);
+                const orbitDbLevel = await orbitdb(ipfsLevel);
+                const databaseLevel = await database(orbitDbLevel);
+                return {libp2p: libp2pLevel, ipfs: ipfsLevel, orbitdb: orbitDbLevel, databases: [databaseLevel]} as T;
+
+            case StackTypes.GossipSub:
+                const libp2pLevel2 = await libp2p();
+                const gossipSubLevel = await gossipsub(libp2pLevel2);
+                return {libp2p: libp2pLevel2, gossipsub: gossipSubLevel} as T;
+
+            case StackTypes.IpfsFileSystem:
+                const libp2pLevel3 = await libp2p();
+                const ipfsLevel2 = await ipfs(libp2pLevel3);
+                const ipfsFileSystemLevel = await ipfsFileSystem(ipfsLevel2);
+                return {libp2p: libp2pLevel3, ipfs: ipfsLevel2, ipfsFileSystem: ipfsFileSystemLevel} as T;
+        }
+    }
+}
+
 
 
 export {
     Stack,
     DatabaseStack,
     GossipSubStack,
-    IpfsFileSystemStack
+    IpfsFileSystemStack,
+    Stacks,
+    StackTypes,
+    StackFactory
 }

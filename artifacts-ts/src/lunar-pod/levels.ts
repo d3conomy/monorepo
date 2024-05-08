@@ -143,7 +143,7 @@ class GossipSubLevel extends StackLevel<GossipSubContainer, Libp2pContainer> {
 }
 
 class IpfsFileSystemLevel extends StackLevel<IpfsFileSystemContainer, IpfsContainer> {
-    constructor({id, options, dependant}: {id: ContainerId, options: InstanceOptions, dependant?: IpfsContainer}) {
+    constructor({id, options, dependant}: {id: ContainerId, options?: InstanceOptions, dependant?: IpfsContainer}) {
         super({
             id,
             type: InstanceTypes.filesystem,
