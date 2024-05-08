@@ -12,7 +12,7 @@ const openDbOptions = () => {
                 name: "databaseName",
                 description: "The name of the database",
                 required: true,
-                value: createRandomId()
+                defaultValue: createRandomId()
             },
             {
                 name: "databaseType",

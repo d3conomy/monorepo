@@ -3,6 +3,7 @@ import { Libp2pLevel, IpfsLevel, OrbitDbLevel, DatabaseLevel } from '../src/luna
 import { createId } from './helpers.js';
 import { InstanceOptions } from '../src/container/options.js';
 import { OrbitDbContainer } from '../src/container-orbitdb/index.js';
+import { OrbitDbTypes } from '../src/container-orbitdb-open/dbTypes.js';
 describe('Levels', async () => {
     const containerId = createId("container");
     const containerId2 = createId("container");
@@ -26,7 +27,13 @@ describe('Levels', async () => {
         await libp2pLevel.init();
         const ipfsLevel = new IpfsLevel({ id: containerId2, dependant: libp2pLevel.container });
         await ipfsLevel.init();
-        const orbitDbLevel = new OrbitDbLevel({ id: containerId3, dependant: ipfsLevel.container });
+        const orbitdbOptions = new InstanceOptions({ options: [
+                {
+                    name: 'directory',
+                    value: './orbitdb/test1'
+                }
+            ] });
+        const orbitDbLevel = new OrbitDbLevel({ id: containerId3, options: orbitdbOptions, dependant: ipfsLevel.container });
         await orbitDbLevel.init();
         const dboptions = new InstanceOptions({ options: [
                 {
@@ -35,11 +42,7 @@ describe('Levels', async () => {
                 },
                 {
                     name: 'databaseType',
-                    value: 'keyvalue'
-                },
-                {
-                    name: 'directory',
-                    value: '/orbitdb'
+                    value: OrbitDbTypes.KEYVALUE
                 }
             ] });
         const databaseLevel = new DatabaseLevel({ id: containerId4, options: dboptions, dependant: orbitDbLevel.container });
@@ -47,11 +50,15 @@ describe('Levels', async () => {
         expect(databaseLevel).to.be.an.instanceOf(DatabaseLevel);
         databaseLevel.container?.jobs.enqueue({
             id: createId('job'),
-            command: databaseLevel.container?.commands.get('add'),
+            command: databaseLevel.container?.commands.get('put'),
             params: [
                 {
-                    name: 'data',
+                    name: 'key',
                     value: 'test-key'
+                },
+                {
+                    name: 'value',
+                    value: 'test-value'
                 }
             ]
         });

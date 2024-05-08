@@ -4,9 +4,9 @@ import { Libp2pLevel, IpfsLevel, OrbitDbLevel, DatabaseLevel, GossipSubLevel, Ip
 import { createId } from './helpers.js';
 import { ContainerId, JobId } from '../src/id-reference-factory/index.js';
 import { InstanceOption, InstanceOptions } from '../src/container/options.js';
-import { or } from 'multiformats/dist/src/bases/base.js';
-import exp from 'constants';
 import { OrbitDbContainer } from '../src/container-orbitdb/index.js';
+import { CommandArg } from '../src/container/commands.js';
+import { OrbitDbTypes } from '../src/container-orbitdb-open/dbTypes.js';
 
 describe('Levels', async () => {
     const containerId = createId("container") as ContainerId;
@@ -39,7 +39,14 @@ describe('Levels', async () => {
         const ipfsLevel = new IpfsLevel({id: containerId2, dependant: libp2pLevel.container});
         await ipfsLevel.init();
 
-        const orbitDbLevel = new OrbitDbLevel({id: containerId3, dependant: ipfsLevel.container});
+        const orbitdbOptions = new InstanceOptions({options: [
+            {
+                name: 'directory',
+                value: './orbitdb/test1'
+            } as InstanceOption<string>
+        ]});
+
+        const orbitDbLevel = new OrbitDbLevel({id: containerId3, options: orbitdbOptions, dependant: ipfsLevel.container});
         await orbitDbLevel.init();
 
         const dboptions: InstanceOptions = new InstanceOptions({options: [
@@ -49,12 +56,8 @@ describe('Levels', async () => {
             } as InstanceOption<string>,
             {
                 name: 'databaseType',
-                value: 'keyvalue'
-            } as InstanceOption<string>,
-            {
-                name: 'directory',
-                value: '/orbitdb'
-            }
+                value: OrbitDbTypes.KEYVALUE
+            } as InstanceOption<string>
         ]});
         const databaseLevel = new DatabaseLevel({id: containerId4, options: dboptions, dependant: orbitDbLevel.container});
         await databaseLevel.init();
@@ -63,12 +66,16 @@ describe('Levels', async () => {
 
         databaseLevel.container?.jobs.enqueue({
             id: createId('job') as JobId,
-            command: databaseLevel.container?.commands.get('add'),
+            command: databaseLevel.container?.commands.get('put'),
             params: [
                 {
-                    name: 'data',
+                    name: 'key',
                     value: 'test-key'
-                } as InstanceOption<string>
+                } as CommandArg<string>,
+                {
+                    name: 'value',
+                    value: 'test-value'
+                } as CommandArg<string>
             ]
         });
 

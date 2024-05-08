@@ -17,7 +17,7 @@ const openDbOptions = (): InstanceOptions => {
             name: "databaseName",
             description: "The name of the database",
             required: true,
-            value: createRandomId()
+            defaultValue: createRandomId()
         } as InstanceOption<string>,
         {
             name: "databaseType",

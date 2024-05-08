@@ -10,6 +10,7 @@ import { openDbCommands } from './commands.js';
 import { removeLock } from './helpers.js';
 import { Container } from '../container/index.js';
 import { InstanceTypes } from '../container/instance.js';
+import { InstanceOptions } from '../container/options.js';
 
 /**
  * Opens a database.
@@ -34,27 +35,25 @@ const databaseInitializer = async (
 
     await removeLock({podId: id.podId.name, address: databaseName, directory: directory});
 
+    let sync = false;
+    if (databaseName.startsWith('/orbitdb')) {
+        sync = true;
+    }
+
     try {
-        let openDatabaseOptions = new Map<string, any>();
-
-        if (databaseName.startsWith('/orbitdb')) {
-            openDatabaseOptions.set('sync', true);
-        }
-
-        openDatabaseOptions.set('type', databaseType);
-        openDatabaseOptions.set('AccessController', OrbitDBAccessController({
-            write: ['*']
-        }));
-
-        if (databaseOptions) {
-            openDatabaseOptions = new Map([...openDatabaseOptions, ...databaseOptions]);
-        }
+        let openDatabaseOptions = {
+            type: databaseType,
+            AccessController: OrbitDBAccessController({
+                write: ['*']
+            }),
+            sync: sync,
+        };
 
         console.log(`opening using orbitdb instance: ${orbitdb.id} for database: ${databaseName} with options: ${JSON.stringify(openDatabaseOptions)} and type: ${databaseType}`)
 
         return await orbitdb.getInstance().open(
             databaseName,
-            { ...openDatabaseOptions }
+            openDatabaseOptions
         );
     }
     catch (error) {
@@ -72,7 +71,7 @@ class DatabaseContainer
      */
     constructor(
         id: ContainerId,
-        options: OpenDbOptions
+        options: InstanceOptions
     ) {
         super({
             id,
