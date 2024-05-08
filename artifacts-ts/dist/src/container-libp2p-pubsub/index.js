@@ -9,7 +9,7 @@ class GossipSubContainer extends Container {
     constructor(id, options) {
         super({
             id,
-            type: InstanceTypes.Pub_Sub,
+            type: InstanceTypes.pubsub,
             options,
             initializer: gossipSubInitializer,
             commands: gossipSubCommands

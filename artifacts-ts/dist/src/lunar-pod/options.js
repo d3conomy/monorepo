@@ -11,11 +11,6 @@ const lunarPodOptions = () => {
                 description: "Lunar Pod Name",
                 required: false
             },
-            // {
-            //     name: 'containers',
-            //     description: 'Containers in the Pod',
-            //     required: false
-            // } as InstanceOption<Array<Container>>,
             {
                 name: 'podbayId',
                 description: 'PodBay ID',
@@ -27,48 +22,6 @@ const lunarPodOptions = () => {
             ...openDbOptions().toArray(),
             ...gossipSubOptions().toArray(),
             ...ipfsFileSystemOptions().toArray()
-            // {
-            //     name: 'podStackType',
-            //     description: 'Pod Stack Type',
-            //     required: true,
-            //     defaultValue: 'database'
-            // } as InstanceOption<string>,
-            // {
-            //     name: 'ipfsOptions',
-            //     description: 'IPFS Options',
-            //     required: true,
-            //     defaultValue: new IpfsOptions()
-            // } as InstanceOption<IpfsOptions>,
-            // {
-            //     name: 'libp2pOptions',
-            //     description: 'Libp2p Options',
-            //     required: true,
-            //     defaultValue: defaultLibp2pOptions()
-            // } as InstanceOption<Libp2pDefaultsOptions>,
-            // {
-            //     name: 'orbitDbOptions',
-            //     description: 'OrbitDB Options',
-            //     required: true,
-            //     defaultValue: new OrbitDbOptions()
-            // } as InstanceOption<Partial<OrbitDbOptions>>,
-            // {
-            //     name: 'openDbOptions',
-            //     description: 'OpenDB Options',
-            //     required: true,
-            //     defaultValue: [new OpenDbOptions()]
-            // } as InstanceOption<OpenDbOptions[]>,
-            // {
-            //     name: 'gossipSubOptions',
-            //     description: 'GossipSub Options',
-            //     required: true,
-            //     defaultValue: new GossipSubOptions()
-            // } as InstanceOption<Partial<OrbitDbOptions>>,
-            // {
-            //     name: 'ipfsFileSystemOptions',
-            //     description: 'IPFS File System Options',
-            //     required: true,
-            //     defaultValue: new IpfsFileSystemOptions()
-            // } as InstanceOption<Partial<OrbitDbOptions>>
         ] });
 };
 class LunarPodOptions extends InstanceOptions {

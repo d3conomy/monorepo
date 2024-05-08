@@ -17,7 +17,7 @@ const gossipSubInitializer = async (
 
 
 class GossipSubContainer
-    extends Container<InstanceTypes.Pub_Sub>
+    extends Container<InstanceTypes.pubsub>
 {
     constructor(
         id: ContainerId,
@@ -25,7 +25,7 @@ class GossipSubContainer
     ) {
         super({
             id,
-            type: InstanceTypes.Pub_Sub,
+            type: InstanceTypes.pubsub,
             options,
             initializer: gossipSubInitializer,
             commands: gossipSubCommands

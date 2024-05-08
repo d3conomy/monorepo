@@ -48,7 +48,7 @@ const orbitDbInitializer = async (
  * @category OrbitDb
  */
 class OrbitDbContainer
-    extends Container<InstanceTypes.OrbitDb>
+    extends Container<InstanceTypes.orbitdb>
 {
     constructor(
         id: ContainerId,
@@ -56,7 +56,7 @@ class OrbitDbContainer
     ) {
         super({
             id,
-            type: InstanceTypes.OrbitDb,
+            type: InstanceTypes.orbitdb,
             options,
             initializer: orbitDbInitializer,
             commands: []

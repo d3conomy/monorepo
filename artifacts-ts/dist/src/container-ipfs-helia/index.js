@@ -29,7 +29,7 @@ class IpfsContainer extends Container {
     constructor(id, options) {
         super({
             id,
-            type: InstanceTypes.IPFS,
+            type: InstanceTypes.ipfs,
             options,
             initializer: ipfsHeliaInitializer,
             commands: ipfsCommands,

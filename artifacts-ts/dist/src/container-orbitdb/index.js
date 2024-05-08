@@ -33,7 +33,7 @@ class OrbitDbContainer extends Container {
     constructor(id, options) {
         super({
             id,
-            type: InstanceTypes.OrbitDb,
+            type: InstanceTypes.orbitdb,
             options,
             initializer: orbitDbInitializer,
             commands: []

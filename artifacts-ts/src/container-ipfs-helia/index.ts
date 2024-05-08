@@ -46,7 +46,7 @@ const ipfsHeliaInitializer = async (
  * @category IPFS
  */
 class IpfsContainer
-    extends Container<InstanceTypes.IPFS>
+    extends Container<InstanceTypes.ipfs>
 {
     constructor(
         id: ContainerId,
@@ -54,7 +54,7 @@ class IpfsContainer
     ) {
         super({
             id,
-            type: InstanceTypes.IPFS,
+            type: InstanceTypes.ipfs,
             options,
             initializer: ipfsHeliaInitializer,
             commands: ipfsCommands,

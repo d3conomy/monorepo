@@ -8,7 +8,7 @@ import { InstanceOptions } from "../container/options.js";
  * Helia is used as the IPFS process
  * @category IPFS
  */
-declare class IpfsContainer extends Container<InstanceTypes.IPFS> {
+declare class IpfsContainer extends Container<InstanceTypes.ipfs> {
     constructor(id: ContainerId, options?: InstanceOptions);
 }
 export { IpfsContainer };

@@ -10,7 +10,7 @@ class Libp2pContainer extends Container {
     constructor(id, options) {
         super({
             id,
-            type: InstanceTypes.Libp2p,
+            type: InstanceTypes.libp2p,
             options: options,
             initializer: libp2pInitializer,
             commands: libp2pCommands

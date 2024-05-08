@@ -11,7 +11,7 @@ describe('Libp2pContainer', async () => {
         await container.init();
         expect(container).to.be.an.instanceOf(Libp2pContainer);
         expect(container.id).to.equal(id);
-        expect(container.type).to.equal(InstanceTypes.Libp2p);
+        expect(container.type).to.equal(InstanceTypes.libp2p);
         // expect(container.initializer).to.be.a('function');
         expect(container.commands).to.deep.equal(libp2pCommands);
     });
@@ -25,7 +25,7 @@ describe('Libp2pContainer', async () => {
         await container.init();
         expect(container).to.be.an.instanceOf(Libp2pContainer);
         expect(container.id).to.equal(id);
-        expect(container.type).to.equal(InstanceTypes.Libp2p);
+        expect(container.type).to.equal(InstanceTypes.libp2p);
         expect(container.commands).to.deep.equal(libp2pCommands);
         expect(container.options).to.deep.equal(options);
     });

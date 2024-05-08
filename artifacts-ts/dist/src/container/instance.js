@@ -1,13 +1,13 @@
 import { ContainerError } from "./error.js";
 var InstanceTypes;
 (function (InstanceTypes) {
-    InstanceTypes["Libp2p"] = "libp2p";
-    InstanceTypes["IPFS"] = "ipfs";
-    InstanceTypes["OrbitDb"] = "orbitdb";
-    InstanceTypes["Database"] = "database";
-    InstanceTypes["File_System"] = "filesystem";
-    InstanceTypes["Pub_Sub"] = "pubsub";
-    InstanceTypes["Custom"] = "custom";
+    InstanceTypes["libp2p"] = "libp2p";
+    InstanceTypes["ipfs"] = "ipfs";
+    InstanceTypes["orbitdb"] = "orbitdb";
+    InstanceTypes["database"] = "database";
+    InstanceTypes["filesystem"] = "filesystem";
+    InstanceTypes["pubsub"] = "pubsub";
+    InstanceTypes["custom"] = "custom";
 })(InstanceTypes || (InstanceTypes = {}));
 class InstanceError extends ContainerError {
     instanceType;

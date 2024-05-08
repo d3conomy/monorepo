@@ -6,7 +6,7 @@ import { InstanceTypes } from '../container/instance.js';
  * A class representing an OrbitDb process
  * @category OrbitDb
  */
-declare class OrbitDbContainer extends Container<InstanceTypes.OrbitDb> {
+declare class OrbitDbContainer extends Container<InstanceTypes.orbitdb> {
     constructor(id: ContainerId, options: InstanceOptions);
 }
 export { OrbitDbContainer };

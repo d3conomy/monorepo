@@ -26,6 +26,9 @@ class StackLevel {
         if (dependant) {
             this.dependant = dependant;
         }
+        if (!this.options) {
+            this.options = new InstanceOptions();
+        }
         this.container = await this.builder(this.id, this.options, this.dependant);
     }
 }
@@ -33,7 +36,7 @@ class Libp2pLevel extends StackLevel {
     constructor({ id, options }) {
         super({
             id,
-            type: InstanceTypes.Libp2p,
+            type: InstanceTypes.libp2p,
             options,
             builder: async (id, options, dependant) => {
                 const container = new Libp2pContainer(id, options);
@@ -48,15 +51,9 @@ class IpfsLevel extends StackLevel {
     constructor({ id, options, dependant }) {
         super({
             id,
-            type: InstanceTypes.IPFS,
+            type: InstanceTypes.ipfs,
             options,
             builder: async (id, options, dependant) => {
-                if (!dependant) {
-                    throw new Error('Dependant not provided');
-                }
-                if (!options) {
-                    options = new InstanceOptions();
-                }
                 options.set('libp2p', dependant);
                 const container = new IpfsContainer(id, options);
                 await container.init();
@@ -70,15 +67,9 @@ class OrbitDbLevel extends StackLevel {
     constructor({ id, options, dependant }) {
         super({
             id,
-            type: InstanceTypes.OrbitDb,
+            type: InstanceTypes.orbitdb,
             options,
             builder: async (id, options, dependant) => {
-                if (!dependant) {
-                    throw new Error('Dependant not provided');
-                }
-                if (!options) {
-                    options = new InstanceOptions();
-                }
                 options.set('ipfs', dependant);
                 const container = new OrbitDbContainer(id, options);
                 await container.init();
@@ -92,15 +83,9 @@ class DatabaseLevel extends StackLevel {
     constructor({ id, options, dependant }) {
         super({
             id,
-            type: InstanceTypes.Database,
+            type: InstanceTypes.database,
             options,
             builder: async (id, options, dependant) => {
-                if (!dependant) {
-                    throw new Error('Dependant not provided');
-                }
-                if (!options) {
-                    options = new InstanceOptions();
-                }
                 options.set('orbitdb', dependant);
                 const container = new DatabaseContainer(id, options);
                 await container.init();
@@ -114,15 +99,9 @@ class GossipSubLevel extends StackLevel {
     constructor({ id, options, dependant }) {
         super({
             id,
-            type: InstanceTypes.Pub_Sub,
+            type: InstanceTypes.pubsub,
             options,
             builder: async (id, options, dependant) => {
-                if (!dependant) {
-                    throw new Error('Dependant not provided');
-                }
-                if (!options) {
-                    options = new InstanceOptions();
-                }
                 options.set('libp2p', dependant);
                 const container = new GossipSubContainer(id, options);
                 await container.init();
@@ -136,15 +115,9 @@ class IpfsFileSystemLevel extends StackLevel {
     constructor({ id, options, dependant }) {
         super({
             id,
-            type: InstanceTypes.File_System,
+            type: InstanceTypes.filesystem,
             options,
             builder: async (id, options, dependant) => {
-                if (!dependant) {
-                    throw new Error('Dependant not provided');
-                }
-                if (!options) {
-                    options = new InstanceOptions();
-                }
                 options.set('ipfs', dependant);
                 const container = new IpfsFileSystemContainer(id, options);
                 await container.init();

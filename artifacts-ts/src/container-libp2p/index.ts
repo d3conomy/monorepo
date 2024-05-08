@@ -11,14 +11,14 @@ const libp2pInitializer = async (options: InstanceOptions): Promise<Libp2p> => {
     return await createLibp2p(await createLibp2pOptions(options));
 }
 
-class Libp2pContainer extends Container<InstanceTypes.Libp2p> {
+class Libp2pContainer extends Container<InstanceTypes.libp2p> {
     constructor(
         id: ContainerId,
         options?: InstanceOptions,
     ) {
         super({
             id,
-            type: InstanceTypes.Libp2p,
+            type: InstanceTypes.libp2p,
             options: options,
             initializer: libp2pInitializer,
             commands: libp2pCommands

@@ -18,7 +18,7 @@ interface Stack {
     databases: DatabaseLevel[];
     gossipsub: GossipSubLevel;
     ipfsFileSystem: IpfsFileSystemLevel;
-    custom?: Container<InstanceTypes.Custom>[];
+    custom?: Container<InstanceTypes.custom>[];
 }
 
 type DatabaseStack = Pick<Stack, 'libp2p' | 'ipfs' | 'orbitdb' | 'databases'>;

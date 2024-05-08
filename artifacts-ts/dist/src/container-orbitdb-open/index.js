@@ -19,13 +19,19 @@ const databaseInitializer = async (options, id) => {
     try {
         let openDatabaseOptions = {
             type: databaseType,
-            AccessController: OrbitDBAccessController({
-                write: ['*']
-            }),
-            sync: sync,
+            // AccessController: OrbitDBAccessController({
+            //     write: ['*']
+            // }),
+            sync: true,
         };
         console.log(`opening using orbitdb instance: ${orbitdb.id} for database: ${databaseName} with options: ${JSON.stringify(openDatabaseOptions)} and type: ${databaseType}`);
-        return await orbitdb.getInstance().open(databaseName, openDatabaseOptions);
+        return await orbitdb.getInstance().open(databaseName, {
+            ...openDatabaseOptions,
+            // ...databaseOptions,
+            AccessController: OrbitDBAccessController({
+                write: ['*']
+            })
+        });
     }
     catch (error) {
         console.log(`error opening database: ${error}`);
@@ -38,7 +44,7 @@ class DatabaseContainer extends Container {
     constructor(id, options) {
         super({
             id,
-            type: InstanceTypes.Database,
+            type: InstanceTypes.database,
             options,
             initializer: databaseInitializer,
             commands: openDbCommands

@@ -1,1 +1,1 @@
-{"version":3,"file":"commands.d.ts","sourceRoot":"","sources":["../../../src/container-orbitdb-open/commands.ts"],"names":[],"mappings":"AAMA,OAAO,EAAuB,QAAQ,EAAE,MAAM,0BAA0B,CAAC;AAGzE,QAAA,MAAM,QAAQ,EAAE,QA+Gb,CAAC;AAIJ,OAAO,EACH,QAAQ,IAAI,cAAc,EAC7B,CAAC"}
+{"version":3,"file":"commands.d.ts","sourceRoot":"","sources":["../../../src/container-orbitdb-open/commands.ts"],"names":[],"mappings":"AAMA,OAAO,EAAuB,QAAQ,EAAE,MAAM,0BAA0B,CAAC;AAGzE,QAAA,MAAM,QAAQ,EAAE,QAgHb,CAAC;AAIJ,OAAO,EACH,QAAQ,IAAI,cAAc,EAC7B,CAAC"}

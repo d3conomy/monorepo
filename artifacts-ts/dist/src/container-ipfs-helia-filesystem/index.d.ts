@@ -6,7 +6,7 @@ import { ContainerId } from '../id-reference-factory/IdReferenceClasses.js';
  * The IPFS file system
  * @category IPFS
  */
-declare class IpfsFileSystemContainer extends Container<InstanceTypes.File_System> {
+declare class IpfsFileSystemContainer extends Container<InstanceTypes.filesystem> {
     /**
      * Constructor for the IPFS file system
      */

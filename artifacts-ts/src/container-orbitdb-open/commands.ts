@@ -47,11 +47,12 @@ const commands: Commands = new Commands({ commands:  [
         name: "get",
         description: "Get data from a database",
         run: async ({args, instance}: {args: CommandArg<any>[], instance: typeof Database}): Promise<any> => {
-            return await instance.get(args[0].value);
+            // console.log(args.find((arg) => arg.name === "hash")?.value);
+            return await instance.get(args.find((arg) => arg.name === "hash")?.value);
         },
         args: [
             {
-                name: "cid",
+                name: "hash",
                 description: "The cid of the data to get from the database",
                 required: true
             } as CommandArg<string>

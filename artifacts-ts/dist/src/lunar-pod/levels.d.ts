@@ -14,12 +14,12 @@ declare class StackLevel<T = StackContainers, U = StackContainers> {
     options?: InstanceOptions | undefined;
     dependant: U | undefined;
     container?: T;
-    builder: (id: ContainerId, options?: InstanceOptions | undefined, dependant?: U | undefined) => Promise<T>;
+    builder: (id: ContainerId, options: InstanceOptions, dependant?: U | undefined) => Promise<T>;
     constructor({ id, type, options, builder, dependant, }: {
         id: ContainerId;
         type: InstanceTypes;
         options?: InstanceOptions;
-        builder: (id: ContainerId, options?: InstanceOptions | undefined, dependant?: U | undefined) => Promise<T>;
+        builder: (id: ContainerId, options: InstanceOptions, dependant?: U | undefined) => Promise<T>;
         dependant?: U;
     });
     init(dependant?: U): Promise<void>;

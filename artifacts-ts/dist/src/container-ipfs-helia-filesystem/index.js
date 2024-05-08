@@ -28,7 +28,7 @@ class IpfsFileSystemContainer extends Container {
     constructor(id, options) {
         super({
             id,
-            type: InstanceTypes.File_System,
+            type: InstanceTypes.filesystem,
             options,
             initializer: ipfsFileSystemInitializer,
             commands: ipfsFileSystemCommands

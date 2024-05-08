@@ -35,7 +35,7 @@ const ipfsFileSystemInitializer = async (
  * @category IPFS
  */
 class IpfsFileSystemContainer
-    extends Container<InstanceTypes.File_System>
+    extends Container<InstanceTypes.filesystem>
 {
    
     /**
@@ -47,7 +47,7 @@ class IpfsFileSystemContainer
     ) {
         super({
             id,
-            type: InstanceTypes.File_System,
+            type: InstanceTypes.filesystem,
             options,
             initializer: ipfsFileSystemInitializer,
             commands: ipfsFileSystemCommands
