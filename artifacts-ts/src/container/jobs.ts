@@ -115,7 +115,7 @@ class JobQueue {
         job.result = jobResult;
 
         this.completed.push(job);
-        console.log(`Job ${job.id} completed with status ${job.status} - ${JSON.stringify(job.result)}`);
+        // console.log(`Job ${job.id} completed with status ${job.status} - ${JSON.stringify(job.result)}`);
 
         if (this.queue.includes(job)) {
             this.dequeue(job.id);

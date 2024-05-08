@@ -34,7 +34,8 @@ describe('Levels', async () => {
         await libp2pLevel.container?.getInstance().stop();
     });
 
-    it('should create an instance of DatabaseLevel', async () => {
+    it('should create an instance of DatabaseLevel', async function (): Promise<void> {
+        this.timeout(50000);
         const libp2pLevel = new Libp2pLevel({id: containerId});
         await libp2pLevel.init();
 
@@ -81,7 +82,7 @@ describe('Levels', async () => {
             ]
         });
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 100; i++) {
             databaseLevel.container?.jobs.enqueue({
                 id: createId('job') as JobId,
                 command: databaseLevel.container?.commands.get('put'),
@@ -117,7 +118,7 @@ describe('Levels', async () => {
         const databaseLevel2 = new DatabaseLevel({id: containerId5, options: dboptions2, dependant: orbitDbLevel.container});
         await databaseLevel2.init();
 
-        const jobs = await databaseLevel.container?.jobs.run(false);
+        const jobs = await databaseLevel.container?.jobs.run(true);
         // console.log(jobs?.forEach((job) => {
         //     console.log(job.result?.output);
         // }));
@@ -142,9 +143,9 @@ describe('Levels', async () => {
         });
 
         const jobs2 = await databaseLevel2.container?.jobs.run(true);
-        console.log(jobs2?.forEach((job2) => {
-            console.log(job2.result?.output);
-        }));
+        // console.log(jobs2?.forEach((job2) => {
+        //     console.log(job2.result?.output);
+        // }));
 
 
 
