@@ -5,6 +5,7 @@ import { IdReferenceFactory } from '../src/id-reference-factory/index.js';
 import { LunarPodOptions } from '../src/lunar-pod/options.js';
 import { InstanceOptions } from '../src/container/options.js';
 import { OrbitDbTypes } from '../src/container-orbitdb-open/dbTypes.js';
+import fs from 'fs/promises';
 describe('StackFactory', () => {
     describe('createStack', () => {
         it('should create a DatabaseStack', async () => {
@@ -76,6 +77,7 @@ describe('StackFactory', () => {
                 await stack.databases[0].container?.getInstance().close();
                 await stack.ipfs?.container?.getInstance().stop();
                 await stack.libp2p?.container?.getInstance().stop();
+                await fs.rm('./orbitdb/test2', { recursive: true, force: true });
             }
             // await stack.orbitdb.container?.getInstance().stop();
             // await stack.databases[0].container?.getInstance().close();

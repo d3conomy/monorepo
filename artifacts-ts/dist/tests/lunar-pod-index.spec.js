@@ -5,6 +5,7 @@ import { createId } from './helpers.js';
 import { LunarPodOptions } from '../src/lunar-pod/options.js';
 import { InstanceOptions, InstanceOptionsList } from '../src/container/options.js';
 import { OrbitDbTypes } from '../src/container-orbitdb-open/dbTypes.js';
+import fs from 'fs/promises';
 describe('LunarPod', () => {
     let lunarPod;
     beforeEach(() => {
@@ -37,6 +38,7 @@ describe('LunarPod', () => {
     });
     afterEach(async () => {
         await lunarPod.stop();
+        await fs.rm('./orbitdb/test3', { recursive: true, force: true });
     });
     it('should create a LunarPod', async () => {
         await lunarPod.init();
