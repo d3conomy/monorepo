@@ -127,4 +127,15 @@ class IpfsFileSystemLevel extends StackLevel {
         });
     }
 }
-export { Libp2pLevel, IpfsLevel, OrbitDbLevel, DatabaseLevel, GossipSubLevel, IpfsFileSystemLevel };
+class CustomLevel extends StackLevel {
+    constructor({ id, options, builder, dependant }) {
+        super({
+            id,
+            type: InstanceTypes.custom,
+            options,
+            builder: builder,
+            dependant,
+        });
+    }
+}
+export { Libp2pLevel, IpfsLevel, OrbitDbLevel, DatabaseLevel, GossipSubLevel, IpfsFileSystemLevel, CustomLevel };

@@ -1,52 +1,112 @@
-"use strict";
-// import { Libp2p } from 'libp2p';
-// import { GossipSubContainer } from '../container-libp2p-pubsub/index.js';
-// import { Libp2pContainer } from '../container-libp2p/index.js';
-// import { Commands } from '../container/commands.js';
-// import { Container } from '../container/index.js';
-// import { InstanceType, InstanceTypes } from '../container/instance.js';
-// import { InstanceOptions } from '../container/options.js';
-// import { ContainerId, PodId } from '../id-reference-factory/IdReferenceClasses.js';
-// import { ContainerTemplate, PodTemplate } from '../manifest/templatesV1.js';
-// import { LunarPodOptions, lunarPodOptions } from './options.js';
-// // import { Stack, StackType } from './stack.js';
-// import { IdReferenceFactory } from '../id-reference-factory/IdReferenceFactory.js';
-// import { DatabaseStack, GossipSubStack, IpfsFileSystemStack, StackType, StackTypes } from './stack.js';
-// import { OpenDbOptions } from '../container-orbitdb-open/options.js';
-// import { IpfsContainer } from '../container-ipfs-helia/index.js';
-// import { OrbitDbContainer } from '../container-orbitdb/index.js';
-// import { DatabaseContainer } from '../container-orbitdb-open/index.js';
-// import { Job, JobQueue } from '../container/jobs.js';
-// // Define the Pod class
-// class Pod
-//     implements Pick<Container, 'options' | 'jobs'>
-// {
-//     private libp2p?: Libp2pContainer;
-//     private ipfs?: IpfsContainer;
-//     private orbitdb?: OrbitDbContainer;
-//     private databases: Array<DatabaseContainer> = [];
-//     private gossipsub?: GossipSubContainer;
-//     private fileSystem?: IpfsFileSystemStack;
-//     private jobs: JobQueue = new JobQueue();
-//     // private containers: Map<ContainerId, Container | Container[] | undefined> = new Map<ContainerId, Container | Container[] | undefined>();
-//     private options: InstanceOptions;
-//     private readonly idReferenceFactory: IdReferenceFactory; 
-//     public readonly id: PodId;
-//     // public readonly template?: PodTemplate;
-//     constructor(id: PodId, idReferenceFactory: IdReferenceFactory, options: InstanceOptions)
-//     {
-//         this.id = id;
-//         this.idReferenceFactory = idReferenceFactory;
-//         this.options = new LunarPodOptions(options, true);
-//     }
-//     private async createContainer<T extends Container>(
-//         id: ContainerId,
-//         type: InstanceType,
-//         options: InstanceOptions,
-//         builder: (id: ContainerId, options?: InstanceOptions) => Promise<T>
-//     ): Promise<T>
-//     {
-//         return await builder(id, options);
-//     }
-// }
-// export { Pod };
+import { IdReferenceTypes } from "../id-reference-factory/IdReferenceConstants.js";
+import { StackFactory, StackTypes } from "./stack.js";
+class LunarPod {
+    id;
+    options;
+    idReferenceFactory;
+    stacks = new Array();
+    constructor({ id, options, idReferenceFactory, stacks }) {
+        this.id = id;
+        this.options = options;
+        this.idReferenceFactory = idReferenceFactory;
+        stacks?.forEach(stack => {
+            this.addStack(stack);
+        });
+    }
+    async init() {
+        await this.createStack({
+            type: StackTypes.Database,
+            options: this.options
+        });
+    }
+    verifyStack(stack) {
+        // Currently allow only a single stack per pod
+        if (this.stacks.length > 0) {
+            throw new Error('Pod already has a stack');
+        }
+        return true;
+    }
+    addStack(stack) {
+        if (this.verifyStack(stack)) {
+            this.stacks.push(stack);
+            return stack;
+        }
+    }
+    async createStack({ type, options }) {
+        let stack;
+        switch (type) {
+            case StackTypes.Database:
+                stack = await StackFactory.createStack(StackTypes.Database, this.id, this.idReferenceFactory, options);
+                break;
+            case StackTypes.GossipSub:
+                stack = await StackFactory.createStack(StackTypes.GossipSub, this.id, this.idReferenceFactory, options);
+                break;
+            case StackTypes.IpfsFileSystem:
+                stack = await StackFactory.createStack(StackTypes.IpfsFileSystem, this.id, this.idReferenceFactory, options);
+                break;
+            default:
+                throw new Error('Invalid stack type');
+        }
+        this.addStack(stack);
+        return stack;
+    }
+    getStacks() {
+        return this.stacks;
+    }
+    getContainers() {
+        let containers = new Array();
+        this.getStacks().forEach(stack => {
+            containers = containers.concat(stack.getContainers());
+        });
+        return containers;
+    }
+    createJob({ command, containerId, params }) {
+        const jobId = this.idReferenceFactory.createIdReference({ type: IdReferenceTypes.JOB, dependsOn: containerId });
+        const containerCommand = this.getContainers().find(container => container?.id === containerId)?.commands.get(command);
+        if (containerCommand === undefined) {
+            throw new Error('Command not found');
+        }
+        const job = {
+            id: jobId,
+            command: containerCommand,
+            params: params
+        };
+        this.queueJob(job);
+        return job;
+    }
+    queueJob(job) {
+        const containerId = job.id.componentId;
+        const containers = this.getContainers();
+        containers.forEach(container => {
+            if (container?.id === containerId) {
+                container.jobs.enqueue(job);
+            }
+        });
+    }
+    async runJobs() {
+        const containers = this.getContainers();
+        containers.forEach(container => {
+            if (container?.jobs.isEmpty() === false) {
+                container?.jobs.run();
+            }
+        });
+    }
+    async stop() {
+        for (const container of this.getContainers()) {
+            const containerType = container?.type;
+            if (containerType === ('libp2p' || 'ipfs')) {
+                container?.jobs.enqueue({
+                    id: this.idReferenceFactory.createIdReference({ type: IdReferenceTypes.JOB, dependsOn: container.id }),
+                    command: container.commands.get('stop')
+                });
+            }
+            if (containerType === 'database') {
+                container?.jobs.enqueue({
+                    id: this.idReferenceFactory.createIdReference({ type: IdReferenceTypes.JOB, dependsOn: container.id }),
+                    command: container.commands.get('close')
+                });
+            }
+        }
+    }
+}
+export { LunarPod };

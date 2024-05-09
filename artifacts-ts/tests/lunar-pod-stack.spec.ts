@@ -42,50 +42,55 @@ describe('StackFactory', () => {
             expect(stack.orbitdb).to.exist;
             expect(stack.databases).to.exist;
 
-            stack.databases[0].container?.jobs.enqueue({
-                id: createId('job') as JobId,
-                command: stack.databases[0].container?.commands.get('put'),
-                params: [
-                    {
-                        name: 'key',
-                        value: 'test-key'
-                    } as CommandArg<string>,
-                    {
-                        name: 'value',
-                        value: 'test-value'
-                    } as CommandArg<string>,
-                ]
-            });
 
-            for (let i = 0; i < 100; i++) {
+            if (stack.databases) {
                 stack.databases[0].container?.jobs.enqueue({
                     id: createId('job') as JobId,
                     command: stack.databases[0].container?.commands.get('put'),
                     params: [
                         {
                             name: 'key',
-                            value: `test-key-${i}`
+                            value: 'test-key'
                         } as CommandArg<string>,
                         {
                             name: 'value',
-                            value: `test-value-${i}`
+                            value: 'test-value'
                         } as CommandArg<string>,
                     ]
                 });
+
+                for (let i = 0; i < 100; i++) {
+                    
+                    stack.databases[0].container?.jobs.enqueue({
+                        id: createId('job') as JobId,
+                        command: stack.databases[0].container?.commands.get('put'),
+                        params: [
+                            {
+                                name: 'key',
+                                value: `test-key-${i}`
+                            } as CommandArg<string>,
+                            {
+                                name: 'value',
+                                value: `test-value-${i}`
+                            } as CommandArg<string>,
+                        ]
+                    });
+                }
+
+
+                await stack.databases[0].container?.jobs.run();
+
+                const address = await stack.databases[0].container?.jobs.execute({
+                    id: createId('job') as JobId,
+                    command: stack.databases[0].container?.commands.get('address')
+                });
+
+                console.log(address?.result?.output);
+
+                await stack.databases[0].container?.getInstance().close();
+                await stack.ipfs?.container?.getInstance().stop();
+                await stack.libp2p?.container?.getInstance().stop();
             }
-
-            await stack.databases[0].container?.jobs.run();
-
-            const address = await stack.databases[0].container?.jobs.execute({
-                id: createId('job') as JobId,
-                command: stack.databases[0].container?.commands.get('address')
-            });
-
-            console.log(address?.result?.output);
-
-            await stack.databases[0].container?.getInstance().close();
-            await stack.ipfs.container?.getInstance().stop();
-            await stack.libp2p.container?.getInstance().stop();
 
             // await stack.orbitdb.container?.getInstance().stop();
             // await stack.databases[0].container?.getInstance().close();

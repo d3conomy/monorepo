@@ -8,9 +8,10 @@ import { IpfsFileSystemContainer } from "../container-ipfs-helia-filesystem/inde
 import { ContainerId } from "../id-reference-factory/IdReferenceClasses.js"
 
 import { InstanceTypes } from "../container/instance.js";
+import { Container } from "../container/index.js"
 
 
-type StackContainers = Libp2pContainer | IpfsContainer | OrbitDbContainer | DatabaseContainer | GossipSubContainer | IpfsFileSystemContainer;
+type StackContainers = Libp2pContainer | IpfsContainer | OrbitDbContainer | DatabaseContainer | GossipSubContainer | IpfsFileSystemContainer | Container<InstanceTypes.custom>;
 
 class StackLevel<T = StackContainers, U = StackContainers > {
     id: ContainerId;
@@ -160,7 +161,29 @@ class IpfsFileSystemLevel extends StackLevel<IpfsFileSystemContainer, IpfsContai
     }
 }
 
-type StackLevels = Libp2pLevel | IpfsLevel | OrbitDbLevel | DatabaseLevel | GossipSubLevel | IpfsFileSystemLevel;
+class CustomLevel extends StackLevel<Container<InstanceTypes.custom>, undefined | StackContainers> {
+    constructor({
+        id,
+        options,
+        builder,
+        dependant
+    }: {
+        id: ContainerId,
+        options?: InstanceOptions,
+        builder: (id: ContainerId, options: InstanceOptions, dependant?: undefined | StackContainers) => Promise<Container<InstanceTypes.custom>>,
+        dependant?: undefined | StackContainers
+    }) {
+        super({
+            id,
+            type: InstanceTypes.custom,
+            options,
+            builder: builder,
+            dependant,
+        });
+    }
+}
+
+type StackLevels = Libp2pLevel | IpfsLevel | OrbitDbLevel | DatabaseLevel | GossipSubLevel | IpfsFileSystemLevel | CustomLevel;
 
 export {
     Libp2pLevel,
@@ -169,6 +192,7 @@ export {
     DatabaseLevel,
     GossipSubLevel,
     IpfsFileSystemLevel,
+    CustomLevel,
     StackContainers,
     StackLevels
 }
