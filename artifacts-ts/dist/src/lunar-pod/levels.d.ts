@@ -65,5 +65,6 @@ declare class IpfsFileSystemLevel extends StackLevel<IpfsFileSystemContainer, Ip
         dependant?: IpfsContainer;
     });
 }
-export { Libp2pLevel, IpfsLevel, OrbitDbLevel, DatabaseLevel, GossipSubLevel, IpfsFileSystemLevel, StackContainers };
+type StackLevels = Libp2pLevel | IpfsLevel | OrbitDbLevel | DatabaseLevel | GossipSubLevel | IpfsFileSystemLevel;
+export { Libp2pLevel, IpfsLevel, OrbitDbLevel, DatabaseLevel, GossipSubLevel, IpfsFileSystemLevel, StackContainers, StackLevels };
 //# sourceMappingURL=levels.d.ts.map

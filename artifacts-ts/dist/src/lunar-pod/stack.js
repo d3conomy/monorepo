@@ -7,6 +7,7 @@ var StackTypes;
     StackTypes["IpfsFileSystem"] = "ipfs-filesystem";
 })(StackTypes || (StackTypes = {}));
 class StackFactory {
+    databases = [];
     static async createStack(type, podId, idReferenceFactory, options) {
         const containerId = () => { return idReferenceFactory.createIdReference({ type: IdReferenceTypes.CONTAINER, dependsOn: podId }); };
         console.log(containerId());

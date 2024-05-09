@@ -160,6 +160,8 @@ class IpfsFileSystemLevel extends StackLevel<IpfsFileSystemContainer, IpfsContai
     }
 }
 
+type StackLevels = Libp2pLevel | IpfsLevel | OrbitDbLevel | DatabaseLevel | GossipSubLevel | IpfsFileSystemLevel;
+
 export {
     Libp2pLevel,
     IpfsLevel,
@@ -167,5 +169,6 @@ export {
     DatabaseLevel,
     GossipSubLevel,
     IpfsFileSystemLevel,
-    StackContainers
+    StackContainers,
+    StackLevels
 }

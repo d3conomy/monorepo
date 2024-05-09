@@ -20,6 +20,7 @@ declare enum StackTypes {
     IpfsFileSystem = "ipfs-filesystem"
 }
 declare class StackFactory {
+    databases: DatabaseLevel[];
     static createStack<T = Stacks>(type: StackTypes, podId: PodId, idReferenceFactory: IdReferenceFactory, options?: LunarPodOptions): Promise<T>;
 }
 export { Stack, DatabaseStack, GossipSubStack, IpfsFileSystemStack, Stacks, StackTypes, StackFactory };

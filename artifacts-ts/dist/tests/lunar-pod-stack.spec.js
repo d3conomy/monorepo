@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { StackFactory, StackTypes } from '../src/lunar-pod/stack.js';
+import { createId } from './helpers.js';
 import { IdReferenceFactory } from '../src/id-reference-factory/index.js';
 import { LunarPodOptions } from '../src/lunar-pod/options.js';
 import { InstanceOptions } from '../src/container/options.js';
@@ -19,6 +20,10 @@ describe('StackFactory', () => {
                     {
                         name: 'databaseType',
                         value: OrbitDbTypes.EVENTS
+                    },
+                    {
+                        name: 'start',
+                        value: true
                     }
                 ] }));
             const idReferenceFactory = new IdReferenceFactory();
@@ -31,6 +36,47 @@ describe('StackFactory', () => {
             expect(stack.ipfs).to.exist;
             expect(stack.orbitdb).to.exist;
             expect(stack.databases).to.exist;
+            stack.databases[0].container?.jobs.enqueue({
+                id: createId('job'),
+                command: stack.databases[0].container?.commands.get('put'),
+                params: [
+                    {
+                        name: 'key',
+                        value: 'test-key'
+                    },
+                    {
+                        name: 'value',
+                        value: 'test-value'
+                    },
+                ]
+            });
+            for (let i = 0; i < 100; i++) {
+                stack.databases[0].container?.jobs.enqueue({
+                    id: createId('job'),
+                    command: stack.databases[0].container?.commands.get('put'),
+                    params: [
+                        {
+                            name: 'key',
+                            value: `test-key-${i}`
+                        },
+                        {
+                            name: 'value',
+                            value: `test-value-${i}`
+                        },
+                    ]
+                });
+            }
+            await stack.databases[0].container?.jobs.run();
+            const address = await stack.databases[0].container?.jobs.execute({
+                id: createId('job'),
+                command: stack.databases[0].container?.commands.get('address')
+            });
+            console.log(address?.result?.output);
+            await stack.databases[0].container?.getInstance().close();
+            await stack.ipfs.container?.getInstance().stop();
+            await stack.libp2p.container?.getInstance().stop();
+            // await stack.orbitdb.container?.getInstance().stop();
+            // await stack.databases[0].container?.getInstance().close();
         });
     });
 });

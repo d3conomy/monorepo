@@ -26,6 +26,7 @@ enum StackTypes {
 }
 
 class StackFactory{
+    databases: DatabaseLevel[] = [];
 
     static async createStack<T = Stacks>(type: StackTypes, podId: PodId, idReferenceFactory: IdReferenceFactory, options?: LunarPodOptions): Promise<T> {
         const containerId = () => { return idReferenceFactory.createIdReference({type: IdReferenceTypes.CONTAINER, dependsOn: podId}) as ContainerId};
