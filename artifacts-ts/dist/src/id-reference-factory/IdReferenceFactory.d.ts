@@ -1,8 +1,8 @@
-import { IdReference, JobId, MoonbaseId, PodBayId, PodId, PodProcessId, SystemId } from "./IdReferenceClasses.js";
+import { ContainerId, IdReference, JobId, MoonbaseId, PodBayId, PodId, PodProcessId, SystemId } from "./IdReferenceClasses.js";
 import { IdReferenceConfig } from "./IdReferenceConfig.js";
 import { IdReferenceFormats, IdReferenceTypes } from "./IdReferenceConstants.js";
 import { MetaData } from "./IdReferenceMetadata.js";
-type IdTypes = PodBayId | PodId | SystemId | MoonbaseId | JobId | PodProcessId | IdReference;
+type IdTypes = PodBayId | PodId | SystemId | MoonbaseId | JobId | PodProcessId | IdReference | ContainerId;
 declare class IdReferenceFactory {
     ids: Array<IdReference>;
     config: IdReferenceConfig;

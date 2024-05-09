@@ -61,7 +61,9 @@ class LunarPod {
         return containers;
     }
     createJob({ command, containerId, params }) {
+        console.log(`containerId in createJob: ${containerId}`);
         const jobId = this.idReferenceFactory.createIdReference({ type: IdReferenceTypes.JOB, dependsOn: containerId });
+        console.log(`jobId: ${jobId.componentId}`);
         const containerCommand = this.getContainers().find(container => container?.id === containerId)?.commands.get(command);
         if (containerCommand === undefined) {
             throw new Error('Command not found');
@@ -72,9 +74,13 @@ class LunarPod {
             params: params
         };
         this.queueJob(job);
-        return job;
+        return {
+            job,
+            containerId
+        };
     }
     queueJob(job) {
+        console.log(`componentId: ${job.id.componentId}`);
         const containerId = job.id.componentId;
         const containers = this.getContainers();
         containers.forEach(container => {
@@ -85,11 +91,17 @@ class LunarPod {
     }
     async runJobs() {
         const containers = this.getContainers();
-        containers.forEach(container => {
-            if (container?.jobs.isEmpty() === false) {
-                container?.jobs.run();
+        let jobs = new Array();
+        for (const container of containers) {
+            const completedJobs = await container?.jobs.run();
+            if (completedJobs === undefined) {
+                continue;
             }
-        });
+            for (const job of completedJobs) {
+                jobs.push(job);
+            }
+        }
+        return jobs;
     }
     async stop() {
         for (const container of this.getContainers()) {

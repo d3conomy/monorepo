@@ -52,6 +52,49 @@ describe('PodBay', () => {
         });
         expect(pod).to.exist;
     });
+    it('should run a job on a pod', async () => {
+        const podId = idReferenceFactory.createIdReference({ type: 'pod', dependsOn: podBay.id });
+        const pod = await podBay.createPod({
+            id: podId,
+            options: new LunarPodOptions(new InstanceOptions({ options: [
+                    {
+                        name: 'directory',
+                        value: './orbitdb/test5'
+                    },
+                    {
+                        name: 'databaseName',
+                        value: 'test5-db'
+                    },
+                    {
+                        name: 'databaseType',
+                        value: OrbitDbTypes.EVENTS
+                    },
+                    {
+                        name: 'start',
+                        value: true
+                    }
+                ] })),
+            initialize: true
+        });
+        const databasePodId = pod.getContainers().find((container) => container?.type === 'database')?.id;
+        console.log(`databasePodId: ${databasePodId}`);
+        const job = pod.createJob({
+            command: 'add',
+            containerId: databasePodId,
+            params: [
+                {
+                    name: 'data',
+                    value: 'test-key'
+                }
+            ]
+        });
+        console.log(`Job: ${job.containerId}`);
+        const jobs = await pod.runJobs();
+        for (const job of jobs) {
+            console.log(`Job: ${job.result?.output}`);
+        }
+        expect(pod.getContainers().find((container) => container?.type === 'database')?.jobs.isEmpty()).to.be.true;
+    });
     it('should not add more than 10 pods', async () => {
         const podId = () => idReferenceFactory.createIdReference({ type: 'pod', dependsOn: podBay.id });
         for (let i = 0; i < 10; i++) {

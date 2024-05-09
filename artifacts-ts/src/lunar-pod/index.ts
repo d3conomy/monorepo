@@ -86,7 +86,7 @@ class LunarPod {
         return this.stacks;
     }
 
-    private getContainers(): Array<StackContainers | undefined> {
+    public getContainers(): Array<StackContainers | undefined> {
         let containers: Array<StackContainers | undefined> = new Array<StackContainers | undefined>();
         this.getStacks().forEach(stack => {
             containers = containers.concat(stack.getContainers());
@@ -102,8 +102,12 @@ class LunarPod {
         command: string,
         containerId: ContainerId,
         params: Array<{name: string, value: string}>
-    }): Job {
-        const jobId = this.idReferenceFactory.createIdReference({type: IdReferenceTypes.JOB, dependsOn: containerId}) as JobId;
+    }): { job: Job, containerId: ContainerId} {
+        console.log(`containerId in createJob: ${containerId}`)
+
+        const jobId = this.idReferenceFactory.createIdReference({type: IdReferenceTypes.JOB, dependsOn: containerId});
+        console.log(`jobId: ${jobId.componentId}`)
+        
         const containerCommand = this.getContainers().find(container => container?.id === containerId)?.commands.get(command);
         
         if (containerCommand === undefined) {
@@ -117,10 +121,14 @@ class LunarPod {
         } as Job;
 
         this.queueJob(job);
-        return job;
+        return {
+            job,
+            containerId
+        };
     }
 
     private queueJob(job: Job): void {
+        console.log(`componentId: ${job.id.componentId}`)
         const containerId = job.id.componentId
         const containers = this.getContainers();
         containers.forEach(container => { 
@@ -130,13 +138,19 @@ class LunarPod {
         });
     }
 
-    public async runJobs(): Promise<void> {
+    public async runJobs(): Promise<Job[]> {
         const containers = this.getContainers();
-        containers.forEach(container => {
-            if (container?.jobs.isEmpty() === false) {
-                container?.jobs.run();
+        let jobs: Array<Job> = new Array<Job>();
+        for (const container of containers) {
+            const completedJobs = await container?.jobs.run();
+            if (completedJobs === undefined) {
+                continue;
             }
-        });
+            for (const job of completedJobs) {
+                jobs.push(job);
+            }
+        }
+        return jobs;
     }
 
     public async stop(): Promise<void> {

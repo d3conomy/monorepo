@@ -2,6 +2,7 @@ import { Job } from "../container/jobs.js";
 import { InstanceOptions } from "../container/options.js";
 import { ContainerId, PodId } from "../id-reference-factory/IdReferenceClasses.js";
 import { IdReferenceFactory } from "../id-reference-factory/IdReferenceFactory.js";
+import { StackContainers } from "./levels.js";
 import { LunarPodOptions } from "./options.js";
 import { Stack, Stacks } from "./stack.js";
 declare class LunarPod {
@@ -20,7 +21,7 @@ declare class LunarPod {
     addStack(stack: Stacks): Stacks | undefined;
     private createStack;
     private getStacks;
-    private getContainers;
+    getContainers(): Array<StackContainers | undefined>;
     createJob({ command, containerId, params }: {
         command: string;
         containerId: ContainerId;
@@ -28,9 +29,12 @@ declare class LunarPod {
             name: string;
             value: string;
         }>;
-    }): Job;
+    }): {
+        job: Job;
+        containerId: ContainerId;
+    };
     private queueJob;
-    runJobs(): Promise<void>;
+    runJobs(): Promise<Job[]>;
     stop(): Promise<void>;
 }
 export { LunarPod };

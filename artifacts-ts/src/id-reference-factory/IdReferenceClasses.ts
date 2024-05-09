@@ -199,7 +199,10 @@ class JobId
         format?: IdReferenceFormats | string
     }) {
         super({name, metadata, format});
+        console.log(`setting componentId: ${componentId}`)
         this.componentId = componentId;
+
+        console.log(`componentId: ${this.componentId}`)
     }
 }
 

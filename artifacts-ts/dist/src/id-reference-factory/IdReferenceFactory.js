@@ -32,12 +32,13 @@ class IdReferenceFactory {
         if (dependsOn && typeof dependsOn === "string") {
             dependsOnId = this.getIdReference(dependsOn);
         }
-        else if (dependsOn instanceof PodBayId || dependsOn instanceof PodId || dependsOn instanceof SystemId || dependsOn instanceof MoonbaseId) {
+        else if (dependsOn instanceof ContainerId || dependsOn instanceof PodBayId || dependsOn instanceof PodId || dependsOn instanceof SystemId || dependsOn instanceof MoonbaseId) {
             dependsOnId = dependsOn;
         }
         else if (type === IdReferenceTypes.SYSTEM) {
             dependsOnId = undefined;
         }
+        console.log(`dependsOnId: ${dependsOnId}`);
         if (metadata instanceof Map) {
             metadata = new MetaData({
                 mapped: metadata,
@@ -71,10 +72,12 @@ class IdReferenceFactory {
                 break;
             case IdReferenceTypes.JOB:
                 idref = new JobId({ name, metadata, format, componentId: dependsOnId });
+                break;
             default:
                 idref = new IdReference({ name, metadata, format });
         }
         this.ids.push(idref);
+        // console.log(`idref: ${idref}`)
         return idref;
     }
     getIdReference(name) {
