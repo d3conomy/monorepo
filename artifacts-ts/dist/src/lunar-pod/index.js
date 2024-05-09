@@ -107,6 +107,7 @@ class LunarPod {
                 });
             }
         }
+        await this.runJobs();
     }
 }
 export { LunarPod };
