@@ -8,9 +8,7 @@ import { InstanceTypes } from '../container/instance.js';
  * @category Database
  */
 const databaseInitializer = async (options, id) => {
-    // options.injectDefaults(openDbOptions())
     const { orbitdb, databaseName, databaseType, databaseOptions, directory } = options.toParams();
-    console.log(`opening database: ${databaseName}`);
     await removeLock({ podId: id.podId.name, address: databaseName, directory: directory });
     let sync = false;
     if (databaseName.startsWith('/orbitdb')) {
@@ -19,12 +17,9 @@ const databaseInitializer = async (options, id) => {
     try {
         let openDatabaseOptions = {
             type: databaseType,
-            // AccessController: OrbitDBAccessController({
-            //     write: ['*']
-            // }),
             sync: true,
         };
-        console.log(`opening using orbitdb instance: ${orbitdb.id} for database: ${databaseName} with options: ${JSON.stringify(openDatabaseOptions)} and type: ${databaseType}`);
+        // console.log(`opening using orbitdb instance: ${orbitdb.id} for database: ${databaseName} with options: ${JSON.stringify(openDatabaseOptions)} and type: ${databaseType}`)
         return await orbitdb.getInstance().open(databaseName, {
             ...openDatabaseOptions,
             // ...databaseOptions,

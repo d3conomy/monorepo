@@ -1,3 +1,4 @@
+import { InstanceTypes } from "../container/instance.js";
 import { Job } from "../container/jobs.js";
 import { InstanceOptions } from "../container/options.js";
 import { ContainerId, PodId } from "../id-reference-factory/IdReferenceClasses.js";
@@ -22,6 +23,8 @@ declare class LunarPod {
     private createStack;
     private getStacks;
     getContainers(): Array<StackContainers | undefined>;
+    getContainer(id: ContainerId | string): StackContainers | undefined;
+    getContainerByType(type: InstanceTypes): StackContainers | undefined;
     createJob({ command, containerId, params }: {
         command: string;
         containerId: ContainerId;

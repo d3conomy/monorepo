@@ -31,7 +31,7 @@ describe('Libp2pJobs', async () => {
 
         expect(container.jobs.completed.length).to.equal(1);
 
-        console.log(container.jobs.completed[0].result);
+        // console.log(container.jobs.completed[0].result);
         await container.getInstance().stop();
 
     });
@@ -77,7 +77,7 @@ describe('Libp2pJobs', async () => {
 
         expect(container.jobs.completed.length).to.equal(6);
 
-        console.log(container.jobs.completed[1].result);
+        // console.log(container.jobs.completed[1].result);
         await container.getInstance().stop();
     
     });

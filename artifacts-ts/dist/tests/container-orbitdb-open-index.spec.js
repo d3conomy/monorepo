@@ -72,8 +72,8 @@ describe('DatabaseContainer', async () => {
             id: createId('job'),
             command: database.commands.get('close')
         });
-        const jobs = await database.jobs.run();
-        console.log(jobs);
+        await database.jobs.run();
+        // console.log(jobs);
         expect(database.jobs.completed.length).to.equal(2);
         // await orbitDbContainer.getInstance().stop();
         await ipfsContainer.getInstance().stop();

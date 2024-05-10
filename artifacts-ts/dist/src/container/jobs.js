@@ -6,15 +6,40 @@ class JobQueue {
     stopFlag = true;
     instance;
     constructor(instance) {
-        this.instance = instance;
+        this.setInstance(instance);
     }
     hasInstance() {
         return this.instance !== undefined;
     }
-    setInstance(instance) {
+    setInstance(instance, overwrite = false) {
+        if (this.instance !== undefined && overwrite === false) {
+            throw new Error('Instance already set');
+        }
         this.instance = instance;
     }
+    verifyJob(job) {
+        if (job.command === undefined) {
+            return false;
+        }
+        if (this.verifyJobParams(job) === false) {
+            return false;
+        }
+        for (const queuedJob of this.queue) {
+            if (queuedJob.id === job.id) {
+                return false;
+            }
+        }
+        for (const completedJob of this.completed) {
+            if (completedJob.id === job.id) {
+                return false;
+            }
+        }
+        return true;
+    }
     enqueue(job) {
+        // if (!this.verifyJob(job)) {
+        //     throw new Error('Invalid job');
+        // }
         this.queue.push(job);
     }
     dequeue(jobid) {

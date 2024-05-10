@@ -90,9 +90,9 @@ describe('PodBay', () => {
 
         const databasePodId = pod.getContainers().find((container) => container?.type === 'database' )?.id as ContainerId;
 
-        console.log(`databasePodId: ${databasePodId}`);
+        // console.log(`databasePodId: ${databasePodId}`);
 
-        const job = pod.createJob({
+        pod.createJob({
             command: 'add',
             containerId: databasePodId,
             params: [
@@ -103,12 +103,25 @@ describe('PodBay', () => {
             ]
         });
 
-        console.log(`Job: ${job.containerId}`);
+        for (let i = 0; i < 100; i++) {
+            pod.createJob({
+                command: 'add',
+                containerId: databasePodId,
+                params: [
+                    {
+                        name: 'data',
+                        value: `test-key-${i}`
+                    }
+                ]
+            });
+        }
+
+        // console.log(`Job: ${job.containerId}`);
 
         const jobs = await pod.runJobs();
-        for (const job of jobs) {
-            console.log(`Job: ${job.result?.output}`);
-        }
+        // for (const job of jobs) {
+        //     console.log(`Job: ${job.result?.output}`);
+        // }
 
         expect(pod.getContainers().find((container) => container?.type === 'database' )?.jobs.isEmpty()).to.be.true;
 

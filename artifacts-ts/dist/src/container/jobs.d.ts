@@ -16,7 +16,8 @@ declare class JobQueue {
     private instance;
     constructor(instance?: any);
     hasInstance(): boolean;
-    setInstance(instance: any): void;
+    setInstance(instance: any, overwrite?: boolean): void;
+    verifyJob(job: Job): boolean;
     enqueue(job: Job): void;
     dequeue(jobid?: JobId): Job | undefined;
     isEmpty(): boolean;

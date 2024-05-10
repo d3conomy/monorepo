@@ -77,8 +77,8 @@ describe('PodBay', () => {
             initialize: true
         });
         const databasePodId = pod.getContainers().find((container) => container?.type === 'database')?.id;
-        console.log(`databasePodId: ${databasePodId}`);
-        const job = pod.createJob({
+        // console.log(`databasePodId: ${databasePodId}`);
+        pod.createJob({
             command: 'add',
             containerId: databasePodId,
             params: [
@@ -88,11 +88,23 @@ describe('PodBay', () => {
                 }
             ]
         });
-        console.log(`Job: ${job.containerId}`);
-        const jobs = await pod.runJobs();
-        for (const job of jobs) {
-            console.log(`Job: ${job.result?.output}`);
+        for (let i = 0; i < 100; i++) {
+            pod.createJob({
+                command: 'add',
+                containerId: databasePodId,
+                params: [
+                    {
+                        name: 'data',
+                        value: `test-key-${i}`
+                    }
+                ]
+            });
         }
+        // console.log(`Job: ${job.containerId}`);
+        const jobs = await pod.runJobs();
+        // for (const job of jobs) {
+        //     console.log(`Job: ${job.result?.output}`);
+        // }
         expect(pod.getContainers().find((container) => container?.type === 'database')?.jobs.isEmpty()).to.be.true;
     });
     it('should not add more than 10 pods', async () => {

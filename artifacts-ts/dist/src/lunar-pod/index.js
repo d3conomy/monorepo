@@ -1,3 +1,4 @@
+import { ContainerId } from "../id-reference-factory/IdReferenceClasses.js";
 import { IdReferenceTypes } from "../id-reference-factory/IdReferenceConstants.js";
 import { StackFactory, StackTypes } from "./stack.js";
 class LunarPod {
@@ -14,10 +15,14 @@ class LunarPod {
         });
     }
     async init() {
+        let type = this.options.get('stack');
+        type = type !== undefined ? type : StackTypes.Database;
+        // if (type !== undefined) {
         await this.createStack({
-            type: StackTypes.Database,
+            type: type,
             options: this.options
         });
+        // }
     }
     verifyStack(stack) {
         // Currently allow only a single stack per pod
@@ -60,10 +65,33 @@ class LunarPod {
         });
         return containers;
     }
+    getContainer(id) {
+        let container = undefined;
+        this.getContainers().forEach(stackContainer => {
+            if (typeof id === 'string') {
+                if (stackContainer?.id.name === id) {
+                    container = stackContainer;
+                }
+            }
+            if (id instanceof ContainerId) {
+                if (stackContainer?.id === id) {
+                    container = stackContainer;
+                }
+            }
+        });
+        return container;
+    }
+    getContainerByType(type) {
+        let container = undefined;
+        this.getContainers().forEach(stackContainer => {
+            if (stackContainer?.type === type) {
+                container = stackContainer;
+            }
+        });
+        return container;
+    }
     createJob({ command, containerId, params }) {
-        console.log(`containerId in createJob: ${containerId}`);
         const jobId = this.idReferenceFactory.createIdReference({ type: IdReferenceTypes.JOB, dependsOn: containerId });
-        console.log(`jobId: ${jobId.componentId}`);
         const containerCommand = this.getContainers().find(container => container?.id === containerId)?.commands.get(command);
         if (containerCommand === undefined) {
             throw new Error('Command not found');
@@ -80,7 +108,6 @@ class LunarPod {
         };
     }
     queueJob(job) {
-        console.log(`componentId: ${job.id.componentId}`);
         const containerId = job.id.componentId;
         const containers = this.getContainers();
         containers.forEach(container => {

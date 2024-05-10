@@ -1,0 +1,1 @@
+{"version":3,"file":"options.d.ts","sourceRoot":"","sources":["../../../src/moonbase/options.ts"],"names":[],"mappings":"AAAA,OAAO,EAAkB,eAAe,EAAE,MAAM,yBAAyB,CAAC;AAE1E,QAAA,MAAM,eAAe,uBAMlB,CAAA;AAEH,cAAM,eAAgB,SAAQ,eAAe;gBAC7B,OAAO,CAAC,EAAE,eAAe,EAAE,QAAQ,GAAE,OAAc;CAGlE;AAED,OAAO,EAAE,eAAe,EAAE,eAAe,EAAE,CAAC"}

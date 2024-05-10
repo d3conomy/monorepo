@@ -85,7 +85,7 @@ describe('Levels', async () => {
             id: createId('job'),
             command: databaseLevel.container?.commands.get('address')
         });
-        console.log(address?.result?.output);
+        // console.log(address?.result?.output);
         const dboptions2 = new InstanceOptions({ options: [
                 {
                     name: 'databaseName',

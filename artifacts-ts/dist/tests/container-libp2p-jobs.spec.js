@@ -18,7 +18,7 @@ describe('Libp2pJobs', async () => {
         container.jobs.enqueue(job);
         await container.jobs.run();
         expect(container.jobs.completed.length).to.equal(1);
-        console.log(container.jobs.completed[0].result);
+        // console.log(container.jobs.completed[0].result);
         await container.getInstance().stop();
     });
     it('should run the peerId command of a container', async () => {
@@ -52,7 +52,7 @@ describe('Libp2pJobs', async () => {
         });
         await container.jobs.run();
         expect(container.jobs.completed.length).to.equal(6);
-        console.log(container.jobs.completed[1].result);
+        // console.log(container.jobs.completed[1].result);
         await container.getInstance().stop();
     });
 });

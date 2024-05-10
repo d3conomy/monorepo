@@ -10,7 +10,6 @@ import { InstanceTypes } from '../container/instance.js';
 const orbitDbInitializer = async (options) => {
     // options.injectDefaults(orbitDbOptions())
     const { ipfs, enableDID, identitySeed, identityProvider, directory } = options.toParams();
-    console.log(`creating orbitdb in directory: ${directory}`);
     if (enableDID === true) {
         return await createOrbitDB({
             ipfs: ipfs.getInstance(),

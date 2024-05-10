@@ -63,7 +63,7 @@ class IdReferenceFactory {
             dependsOnId = undefined;
         }
 
-        console.log(`dependsOnId: ${dependsOnId}`)
+        // console.log(`dependsOnId: ${dependsOnId}`)
 
         if (metadata instanceof Map) {
             metadata = new MetaData({
@@ -76,7 +76,6 @@ class IdReferenceFactory {
         }
         metadata.set("created", new Date());
         metadata.set("type", type);
-
 
         let idref: IdReference;
         switch (type) {
@@ -104,8 +103,8 @@ class IdReferenceFactory {
             default:
                 idref = new IdReference({name, metadata, format});
         }
+
         this.ids.push(idref);
-        // console.log(`idref: ${idref}`)
         return idref;
     }
 

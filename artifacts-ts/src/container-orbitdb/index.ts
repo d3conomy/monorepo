@@ -26,8 +26,6 @@ const orbitDbInitializer = async (
         directory
     } = options.toParams()
 
-    console.log(`creating orbitdb in directory: ${directory}`)
-
     if (enableDID === true) {
         return await createOrbitDB({
             ipfs: ipfs.getInstance(),

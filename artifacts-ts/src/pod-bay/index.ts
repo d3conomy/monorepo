@@ -1,7 +1,11 @@
 import { LunarPod } from "../lunar-pod/index.js";
-import { IdReferenceFactory, PodBayId, PodId } from "../id-reference-factory/index.js";
+import { ContainerId, IdReferenceFactory, PodBayId, PodId } from "../id-reference-factory/index.js";
 import { LunarPodOptions } from "../lunar-pod/options";
 import { InstanceOptions } from "../container/options";
+import { StackContainers } from "../lunar-pod/levels.js";
+import { Command } from "../container/commands.js";
+import { Container } from "../container/index.js";
+import { InstanceTypes } from "../container/instance.js";
 
 
 class PodBay {
@@ -89,6 +93,51 @@ class PodBay {
         } else {
             throw new Error('Pod not found');
         }
+    }
+
+    public getContainer(containerId?: ContainerId | string, type?: InstanceTypes): StackContainers {
+        let container: StackContainers | undefined = undefined;
+        if (typeof containerId === 'string') {
+            container = this.pods.map((pod: LunarPod) => pod.getContainer(containerId) !== undefined ? pod.getContainer(containerId) : undefined).find((container) => container !== undefined);
+        }
+        if (containerId instanceof ContainerId) {
+            container = this.pods.map((pod) => pod.getContainer(containerId as ContainerId) !== undefined ? pod.getContainer(containerId as ContainerId) : undefined).find((container) => container !== undefined) ;
+        }
+        if (type !== undefined) {
+            container = this.pods.map((pod) => pod.getContainerByType(type) !== undefined ? pod.getContainerByType(type) : undefined).find((container) => container !== undefined);
+        }
+        if (container === undefined) {
+            throw new Error('Container not found');
+        }
+        return container;
+    }
+
+    public getCommand(
+        command: string,
+        containerId?: ContainerId | string
+    ): Array<{
+        container: ContainerId,
+        command: Command
+    }> {
+        let containers: Array<Container> = new Array<Container>();
+        if (containerId) {
+            containers.push(this.getContainer(containerId));
+        } else {
+            const allContainers = this.pods.map(pod => pod.getContainers()).flat();
+            allContainers.forEach(container => {
+                containers.push(container as Container);
+            });
+        }
+
+        let containerCommand: Array<{container: ContainerId, command: Command}> = new Array<{container: ContainerId, command: Command}>();
+        for (const container of containers) {
+            let foundCommand = container.commands.get(command);
+            if (foundCommand !== undefined) {
+                containerCommand.push({container: container.id, command: foundCommand});
+            }
+        }
+
+        return containerCommand;
     }
 }
 

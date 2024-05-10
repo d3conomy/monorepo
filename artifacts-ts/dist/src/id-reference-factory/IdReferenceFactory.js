@@ -38,7 +38,7 @@ class IdReferenceFactory {
         else if (type === IdReferenceTypes.SYSTEM) {
             dependsOnId = undefined;
         }
-        console.log(`dependsOnId: ${dependsOnId}`);
+        // console.log(`dependsOnId: ${dependsOnId}`)
         if (metadata instanceof Map) {
             metadata = new MetaData({
                 mapped: metadata,
@@ -77,7 +77,6 @@ class IdReferenceFactory {
                 idref = new IdReference({ name, metadata, format });
         }
         this.ids.push(idref);
-        // console.log(`idref: ${idref}`)
         return idref;
     }
     getIdReference(name) {

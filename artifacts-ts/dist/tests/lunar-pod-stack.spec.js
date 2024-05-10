@@ -31,7 +31,6 @@ describe('StackFactory', () => {
             const moonbaseId = idReferenceFactory.createIdReference({ type: 'moonbase' });
             const podBayId = idReferenceFactory.createIdReference({ type: 'pod-bay', dependsOn: moonbaseId });
             const podId = idReferenceFactory.createIdReference({ type: 'pod', dependsOn: podBayId });
-            console.log(podId);
             const stack = await StackFactory.createStack(StackTypes.Database, podId, idReferenceFactory, options);
             expect(stack.libp2p).to.exist;
             expect(stack.ipfs).to.exist;
@@ -73,7 +72,6 @@ describe('StackFactory', () => {
                     id: createId('job'),
                     command: stack.databases[0].container?.commands.get('address')
                 });
-                console.log(address?.result?.output);
                 await stack.databases[0].container?.getInstance().close();
                 await stack.ipfs?.container?.getInstance().stop();
                 await stack.libp2p?.container?.getInstance().stop();

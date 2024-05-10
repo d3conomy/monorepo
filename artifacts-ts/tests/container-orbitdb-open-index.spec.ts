@@ -87,9 +87,9 @@ describe('DatabaseContainer', async () => {
             command: database.commands.get('close')
         });
 
-        const jobs = await database.jobs.run();
+        await database.jobs.run();
 
-        console.log(jobs);
+        // console.log(jobs);
 
         expect(database.jobs.completed.length).to.equal(2);
 

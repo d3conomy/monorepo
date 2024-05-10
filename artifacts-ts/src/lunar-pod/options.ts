@@ -5,6 +5,7 @@ import { openDbOptions } from "../container-orbitdb-open/options.js";
 import { PodBayId } from "../id-reference-factory/IdReferenceClasses.js";
 import { gossipSubOptions } from "../container-libp2p-pubsub/options.js";
 import { ipfsFileSystemOptions } from "../container-ipfs-helia-filesystem/options.js";
+import { StackTypes } from "./stack.js";
 
 
 const lunarPodOptions = (): InstanceOptions => {
@@ -19,6 +20,12 @@ const lunarPodOptions = (): InstanceOptions => {
             description: 'PodBay ID',
             required: true
         } as InstanceOption<PodBayId>,
+        {
+            name: 'stack',
+            description: 'Stack to run on the pod',
+            required: false,
+            defaultValue: StackTypes.Database
+        } as InstanceOption<StackTypes>,
         ...defaultLibp2pOptions().toArray(),
         ...ipfsFileSystemOptions().toArray(),
         ...orbitDbOptions().toArray(),

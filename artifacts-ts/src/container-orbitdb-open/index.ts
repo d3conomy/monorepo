@@ -21,8 +21,6 @@ const databaseInitializer = async (
     id: ContainerId
 ): Promise<typeof Database> => {
 
-    // options.injectDefaults(openDbOptions())
-
     const {
         orbitdb,
         databaseName,
@@ -30,8 +28,6 @@ const databaseInitializer = async (
         databaseOptions,
         directory
     } = options.toParams();
-
-    console.log(`opening database: ${databaseName}`)
 
     await removeLock({podId: id.podId.name, address: databaseName, directory: directory});
 
@@ -43,13 +39,10 @@ const databaseInitializer = async (
     try {
         let openDatabaseOptions = {
             type: databaseType,
-            // AccessController: OrbitDBAccessController({
-            //     write: ['*']
-            // }),
             sync: true,
         };
 
-        console.log(`opening using orbitdb instance: ${orbitdb.id} for database: ${databaseName} with options: ${JSON.stringify(openDatabaseOptions)} and type: ${databaseType}`)
+        // console.log(`opening using orbitdb instance: ${orbitdb.id} for database: ${databaseName} with options: ${JSON.stringify(openDatabaseOptions)} and type: ${databaseType}`)
 
         return await orbitdb.getInstance().open(
             databaseName,

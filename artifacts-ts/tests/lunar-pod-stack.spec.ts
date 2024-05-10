@@ -5,7 +5,7 @@ import { IdReferenceFactory, JobId, MoonbaseId, PodBayId, PodId } from '../src/i
 import { LunarPodOptions } from '../src/lunar-pod/options.js';
 import { InstanceOption, InstanceOptions } from '../src/container/options.js';
 import { OrbitDbTypes } from '../src/container-orbitdb-open/dbTypes.js';
-import { CommandArg } from './container/commands.js';
+import { CommandArg } from '../src/container/commands.js';
 import fs from 'fs/promises';
 
 describe('StackFactory', () => {
@@ -33,8 +33,6 @@ describe('StackFactory', () => {
             const moonbaseId = idReferenceFactory.createIdReference({type: 'moonbase'}) as MoonbaseId;
             const podBayId = idReferenceFactory.createIdReference({type: 'pod-bay', dependsOn: moonbaseId}) as PodBayId;
             const podId = idReferenceFactory.createIdReference({type: 'pod', dependsOn: podBayId}) as PodId;
-
-            console.log(podId)  
 
             const stack = await StackFactory.createStack<DatabaseStack>(StackTypes.Database, podId, idReferenceFactory, options);
 
@@ -85,8 +83,6 @@ describe('StackFactory', () => {
                     id: createId('job') as JobId,
                     command: stack.databases[0].container?.commands.get('address')
                 });
-
-                console.log(address?.result?.output);
 
                 await stack.databases[0].container?.getInstance().close();
                 await stack.ipfs?.container?.getInstance().stop();

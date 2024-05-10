@@ -4,7 +4,7 @@ describe('Libp2pOptions', () => {
     describe('createSubProcesses', () => {
         it('should create libp2p options with default options', async () => {
             const libp2pOptions = await createLibp2pOptions();
-            console.log(libp2pOptions);
+            // console.log(libp2pOptions)
             expect(libp2pOptions.start).to.equal(false);
             // expect(libp2pOptions.addresses?.listen).to.deep.equal([]);
             // expect(libp2pOptions.connectionEncryption).to.deep.equal([]);

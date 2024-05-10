@@ -47,7 +47,6 @@ describe('src/log-books-manager/LogBooksManager.js', () => {
     it('should get all entries from all log books', () => {
         logBooksManager.create('Test LogBook 1', LogLevel.INFO);
         logBooksManager.create('Test LogBook 2', LogLevel.DEBUG);
-        console.log(logBooksManager.books);
         const logBook1 = logBooksManager.get('Test LogBook 1');
         const logBook2 = logBooksManager.get('Test LogBook 2');
         const entry1 = new LogEntry({ message: 'Test message 1', level: LogLevel.INFO, printLevel: LogLevel.INFO });
@@ -55,7 +54,6 @@ describe('src/log-books-manager/LogBooksManager.js', () => {
         logBook1.add(entry1);
         logBook2.add(entry2);
         const allEntries = logBooksManager.getLastEntries();
-        console.log(allEntries);
         expect(allEntries.size).to.be.equal(2);
         expect(allEntries.get('Test LogBook 1-1')).to.be.equal(entry1);
         expect(allEntries.get('Test LogBook 2-1')).to.be.equal(entry2);

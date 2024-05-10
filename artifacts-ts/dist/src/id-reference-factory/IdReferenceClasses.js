@@ -64,9 +64,7 @@ class JobId extends IdReference {
     componentId;
     constructor({ componentId, name, metadata, format }) {
         super({ name, metadata, format });
-        console.log(`setting componentId: ${componentId}`);
         this.componentId = componentId;
-        console.log(`componentId: ${this.componentId}`);
     }
 }
 export { IdReference, SystemId, MoonbaseId, PodBayId, PodId, ContainerId, PodProcessId, JobId };
