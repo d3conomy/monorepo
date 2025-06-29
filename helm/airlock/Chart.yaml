@@ -1,0 +1,18 @@
+apiVersion: v2
+name: airlock
+description: A Helm chart for Airlock - Auth Client Package
+type: application
+version: 0.1.0
+appVersion: "0.0.1"
+keywords:
+  - airlock
+  - auth
+  - client
+  - authentication
+  - authorization
+home: https://github.com/d3conomy/airlock
+sources:
+  - https://github.com/d3conomy/airlock
+maintainers:
+  - name: d3
+    email: d3@d3conomy.com

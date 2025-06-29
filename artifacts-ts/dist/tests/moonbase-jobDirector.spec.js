@@ -1,4 +1,9 @@
 import { expect } from 'chai';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 import { PodBay } from '../src/pod-bay/index.js';
 import { IdReferenceFactory } from '../src/id-reference-factory/index.js';
 import { Moonbase } from '../src/moonbase/index.js';
@@ -10,7 +15,16 @@ describe('JobDirector', () => {
     let moonbase;
     let jobDirector;
     let pod;
+    // Increase timeout for slow async operations
+    before(function () {
+        this.timeout(10000); // 10 seconds
+    });
     beforeEach(async () => {
+        // Clean up the test database directory to avoid lock errors
+        const testDir = path.resolve(__dirname, '../pods/test/moonbase');
+        if (fs.existsSync(testDir)) {
+            fs.rmSync(testDir, { recursive: true, force: true });
+        }
         // Initialize the JobDirector instance with mock dependencies
         const idReferenceFactory = new IdReferenceFactory();
         const systemId = idReferenceFactory.createIdReference({ type: 'system' });
@@ -44,11 +58,25 @@ describe('JobDirector', () => {
                     }
                 ] })
         });
-        // await pod.init();
+        await pod.init();
         jobDirector = moonbase.jobDirector;
     });
+    afterEach(async () => {
+        // Attempt to close the pod/database and any submodules if possible
+        if (pod && typeof pod.stop === 'function') {
+            try {
+                await pod.stop();
+            }
+            catch (e) { }
+        }
+        // Clean up the test database directory again
+        const testDir = path.resolve(__dirname, '../pods/test/moonbase');
+        if (fs.existsSync(testDir)) {
+            fs.rmSync(testDir, { recursive: true, force: true });
+        }
+    });
     describe('enqueue', () => {
-        it('should add a job to the queue', () => {
+        it('should add a job to the queue', async () => {
             const containers = pod.getContainers();
             console.log(containers);
             let databaseContainerId;

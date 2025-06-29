@@ -3,3 +3,4 @@ orbitdb
 ipfs
 data
 tsconfig.tsbuildinfo
+dist/

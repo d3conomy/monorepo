@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moonbase
+  labels:
+    app: moonbase
+    version: v0.0.1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moonbase
+  template:
+    metadata:
+      labels:
+        app: moonbase
+    spec:
+      containers:
+        - name: moonbase
+          image: "moonbase:latest"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 4343
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+            requests:
+              cpu: 500m
+              memory: 512Mi
+          volumeMounts:
+            - name: config
+              mountPath: /usr/app/webapp/config.json
+              subPath: config.json
+            - name: data
+              mountPath: /usr/app/webapp/data
+          env:
+            - name: NODE_ENV
+              value: "production"
+      volumes:
+        - name: config
+          configMap:
+            name: moonbase-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: moonbase-data

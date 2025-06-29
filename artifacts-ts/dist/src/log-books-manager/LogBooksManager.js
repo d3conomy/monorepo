@@ -1,5 +1,4 @@
 import { IdReferenceFormats, IdReferenceTypes, isIdReferenceFormat } from "../id-reference-factory/index.js";
-// import { ProcessStage, ResponseCode } from "../process-interface/index.js";
 import { LogBook } from "./LogBook.js";
 import { LogEntry } from "./LogEntry.js";
 import { LogLevel, isLogLevel } from "./LogLevels.js";

@@ -1,4 +1,6 @@
 import { IdReference } from "../id-reference-factory/index.js";
+import { ProcessStage } from "../process-interface/IProcess.js";
+import { ResponseCode } from "../process-interface/logging.js";
 import { LogLevel } from "./LogLevels.js";
 /**
  * Interface for a log entry
@@ -8,6 +10,8 @@ interface ILogEntry {
     podId?: IdReference;
     processId?: IdReference;
     level?: LogLevel;
+    code?: ResponseCode;
+    stage?: ProcessStage | string;
     timestamp: Date;
     message: string;
     error?: Error;
@@ -21,14 +25,18 @@ declare class LogEntry implements ILogEntry {
     podId?: IdReference;
     processId?: IdReference;
     level?: LogLevel;
+    code?: ResponseCode;
+    stage?: ProcessStage | string;
     timestamp: Date;
     message: string;
     error?: Error;
-    constructor({ podId, processId, message, level, error, printLevel }: {
+    constructor({ podId, processId, message, level, code, stage, error, printLevel }: {
         podId?: IdReference;
         processId?: IdReference;
         message: string;
         level?: LogLevel | string;
+        code?: ResponseCode;
+        stage?: ProcessStage | string;
         error?: Error;
         printLevel: LogLevel;
     });

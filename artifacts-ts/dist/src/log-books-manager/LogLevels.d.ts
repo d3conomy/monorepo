@@ -3,10 +3,11 @@
  * @category Logging
  */
 declare enum LogLevel {
+    DEBUG = "debug",
     INFO = "info",
     WARN = "warn",
     ERROR = "error",
-    DEBUG = "debug"
+    FATAL = "fatal"
 }
 /**
  * Check if a string is a valid log level

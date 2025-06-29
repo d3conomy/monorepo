@@ -162,16 +162,11 @@ class JobQueue {
     }
 
     private runParallel = async (): Promise<Job[]> => {
-        let jobsCompleted = new Array<Job>();
-        const jobPromises = () => this.queue.map( async (job) => {
+        const jobPromises = this.queue.map(async (job) => {
             return this.execute(job);
         });
 
-        for (const jobPromise of jobPromises()) {
-            const job = await Promise.resolve(jobPromise);
-            jobsCompleted.push(job);
-        }
-
+        const jobsCompleted = await Promise.all(jobPromises);
         return jobsCompleted;
     }
 

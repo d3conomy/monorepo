@@ -52,3 +52,8 @@ class Container {
     }
 }
 export { Container };
+export * from './commands.js';
+export * from './jobs.js';
+export * from './instance.js';
+export * from './options.js';
+export * from './status.js';

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: moonbase-config
+  labels:
+    app: moonbase
+data:
+  config.json: |
+    {
+      "logs": {
+        "dir": "logs",
+        "level": "debug"
+      },
+      "general": {
+        "names": "name"
+      },
+      "api": {
+        "port": 4343,
+        "corsOrigin": "*"
+      },
+      "auth": {
+        "authDbCid": "zdpuAwKvuPvsSgcD1vPN3MjhF8rEfnXzgGAXnTRn2DbQ9Shb8",
+        "sessionDbCid": "zdpuAtk34p4dSV2wCLEZPoiYCvdNii5XZ5i7h8USeocDGe229",
+        "eventLogCid": "zdpuB1gWhT3fdGv6CxJKh9y9gMTax9xajiC2ErumHgkH2Gi3E",
+        "systemSwarmKey": "deeaa20d10f8379c3ab1fc10f5c24fb1a5d1aeae9d9095cc12d91a95fe96409a"
+      }
+    }

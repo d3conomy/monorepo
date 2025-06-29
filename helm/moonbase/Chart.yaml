@@ -1,0 +1,19 @@
+apiVersion: v2
+name: moonbase
+description: A Helm chart for Moonbase - OrbitDB, libp2p, and IPFS server
+type: application
+version: 0.1.0
+appVersion: "0.0.1"
+keywords:
+  - moonbase
+  - ipfs
+  - libp2p
+  - orbitdb
+  - blockchain
+  - decentralized
+home: https://github.com/d3conomy/moonbase
+sources:
+  - https://github.com/d3conomy/moonbase
+maintainers:
+  - name: d3
+    email: d3@d3conomy.com

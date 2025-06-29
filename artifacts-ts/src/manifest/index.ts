@@ -22,3 +22,6 @@ interface Manifest<T = TemplateVersion> {
 export {
     Manifest
 }
+
+export * from './templatesV1.js'
+export * from './import.js'
