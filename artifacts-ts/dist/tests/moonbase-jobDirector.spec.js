@@ -61,18 +61,36 @@ describe('JobDirector', () => {
         await pod.init();
         jobDirector = moonbase.jobDirector;
     });
-    afterEach(async () => {
-        // Attempt to close the pod/database and any submodules if possible
+    afterEach(async function () {
+        this.timeout(15000); // Extended timeout for cleanup
+        // Stop the pod
         if (pod && typeof pod.stop === 'function') {
             try {
                 await pod.stop();
             }
-            catch (e) { }
+            catch (e) {
+                console.warn('Error stopping pod:', e);
+            }
         }
-        // Clean up the test database directory again
+        // Add delay to ensure resources are released
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Clean up the test database directory
         const testDir = path.resolve(__dirname, '../pods/test/moonbase');
         if (fs.existsSync(testDir)) {
-            fs.rmSync(testDir, { recursive: true, force: true });
+            try {
+                fs.rmSync(testDir, { recursive: true, force: true });
+            }
+            catch (e) {
+                console.warn('Error cleaning test directory:', e);
+                // If normal cleanup fails, try with a delay and retry
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                try {
+                    fs.rmSync(testDir, { recursive: true, force: true });
+                }
+                catch (e2) {
+                    console.warn('Retry cleanup also failed:', e2);
+                }
+            }
         }
     });
     describe('enqueue', () => {

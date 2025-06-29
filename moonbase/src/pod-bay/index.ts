@@ -134,37 +134,49 @@ class PodBay {
      * Gets a pod from the PodBay.
      */
     public getPod(id?: PodId | string): LunarPod | undefined {
-        // if (!id) {
-        //     logger({
-        //         level: LogLevel.ERROR,
-        //         message: `IdReference is undefined`
-        //     })
-        // }
-        // else {
-            let podId: PodId;
-            if (typeof id === "string") {
-                podId = this.idReferenceFactory.getIdReference(id) as PodId;
-            }
-            else if (id instanceof PodId){
-                podId = id;
-            }
-            else {
-                logger({
-                    level: LogLevel.ERROR,
-                    message: `IdReference is not of type PodId`
-                });
-            }
-            const pod = this.pods.find(pod => pod.id.name === podId.name);
-            if (pod) {
-                return pod;
-            }
-            else {
-                logger({
-                    level: LogLevel.ERROR,
-                    message: `Pod with id ${id} not found`
-                });
-            }
-        // }
+        if (!id) {
+            logger({
+                level: LogLevel.ERROR,
+                message: `IdReference is undefined`
+            });
+            return undefined;
+        }
+
+        let podId: PodId;
+        if (typeof id === "string") {
+            podId = this.idReferenceFactory.getIdReference(id) as PodId;
+        }
+        else if (id instanceof PodId){
+            podId = id;
+        }
+        else {
+            logger({
+                level: LogLevel.ERROR,
+                message: `IdReference is not of type PodId`
+            });
+            return undefined;
+        }
+
+        // Additional safety check
+        if (!podId) {
+            logger({
+                level: LogLevel.ERROR,
+                message: `Failed to resolve pod ID: ${id}`
+            });
+            return undefined;
+        }
+
+        const pod = this.pods.find(pod => pod.id.name === podId.name);
+        if (pod) {
+            return pod;
+        }
+        else {
+            logger({
+                level: LogLevel.ERROR,
+                message: `Pod with id ${id} not found`
+            });
+            return undefined;
+        }
     }
 
     /**

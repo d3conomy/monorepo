@@ -1,0 +1,6 @@
+[36m[1m🚀 MOONBASE v0 COMPREHENSIVE TEST SUITE[0m[0m
+[36m[1m=====================================[0m[0m
+[37mTesting all available v0 API endpoints systematically...[0m
+[35m
+[1m🏥 INITIAL HEALTH CHECK[0m[0m
+[31m❌ Server is not responding - aborting tests[0m

@@ -89,13 +89,13 @@ class PodBay {
      * Gets a pod from the PodBay.
      */
     getPod(id) {
-        // if (!id) {
-        //     logger({
-        //         level: LogLevel.ERROR,
-        //         message: `IdReference is undefined`
-        //     })
-        // }
-        // else {
+        if (!id) {
+            logger({
+                level: LogLevel.ERROR,
+                message: `IdReference is undefined`
+            });
+            return undefined;
+        }
         let podId;
         if (typeof id === "string") {
             podId = this.idReferenceFactory.getIdReference(id);
@@ -108,6 +108,15 @@ class PodBay {
                 level: LogLevel.ERROR,
                 message: `IdReference is not of type PodId`
             });
+            return undefined;
+        }
+        // Additional safety check
+        if (!podId) {
+            logger({
+                level: LogLevel.ERROR,
+                message: `Failed to resolve pod ID: ${id}`
+            });
+            return undefined;
         }
         const pod = this.pods.find(pod => pod.id.name === podId.name);
         if (pod) {
@@ -118,8 +127,8 @@ class PodBay {
                 level: LogLevel.ERROR,
                 message: `Pod with id ${id} not found`
             });
+            return undefined;
         }
-        // }
     }
     /**
      * Removes a pod from the PodBay.

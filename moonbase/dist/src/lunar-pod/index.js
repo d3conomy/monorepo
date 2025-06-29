@@ -94,7 +94,7 @@ class LunarPod {
             case ProcessType.LIBP2P:
                 await this.initLibp2p(options);
                 break;
-            case ProcessType.PUB_SUB:
+            case ProcessType.PUBSUB:
                 await this.initPubSub(options?.pubsubTopic);
                 break;
             case ProcessType.IPFS:
@@ -103,7 +103,7 @@ class LunarPod {
             case ProcessType.ORBITDB:
                 await this.initOrbitDb(options);
                 break;
-            case ProcessType.OPEN_DB:
+            case ProcessType.DATABASE:
                 await this.initOpenDb(options);
                 break;
             // case ProcessType.FILE_SYSTEM:
@@ -269,7 +269,7 @@ class LunarPod {
     }
     async initPubSub(topic) {
         if (this.libp2p && !this.pubsub) {
-            const processId = this.processIds.get(ProcessType.PUB_SUB) ||
+            const processId = this.processIds.get(ProcessType.PUBSUB) ||
                 this.idReferenceFactory.createIdReference({
                     name: `${this.id.name}-pubsub`,
                     type: IdReferenceTypes.PROCESS,

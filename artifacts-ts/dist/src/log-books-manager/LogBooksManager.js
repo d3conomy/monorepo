@@ -107,10 +107,7 @@ const logBooksManager = new LogBooksManager();
  *     podId: undefined
  * });
  */
-const logger = ({ name, level, 
-// code,
-// stage,
-message, error, processId, podId }) => {
+const logger = ({ name, level, code, stage, message, error, processId, podId }) => {
     let logBook;
     if (!name) {
         name = IdReferenceTypes.SYSTEM;
@@ -125,8 +122,8 @@ message, error, processId, podId }) => {
     const entry = new LogEntry({
         printLevel: logBooksManager.config.level,
         level: level ? level : LogLevel.INFO,
-        // code: code,
-        // stage: stage,
+        code: code,
+        stage: stage,
         message: message,
         error: error,
         podId: podId,
