@@ -1,0 +1,52 @@
+{
+  "timestamp": "2025-06-29T06:51:46.919Z",
+  "results": {
+    "totalTests": 57,
+    "passedTests": 53,
+    "failedTests": 4,
+    "skippedTests": 0,
+    "coverage": {
+      "artifacts": 0,
+      "moonbase": 0,
+      "api": 0
+    },
+    "reliability": {
+      "score": 0,
+      "uptime": 0,
+      "errorRate": 0
+    },
+    "performanceMetrics": {
+      "averageResponseTime": 0,
+      "throughput": 0,
+      "memoryUsage": 0
+    }
+  },
+  "coverage": {
+    "unit": "90.0",
+    "integration": "86.8",
+    "api": "98.8",
+    "overall": "91.8"
+  },
+  "reliability": {
+    "score": 92.982,
+    "uptime": 92.976,
+    "errorRate": 7.018
+  },
+  "testCategories": [
+    "unit",
+    "integration",
+    "api",
+    "stress",
+    "security",
+    "performance",
+    "edge-cases",
+    "error-handling"
+  ],
+  "recommendations": [
+    "Investigate and fix failing tests",
+    "Implement comprehensive error handling",
+    "Add retry mechanisms",
+    "Optimize performance",
+    "Increase test coverage"
+  ]
+}

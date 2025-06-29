@@ -78,18 +78,45 @@ router.post('/fs', async function (req, res) {
     const podId = req.body.podId;
     const filesystemName = req.body.filesystemName;
     const filesystemType = req.body.filesystemType;
-    const ipfsFS = await podBay.createFs({
-        podId,
-        filesystemName,
-        filesystemType
-    });
-    const ipfsFSProcess = podBay.getFs(ipfsFS);
-    const dirCid = await ipfsFSProcess.addDirectory({ path: 'test' });
-    ipfsFSProcess.activeCid = dirCid;
-    res.send({
-        ipfsFilesystemName: ipfsFS,
-        dirCid: dirCid.toString()
-    });
+    // Validate required parameters
+    if (!podId) {
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'podId is required'
+        });
+    }
+    if (!filesystemName) {
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'filesystemName is required'
+        });
+    }
+    if (!filesystemType) {
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'filesystemType is required'
+        });
+    }
+    try {
+        const ipfsFS = await podBay.createFs({
+            podId,
+            filesystemName,
+            filesystemType
+        });
+        const ipfsFSProcess = podBay.getFs(ipfsFS);
+        const dirCid = await ipfsFSProcess.addDirectory({ path: 'test' });
+        ipfsFSProcess.activeCid = dirCid;
+        res.send({
+            ipfsFilesystemName: ipfsFS,
+            dirCid: dirCid.toString()
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            error: 'Internal Server Error',
+            message: error instanceof Error ? error.message : 'Unknown error occurred'
+        });
+    }
 });
 /**
  * @openapi
